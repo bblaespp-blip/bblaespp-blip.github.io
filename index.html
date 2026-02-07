@@ -1,0 +1,296 @@
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>BETTO BLAESPP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* (Tu CSS existente aquí) */
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#0f0f0f;
+  color:#eee;
+}
+header{
+  padding:80px 20px;
+  text-align:center;
+  background:linear-gradient(135deg,#ff416c,#ff4b2b);
+}
+header h1{font-size:48px;margin:0;}
+header p{font-size:18px;}
+.info-box {
+  font-size: 30px;
+  line-height: 1.6;
+}
+section{
+  max-width:1300px;
+  margin:auto;
+  padding:50px 25px;
+}
+
+.filters{
+  text-align:center;
+  margin-bottom:35px;
+}
+.filters button{
+  background:transparent;
+  border:2px solid #ff4b2b;
+  color:#fff;
+  padding:10px 22px;
+  margin:6px;
+  border-radius:30px;
+  font-size:15px;
+  cursor:pointer;
+  transition:.3s;
+}
+.filters button:hover,
+.filters button.active{
+  background:#ff4b2b;
+  color:#000;
+}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:22px;
+}
+
+.gallery img{
+  width:100%;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.35s;
+}
+.gallery img:hover{
+  transform:scale(1.06);
+  box-shadow:0 15px 40px rgba(0,0,0,.7);
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+.modal img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:12px;
+}
+.modal span{
+  position:absolute;
+  top:30px;
+  right:40px;
+  font-size:40px;
+  cursor:pointer;
+}
+
+/* +18 */
+.age-warning{
+  text-align:center;
+  background:#1a1a1a;
+  border:2px solid #ff4b2b;
+  padding:40px;
+  border-radius:20px;
+}
+
+.age-warning button{
+  background:#ff4b2b;
+  border:none;
+  padding:12px 25px;
+  font-size:18px;
+  cursor:pointer;
+  border-radius:10px;
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  background:#000;
+  color:#666;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="curriculum.jpg" alt="Curriculum" class="header-cv" />
+  <div class="text-content">
+    <h1>BETTO BLAESPP</h1>
+    <p>Arista visual</p> 
+    <p>ILUSTRACION ° SFW  ° NSFW</p>
+  </div>
+</header>
+
+<style>
+ header {
+  padding: 80px 20px;
+  background: linear-gradient(135deg,#ff416c,#ff4b2b);
+  color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  /* Cambiar a centered */
+  text-align: center;
+}
+
+header div.text-content {
+  max-width: 600px;
+  text-align: center; /* centra el texto dentro del div */
+}
+  header div.text-content {
+    max-width: 600px;
+  }
+</style>
+
+<section>
+
+<div class="filters">
+  <button onclick="showInfo(event)">CONTACTO</button>
+  <button class="active" onclick="loadImages('ILUSTRACION',event)">ILUSTRACION</button>
+  <button onclick="loadImages('sfw',event)">SFW</button>
+  <button onclick="askNSFW(event)">NSFW 🔞</button>
+  <button onclick="loadImages('FONDOS',event)">FONDOS</button>
+  <button onclick="loadImages('COMICS',event)">COMICS</button>
+</div>
+
+<div id="gallery" class="gallery"></div>
+
+<div id="infoSection" style="display:none;">
+  <div class="info-box">
+    <h2>👤 SOBRE MÍ</h2>
+   <CEnter>
+      Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.
+      Soy Betto Blaespp, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración 
+      es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. Creo arte original, cómics y comisiones 
+      que transforman ideas en imágenes que no se olvidan. Si buscas ilustración con carácter, energía y narrativa visual real…  aquí empieza tu historia.
+    </CEnter>
+    <CEnter>
+    </p>
+      <h3>📬 𝐂𝐎𝐍𝐓𝐀𝐂𝐓𝐎</h3>
+    <ul>
+      <li>📧 Email: bblaespp@gmail.com</li>
+      <li>📸 Instagram: @BBLAESPP</li>
+      <li>📱 WhatsApp: 3152395773</li>
+    </ul> 
+  
+  </div>
+</div>
+
+<div id="ageCheck" class="age-warning" style="display:none;">
+  <h2>🔞 Contenido para adultos</h2>
+  <p>Este contenido es solo para mayores de 18 años.</p>
+  <button onclick="enterNSFW()">Soy mayor de 18</button>
+</div>
+
+</section>
+
+<footer>
+© 2026 · Portafolio Profesional
+</footer>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <span onclick="closeModal()">×</span>
+  <img id="modalImg">
+</div>
+
+<script>
+// Definición de imágenes
+const images = {
+  ILUSTRACION: [
+    "ILUSTRACION/1.PNG", 
+    "ILUSTRACION/2.PNG",
+
+  ],
+  sfw: [
+    "sfw/1.PNG",
+    "sfw/sfw2.jpg"
+  ],
+  nsfw: [
+    "nsfw/1.PNG",
+    
+  ],
+  FONDOS: [
+    "FONDOS/X.png",
+    
+
+  ],
+    COMICS: [
+    "COMICS/3.PNG",
+    "COMICS/4.PNG",
+    "COMICS/PAG1.PNG",
+    "COMICS/PAG2.PNG",
+    "COMICS/PAG3.PNG",
+    "COMICS/PAG4.PNG",
+    "COMICS/PAG5.PNG",
+
+  ],
+
+};
+
+function setActive(e){
+  document.querySelectorAll('.filters button')
+    .forEach(b=>b.classList.remove('active'));
+  if(e) e.target.classList.add('active');
+}
+
+// Carga imágenes y muestra galería
+function loadImages(category, e){
+  setActive(e);
+  document.getElementById("ageCheck").style.display="none";
+  document.getElementById("infoSection").style.display = "none";
+  const gallery = document.getElementById("gallery");
+  gallery.style.display = "grid";
+  gallery.innerHTML="";
+
+  images[category].forEach(src=>{
+    const img=document.createElement("img");
+    img.src=src;
+    img.onclick=()=>openModal(img);
+    gallery.appendChild(img);
+  });
+}
+
+// Muestra solo texto CONTACTO
+function showInfo(e){
+  setActive(e);
+  document.getElementById("gallery").style.display = "none";
+  document.getElementById("infoSection").style.display = "block";
+  document.getElementById("ageCheck").style.display = "none";
+}
+
+// Mostrar aviso +18
+function askNSFW(e){
+  setActive(e);
+  document.getElementById("gallery").innerHTML="";
+  document.getElementById("gallery").style.display = "none";
+  document.getElementById("ageCheck").style.display="block";
+  document.getElementById("infoSection").style.display = "none";
+}
+
+function enterNSFW(){
+  document.getElementById("ageCheck").style.display="none";
+  loadImages('nsfw');
+}
+
+function openModal(img){
+  document.getElementById("modal").style.display="flex";
+  document.getElementById("modalImg").src=img.src;
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
+</script>
+
+</body>
+</html>
