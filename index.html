@@ -87,7 +87,7 @@
     gap: 22px;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
-  /* Contenedor de cada imagen con botones de me gusta */
+  /* Contenedor de cada imagen con botones y comentarios */
   .image-container {
     display: flex;
     flex-direction: column;
@@ -127,6 +127,41 @@
   }
   .like-btn:hover {
     background-color: #d63927;
+  }
+  .comment-section {
+    margin-top: 12px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+  }
+  .comment-list {
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .comment-list.empty {
+    font-style: italic;
+    color: #777;
+  }
+  .comment-list p {
+    margin: 4px 0;
+  }
+  .comment-input {
+    padding: 8px 10px;
+    border-radius: 10px;
+    width: 100%;
+    border: 1px solid #555;
+    background: #222;
+    color: #eee;
+    font-size: 14px;
+    outline-offset: 2px;
+    outline-color: transparent;
+    transition: outline-color 0.3s ease;
+  }
+  .comment-input:focus {
+    outline-color: #ff4b2b;
   }
   #infoSection {
     background: #181818;
@@ -369,8 +404,52 @@
       };
       likeBtn.title = "Me gusta esta imagen";
 
+      // Comentarios
+      const commentSection = document.createElement("div");
+      commentSection.className = "comment-section";
+
+      const commentList = document.createElement("div");
+      commentList.className = "comment-list";
+
+      const commentKey = "comments_" + src;
+      let storedComments = JSON.parse(localStorage.getItem(commentKey) || "[]");
+
+      function renderComments() {
+        commentList.innerHTML = "";
+        if (storedComments.length === 0) {
+          commentList.textContent = "Sin comentarios aún.";
+          commentList.classList.add("empty");
+        } else {
+          commentList.classList.remove("empty");
+          storedComments.forEach(c => {
+            const p = document.createElement("p");
+            p.textContent = c;
+            commentList.appendChild(p);
+          });
+        }
+      }
+      renderComments();
+
+      const commentInput = document.createElement("input");
+      commentInput.className = "comment-input";
+      commentInput.type = "text";
+      commentInput.placeholder = "Agregar comentario...";
+      commentInput.ariaLabel = "Ingrese un comentario y presione Enter para enviar";
+      commentInput.addEventListener("keydown", (evt) => {
+        if (evt.key === "Enter" && commentInput.value.trim() !== "") {
+          storedComments.push(commentInput.value.trim());
+          localStorage.setItem(commentKey, JSON.stringify(storedComments));
+          commentInput.value = "";
+          renderComments();
+        }
+      });
+
+      commentSection.appendChild(commentList);
+      commentSection.appendChild(commentInput);
+
       container.appendChild(img);
       container.appendChild(likeBtn);
+      container.appendChild(commentSection);
 
       gallery.appendChild(container);
     });
@@ -426,6 +505,12 @@
       closeModal();
     }
   });
+
+  // Inicializar galería con ILUSTRACION
+  window.onload = () => {
+    loadImages('ILUSTRACION');
+  };
+</script>
 
 </body>
 </html>
