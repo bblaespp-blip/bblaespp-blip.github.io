@@ -328,30 +328,33 @@
 <script>
   const images = {
     ILUSTRACION: [
-      "ILUSTRACION/1.png",
-      "ILUSTRACION/2.png",
-      "ILUSTRACION/3.png",
+      "ILUSTRACION/1.PNG",
+      "ILUSTRACION/2.PNG",
+      "ILUSTRACION/3.PNG",
     ],
     sfw: [
-      "sfw/1.png",
-      "sfw/sfw2.jpg"
+      "sfw/1.PNG",
     ],
     nsfw: [
-      "nsfw/1.png",
+      "nsfw/1.PNG",
     ],
     FONDOS: [
       "FONDOS/X.png",
     ],
     COMICS: [
-      "COMICS/3.png",
-      "COMICS/4.png",
-      "COMICS/PAG1.png",
-      "COMICS/PAG2.png",
-      "COMICS/PAG3.png",
-      "COMICS/PAG4.png",
-      "COMICS/PAG5.png",
+      "COMICS/3.PNG",
+      "COMICS/4.PNG",
+      "COMICS/PAG1.PNG",
+      "COMICS/PAG2.PNG",
+      "COMICS/PAG3.PNG",
+      "COMICS/PAG4.PNG",
+      "COMICS/PAG5.PNG",
     ],
   };
+
+  const imagesPerPage = 20;
+  let currentCategory = null;
+  let currentPage = 1;
 
   function setActive(e) {
     if (!e) return;
@@ -359,8 +362,10 @@
     e.target.classList.add('active');
   }
 
-  function loadImages(category, e) {
-    setActive(e);
+  function loadImages(category, e, page = 1) {
+    currentCategory = category;
+    currentPage = page;
+    if (e) setActive(e);
     document.getElementById("ageCheck").style.display = "none";
     document.getElementById("infoSection").style.display = "none";
 
@@ -368,12 +373,21 @@
     gallery.style.display = "grid";
     gallery.innerHTML = "";
 
-    if (!images[category] || images[category].length === 0) {
+    const categoryImages = images[category] || [];
+    if (categoryImages.length === 0) {
       gallery.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-style:italic; color:#777;">No hay imágenes para esta categoría.</p>';
       return;
     }
 
-    images[category].forEach(src => {
+    const totalPages = Math.ceil(categoryImages.length / imagesPerPage);
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * imagesPerPage;
+    const end = start + imagesPerPage;
+    const pageImages = categoryImages.slice(start, end);
+
+    pageImages.forEach(src => {
       const container = document.createElement("div");
       container.className = "image-container";
 
@@ -453,6 +467,36 @@
 
       gallery.appendChild(container);
     });
+
+    // Controles de paginación si hay más de una página
+    if (totalPages > 1) {
+      const paginationDiv = document.createElement("div");
+      paginationDiv.style.gridColumn = "1 / -1";
+      paginationDiv.style.textAlign = "center";
+      paginationDiv.style.marginTop = "20px";
+
+      const prevBtn = document.createElement("button");
+      prevBtn.textContent = "Anterior";
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => loadImages(currentCategory, null, currentPage - 1);
+
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "Siguiente";
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => loadImages(currentCategory, null, currentPage + 1);
+
+      const pageInfo = document.createElement("span");
+      pageInfo.textContent = ` Página ${currentPage} de ${totalPages} `;
+      pageInfo.style.margin = "0 10px";
+      pageInfo.style.color = "#ff4b2b";
+      pageInfo.style.fontWeight = "600";
+
+      paginationDiv.appendChild(prevBtn);
+      paginationDiv.appendChild(pageInfo);
+      paginationDiv.appendChild(nextBtn);
+
+      gallery.appendChild(paginationDiv);
+    }
   }
 
   function showInfo(e) {
@@ -472,7 +516,7 @@
 
   function enterNSFW() {
     document.getElementById("ageCheck").style.display = "none";
-    loadImages('nsfw');
+    loadImages('nsfw', null, 1);
   }
 
   function openModal(img) {
@@ -488,7 +532,6 @@
   function closeModal() {
     const modal = document.getElementById("modal");
     modal.classList.remove("active");
-    // Evitar foco perdido
     document.querySelector('.filters button.active')?.focus();
   }
 
@@ -506,12 +549,11 @@
     }
   });
 
-  // Inicializar galería con ILUSTRACION
+  // Inicializar con ILUSTRACION y página 1
   window.onload = () => {
-    loadImages('ILUSTRACION');
+    loadImages('ILUSTRACION', null, 1);
   };
 </script>
 
 </body>
 </html>
-
