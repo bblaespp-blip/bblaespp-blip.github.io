@@ -203,11 +203,32 @@ header div.text-content {
 </div>
 
 <script>
+  function loadImages(category, e){
+  setActive(e);
+  document.getElementById("ageCheck").style.display = "none";
+  document.getElementById("infoSection").style.display = "none";
+  const gallery = document.getElementById("gallery");
+  gallery.style.display = "grid";
+  gallery.innerHTML = "";
+
+  images[category].forEach(src => {
+    console.log("Cargando imagen: " + src);
+    const img = document.createElement("img");
+    img.src = src;
+    // Detectar errores
+    img.onerror = function() {
+      console.error("No se pudo cargar la imagen: " + src);
+    }
+    img.onclick = () => openModal(img);
+    gallery.appendChild(img);
+  });
+}
 // Definición de imágenes
 const images = {
   ILUSTRACION: [
     "ILUSTRACION/1.PNG", 
     "ILUSTRACION/2.PNG",
+    "ILUSTRACION/3.PNG", 
   ],
   sfw: [
     "sfw/1.PNG",
@@ -215,9 +236,12 @@ const images = {
   ],
   nsfw: [
     "nsfw/1.PNG",
+    
   ],
   FONDOS: [
     "FONDOS/X.png",
+    
+
   ],
     COMICS: [
     "COMICS/3.PNG",
@@ -227,7 +251,8 @@ const images = {
     "COMICS/PAG3.PNG",
     "COMICS/PAG4.PNG",
     "COMICS/PAG5.PNG",
- ],
+
+  ],
 
 };
 
@@ -288,5 +313,4 @@ function closeModal(){
 </script>
 
 </body>
-
 </html>
