@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BETTO BLAESPP - Portafolio</title>
 <style>
+  /* (Tu CSS original aquí, no modificado) */
   /* Reset y básicos */
   * {
     box-sizing: border-box;
@@ -325,7 +326,25 @@
   <img id="modalImg" alt="Imagen ampliada" />
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
 <script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
+  authDomain: "base-de-datos-para-pagina.firebaseapp.com",
+  projectId: "base-de-datos-para-pagina",
+  storageBucket: "base-de-datos-para-pagina.firebasestorage.app",
+  messagingSenderId: "427794640215",
+  appId: "1:427794640215:web:9f75586c9dc3b2cac3e212",
+  measurementId: "G-06KWN103KC"
+  };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
   const images = {
     ILUSTRACION: [
       "ILUSTRACION/1.png",
@@ -356,10 +375,29 @@
   let currentCategory = null;
   let currentPage = 1;
 
+  // Cache para mostrar datos en UI rápidamente
+  const likesCache = {};
+  const commentsCache = {};
+
+  function encodeKey(str) {
+    // Firebase keys no pueden contener . # $ [ ] /
+    return str.replace(/[.#$[\]/]/g, "_");
+  }
+
   function setActive(e) {
     if (!e) return;
     document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
+  }
+
+  async function fetchLikesAndComments(src) {
+    const key = encodeKey(src);
+    const likesSnap = await db.ref("likes/" + key).get();
+    likesCache[src] = likesSnap.val() || 0;
+
+    const commentsSnap = await db.ref("comments/" + key).get();
+    const val = commentsSnap.val() || {};
+    commentsCache[src] = Object.values(val);
   }
 
   function loadImages(category, e, page = 1) {
@@ -387,116 +425,130 @@
     const end = start + imagesPerPage;
     const pageImages = categoryImages.slice(start, end);
 
-    pageImages.forEach(src => {
-      const container = document.createElement("div");
-      container.className = "image-container";
+    // Primero obtener likes y comentarios para la página
+    Promise.all(pageImages.map(fetchLikesAndComments)).then(() => {
+      pageImages.forEach(src => {
+        const container = document.createElement("div");
+        container.className = "image-container";
 
-      const img = document.createElement("img");
-      img.src = src;
-      img.alt = "Ilustración " + src.split("/").pop();
-      img.onerror = () => {
-        console.warn("No se pudo cargar la imagen:", src);
-        img.alt = "Imagen no disponible";
-        img.style.filter = "grayscale(100%)";
-        img.style.opacity = "0.5";
-        img.style.cursor = "default";
-      };
-      img.onclick = () => openModal(img);
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Ilustración " + src.split("/").pop();
+        img.onerror = () => {
+          console.warn("No se pudo cargar la imagen:", src);
+          img.alt = "Imagen no disponible";
+          img.style.filter = "grayscale(100%)";
+          img.style.opacity = "0.5";
+          img.style.cursor = "default";
+        };
+        img.onclick = () => openModal(img);
 
-      // Me gusta
-      const likeBtn = document.createElement("button");
-      likeBtn.className = "like-btn";
-      const likeKey = "likes_" + src;
-      let likes = parseInt(localStorage.getItem(likeKey) || "0");
-      likeBtn.textContent = `❤️ Me gusta (${likes})`;
-      likeBtn.setAttribute("aria-pressed", likes > 0 ? "true" : "false");
-      likeBtn.onclick = () => {
-        likes++;
-        localStorage.setItem(likeKey, likes);
+        // Likes
+        const likeBtn = document.createElement("button");
+        likeBtn.className = "like-btn";
+        let likes = likesCache[src] || 0;
         likeBtn.textContent = `❤️ Me gusta (${likes})`;
-        likeBtn.setAttribute("aria-pressed", "true");
-      };
-      likeBtn.title = "Me gusta esta imagen";
+        likeBtn.setAttribute("aria-pressed", likes > 0 ? "true" : "false");
+        likeBtn.title = "Me gusta esta imagen";
 
-      // Comentarios
-      const commentSection = document.createElement("div");
-      commentSection.className = "comment-section";
+        likeBtn.onclick = () => {
+          const likesRef = db.ref("likes/" + encodeKey(src));
+          likesRef.transaction(current => (current || 0) + 1);
+        };
 
-      const commentList = document.createElement("div");
-      commentList.className = "comment-list";
+        // Comentarios
+        const commentSection = document.createElement("div");
+        commentSection.className = "comment-section";
 
-      const commentKey = "comments_" + src;
-      let storedComments = JSON.parse(localStorage.getItem(commentKey) || "[]");
+        const commentList = document.createElement("div");
+        commentList.className = "comment-list";
 
-      function renderComments() {
-        commentList.innerHTML = "";
-        if (storedComments.length === 0) {
-          commentList.textContent = "Sin comentarios aún.";
-          commentList.classList.add("empty");
-        } else {
-          commentList.classList.remove("empty");
-          storedComments.forEach(c => {
-            const p = document.createElement("p");
-            p.textContent = c;
-            commentList.appendChild(p);
-          });
+        function renderComments() {
+          commentList.innerHTML = "";
+          const arr = commentsCache[src] || [];
+          if (arr.length === 0) {
+            commentList.textContent = "Sin comentarios aún.";
+            commentList.classList.add("empty");
+          } else {
+            commentList.classList.remove("empty");
+            arr.forEach(c => {
+              const p = document.createElement("p");
+              p.textContent = c;
+              commentList.appendChild(p);
+            });
+          }
         }
-      }
-      renderComments();
+        renderComments();
 
-      const commentInput = document.createElement("input");
-      commentInput.className = "comment-input";
-      commentInput.type = "text";
-      commentInput.placeholder = "Agregar comentario...";
-      commentInput.ariaLabel = "Ingrese un comentario y presione Enter para enviar";
-      commentInput.addEventListener("keydown", (evt) => {
-        if (evt.key === "Enter" && commentInput.value.trim() !== "") {
-          storedComments.push(commentInput.value.trim());
-          localStorage.setItem(commentKey, JSON.stringify(storedComments));
-          commentInput.value = "";
+        const commentInput = document.createElement("input");
+        commentInput.className = "comment-input";
+        commentInput.type = "text";
+        commentInput.placeholder = "Agregar comentario...";
+        commentInput.setAttribute("aria-label", "Ingrese un comentario y presione Enter para enviar");
+        commentInput.addEventListener("keydown", (evt) => {
+          if (evt.key === "Enter" && commentInput.value.trim() !== "") {
+            const newComment = commentInput.value.trim();
+            const commentsRef = db.ref("comments/" + encodeKey(src));
+            commentsRef.push(newComment);
+            commentInput.value = "";
+          }
+        });
+
+        commentSection.appendChild(commentList);
+        commentSection.appendChild(commentInput);
+
+        container.appendChild(img);
+        container.appendChild(likeBtn);
+        container.appendChild(commentSection);
+
+        gallery.appendChild(container);
+
+        // Escuchar cambios en tiempo real para likes y comentarios
+        db.ref("likes/" + encodeKey(src)).on("value", snap => {
+          const val = snap.val() || 0;
+          likesCache[src] = val;
+          likeBtn.textContent = `❤️ Me gusta (${val})`;
+          likeBtn.setAttribute("aria-pressed", val > 0 ? "true" : "false");
+        });
+
+        db.ref("comments/" + encodeKey(src)).on("value", snap => {
+          const val = snap.val() || {};
+          commentsCache[src] = Object.values(val);
           renderComments();
-        }
+        });
       });
 
-      commentSection.appendChild(commentList);
-      commentSection.appendChild(commentInput);
+      // Paginación
+      if (totalPages > 1) {
+        const paginationDiv = document.createElement("div");
+        paginationDiv.style.gridColumn = "1 / -1";
+        paginationDiv.style.textAlign = "center";
+        paginationDiv.style.marginTop = "20px";
 
-      container.appendChild(img);
-      container.appendChild(likeBtn);
-      container.appendChild(commentSection);
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "Anterior";
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => loadImages(currentCategory, null, currentPage - 1);
 
-      gallery.appendChild(container);
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Siguiente";
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => loadImages(currentCategory, null, currentPage + 1);
+
+        const pageInfo = document.createElement("span");
+        pageInfo.textContent = ` Página ${currentPage} de ${totalPages} `;
+        pageInfo.style.margin = "0 10px";
+        pageInfo.style.color = "#ff4b2b";
+        pageInfo.style.fontWeight = "600";
+
+        paginationDiv.appendChild(prevBtn);
+        paginationDiv.appendChild(pageInfo);
+        paginationDiv.appendChild(nextBtn);
+
+        gallery.appendChild(paginationDiv);
+      }
     });
 
-    // Controles de paginación si hay más de una página
-    if (totalPages > 1) {
-      const paginationDiv = document.createElement("div");
-      paginationDiv.style.gridColumn = "1 / -1";
-      paginationDiv.style.textAlign = "center";
-      paginationDiv.style.marginTop = "20px";
-
-      const prevBtn = document.createElement("button");
-      prevBtn.textContent = "Anterior";
-      prevBtn.disabled = currentPage === 1;
-      prevBtn.onclick = () => loadImages(currentCategory, null, currentPage - 1);
-
-      const nextBtn = document.createElement("button");
-      nextBtn.textContent = "Siguiente";
-      nextBtn.disabled = currentPage === totalPages;
-      nextBtn.onclick = () => loadImages(currentCategory, null, currentPage + 1);
-
-      const pageInfo = document.createElement("span");
-      pageInfo.textContent = ` Página ${currentPage} de ${totalPages} `;
-      pageInfo.style.margin = "0 10px";
-      pageInfo.style.color = "#ff4b2b";
-      pageInfo.style.fontWeight = "600";
-
-      paginationDiv.appendChild(prevBtn);
-      paginationDiv.appendChild(pageInfo);
-      paginationDiv.appendChild(nextBtn);
-
-      gallery.appendChild(paginationDiv);
-    }
   }
 
   function showInfo(e) {
@@ -549,7 +601,6 @@
     }
   });
 
-  // Inicializar con ILUSTRACION y página 1
   window.onload = () => {
     loadImages('ILUSTRACION', null, 1);
   };
@@ -557,4 +608,3 @@
 
 </body>
 </html>
-
