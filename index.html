@@ -6,80 +6,24 @@
   <title>BETTO BLAESPP - Portafolio</title>
   <style>
     * { box-sizing: border-box; }
-    body {
-      margin: 0; padding: 0;
-      background: #0f0f0f;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      color: #eee;
-      min-height: 100vh;
-    }
-    header {
-      background: linear-gradient(135deg, #ff416c, #ff4b2b);
-      color: #fff;
-      padding: 50px 20px;
-      text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    header img { max-width: 140px; border-radius: 15px; border: 3px solid #fff; margin-bottom: 15px; }
-    
-    .filters { text-align: center; margin: 25px 0; position: sticky; top: 0; background: #0f0f0f; padding: 10px; z-index: 10; }
-    .filters button {
-      background: transparent;
-      border: 2px solid #ff4b2b;
-      color: #eee;
-      padding: 10px 18px;
-      margin: 5px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    .filters button:hover, .filters button.active { background: #ff4b2b; color: #fff; }
-
-    #gallery {
-      display: grid;
-      gap: 25px;
-      padding: 20px;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      max-width: 1400px;
-      margin: auto;
-    }
-    
-    .image-container { 
-      background: #1a1a1a; 
-      padding: 15px; 
-      border-radius: 15px; 
-      border: 1px solid #333; 
-    }
-    .image-container img { width: 100%; border-radius: 10px; cursor: pointer; display: block; transition: 0.3s; }
-    .image-container img:hover { transform: scale(1.02); }
-    
-    .like-btn { 
-      background: #ff4b2b; border: none; color: white; padding: 10px; 
-      margin: 12px 0; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; 
-    }
-    
-    .comment-list { font-size: 13px; color: #ccc; max-height: 150px; overflow-y: auto; margin-bottom: 10px; }
-    .comment-item { 
-      display: flex; justify-content: space-between; align-items: center; 
-      background: #252525; margin: 5px 0; padding: 8px; border-radius: 6px; 
-    }
-    
-    .del-btn { color: #ff416c; cursor: pointer; font-size: 16px; border: none; background: none; display: none; }
-    .show-delete { display: inline-block !important; }
-
-    .comment-input { 
-      width: 100%; padding: 10px; background: #000; border: 1px solid #444; 
-      color: #fff; border-radius: 6px; outline: none;
-    }
-
-    #infoSection, #ageCheck { background: #1a1a1a; padding: 50px; margin: 20px auto; border-radius: 20px; text-align: center; max-width: 600px; border: 1px solid #ff4b2b; }
-    
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    body { margin: 0; padding: 0; background: #0f0f0f; font-family: sans-serif; color: #eee; }
+    header { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; padding: 40px 20px; text-align: center; }
+    header img { max-width: 120px; border-radius: 15px; border: 2px solid #fff; margin-bottom: 10px; }
+    .filters { text-align: center; margin: 20px 0; position: sticky; top: 0; background: #0f0f0f; padding: 10px; z-index: 10; }
+    .filters button { background: transparent; border: 2px solid #ff4b2b; color: #eee; padding: 10px 18px; margin: 5px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+    .filters button.active { background: #ff4b2b; color: #fff; }
+    #gallery { display: grid; gap: 20px; padding: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: auto; }
+    .image-container { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
+    .image-container img { width: 100%; border-radius: 8px; cursor: pointer; display: block; }
+    .like-btn { background: #ff4b2b; border: none; color: white; padding: 10px; margin: 10px 0; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+    .comment-list { font-size: 13px; color: #ccc; max-height: 120px; overflow-y: auto; margin-bottom: 10px; }
+    .comment-item { display: flex; justify-content: space-between; align-items: center; background: #222; margin: 4px 0; padding: 8px; border-radius: 5px; }
+    .del-btn { color: #ff416c; cursor: pointer; border: none; background: none; font-size: 16px; font-weight: bold; }
+    .comment-input { width: 100%; padding: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px; outline: none; }
+    #infoSection, #ageCheck { background: #1a1a1a; padding: 30px; margin: 20px auto; border-radius: 15px; text-align: center; max-width: 500px; border: 1px solid #ff4b2b; display: none; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 1000; }
     .modal.active { display: flex; }
     .modal img { max-width: 90%; max-height: 90%; border-radius: 10px; }
-    
-    footer { text-align: center; padding: 40px; color: #555; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -92,25 +36,23 @@
 
 <div class="filters">
   <button onclick="showInfo(event)">CONTACTO</button>
-  <button class="active" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
-  <button onclick="loadImages('sfw', event)">SFW</button>
+  <button class="active" onclick="window.loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
+  <button onclick="window.loadImages('sfw', event)">SFW</button>
   <button onclick="askNSFW(event)">NSFW 🔞</button>
-  <button onclick="loadImages('FONDOS', event)">FONDOS</button>
-  <button onclick="loadImages('COMICS', event)">CÓMICS</button>
+  <button onclick="window.loadImages('FONDOS', event)">FONDOS</button>
+  <button onclick="window.loadImages('COMICS', event)">CÓMICS</button>
 </div>
 
-<section id="gallery"></section>
+<div id="gallery"></div>
 
-<div id="infoSection" style="display:none;">
-  <h2>👤 SOBRE MÍ</h2>
-  <p>Dibujante e ilustrador digital.</p>
-  <p>Contacto: <a href="mailto:bblaespp@gmail.com" style="color:#ff4b2b;">bblaespp@gmail.com</a></p>
+<div id="infoSection">
+  <h2>📬 CONTACTO</h2>
+  <p>Email: <strong>bblaespp@gmail.com</strong></p>
 </div>
 
-<div id="ageCheck" style="display:none;">
+<div id="ageCheck">
   <h2>🔞 CONTENIDO ADULTO</h2>
-  <p>Confirma que eres mayor de edad para ver esta galería.</p>
-  <button onclick="enterNSFW()" style="padding:12px 25px; background:#ff4b2b; border:none; color:white; border-radius:10px; cursor:pointer;">Entrar</button>
+  <button onclick="enterNSFW()" style="padding:10px 20px; background:#ff4b2b; border:none; color:white; border-radius:10px; cursor:pointer;">Entrar</button>
 </div>
 
 <div class="modal" id="modal" onclick="this.classList.remove('active')">
@@ -134,53 +76,40 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // --- LISTA DE IMÁGENES (AÑADE AQUÍ LAS NUEVAS) ---
+  // Lista de imágenes manual (ajusta según tus carpetas en GitHub)
   const images = {
-    ILUSTRACION: ["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png"],
+    ILUSTRACION: ["ILUSTRACION/1.png", "ILUSTRACION/2.png", "ILUSTRACION/3.png"],
     sfw: ["sfw/1.png"],
     nsfw: ["nsfw/1.png"],
     FONDOS: ["FONDOS/X.png"],
     COMICS: ["COMICS/3.png", "COMICS/4.png", "COMICS/PAG1.png", "COMICS/PAG2.png", "COMICS/PAG3.png", "COMICS/PAG4.png", "COMICS/PAG5.png"]
   };
 
-  // Identificador de usuario para borrar sus propios comentarios
-  if (!localStorage.getItem('viewer_id')) {
-    localStorage.setItem('viewer_id', 'id_' + Math.random().toString(36).substr(2, 9));
+  // Crear ID único para el usuario si no existe
+  if (!localStorage.getItem('user_token')) {
+    localStorage.setItem('user_token', 'u_' + Math.random().toString(36).substr(2, 9));
   }
-  const myId = localStorage.getItem('viewer_id');
+  const myToken = localStorage.getItem('user_token');
 
-  // Modo Admin Secreto (Escribe "bettoadmin" en el teclado)
-  let keys = "";
-  let isAdmin = false;
-  window.addEventListener("keydown", (e) => {
-    keys += e.key.toLowerCase();
-    if (keys.includes("bettoadmin")) {
-      isAdmin = !isAdmin;
-      alert(isAdmin ? "ADMIN ACTIVO" : "ADMIN DESACTIVADO");
-      keys = "";
-      location.reload();
-    }
-    if (keys.length > 20) keys = "";
-  });
-
-  const sanitize = (path) => path.replace(/[.#$[\]/g, "_");
+  const sanitize = (path) => path.replace(/[.#$[\]]/g, "_");
 
   window.deleteComment = (imgId, commentKey) => {
-    if(confirm("¿Eliminar comentario?")) {
+    if(confirm("¿Quieres borrar tu comentario?")) {
       remove(ref(db, `comments/${imgId}/${commentKey}`));
     }
   };
 
-  window.loadImages = (category, e) => {
+  window.loadImages = function(category, e) {
     if (e) {
       document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
     }
+    
     const gallery = document.getElementById("gallery");
-    gallery.innerHTML = "";
+    gallery.style.display = "grid";
     document.getElementById("infoSection").style.display = "none";
     document.getElementById("ageCheck").style.display = "none";
-    gallery.style.display = "grid";
+    gallery.innerHTML = "";
 
     (images[category] || []).forEach(src => {
       const id = sanitize(src);
@@ -188,35 +117,45 @@
       card.className = "image-container";
       card.innerHTML = `
         <img src="${src}" onclick="document.getElementById('modalImg').src='${src}'; document.getElementById('modal').classList.add('active')">
-        <button class="like-btn" id="like-${id}">❤️ ...</button>
+        <button class="like-btn" id="like-${id}">❤️ Me gusta</button>
         <div class="comment-list" id="list-${id}"></div>
-        <input type="text" class="comment-input" placeholder="Comentar..." id="input-${id}">
+        <input type="text" class="comment-input" placeholder="Escribe un comentario..." id="input-${id}">
       `;
       gallery.appendChild(card);
 
-      // Likes
-      const likeRef = ref(db, `likes/${id}`);
-      onValue(likeRef, (s) => { document.getElementById(`like-${id}`).textContent = `❤️ Likes (${s.val() || 0})`; });
-      document.getElementById(`like-${id}`).onclick = () => { runTransaction(likeRef, (v) => (v || 0) + 1); };
+      // Sincronizar Likes
+      onValue(ref(db, `likes/${id}`), (s) => {
+        document.getElementById(`like-${id}`).textContent = `❤️ Me gusta (${s.val() || 0})`;
+      });
+      document.getElementById(`like-${id}`).onclick = () => {
+        runTransaction(ref(db, `likes/${id}`), (v) => (v || 0) + 1);
+      };
 
-      // Comentarios
-      const commRef = ref(db, `comments/${id}`);
-      onValue(commRef, (s) => {
-        const list = document.getElementById(`list-${id}`);
-        list.innerHTML = "";
-        s.forEach((child) => {
+      // Sincronizar Comentarios
+      onValue(ref(db, `comments/${id}`), (snapshot) => {
+        const cList = document.getElementById(`list-${id}`);
+        if (!cList) return;
+        cList.innerHTML = "";
+        snapshot.forEach((child) => {
           const data = child.val();
-          const canDelete = isAdmin || (data.authorId === myId);
+          const isMine = data.authorToken === myToken; // Solo yo puedo borrarlo
           const item = document.createElement("div");
           item.className = "comment-item";
-          item.innerHTML = `<span>${data.text}</span> ${canDelete ? `<button class="del-btn show-delete" onclick="deleteComment('${id}', '${child.key}')">🗑️</button>` : ''}`;
-          list.appendChild(item);
+          item.innerHTML = `
+            <span>${data.text}</span>
+            ${isMine ? `<button class="del-btn" onclick="deleteComment('${id}', '${child.key}')">🗑️</button>` : ''}
+          `;
+          cList.appendChild(item);
         });
       });
 
+      // Enviar Comentario
       document.getElementById(`input-${id}`).onkeydown = (ev) => {
         if (ev.key === "Enter" && ev.target.value.trim()) {
-          push(commRef, { text: ev.target.value.trim(), authorId: myId });
+          push(ref(db, `comments/${id}`), {
+            text: ev.target.value.trim(),
+            authorToken: myToken
+          });
           ev.target.value = "";
         }
       };
@@ -239,12 +178,10 @@
     document.getElementById("ageCheck").style.display = "block";
   };
 
-  window.enterNSFW = () => loadImages('nsfw', null);
+  window.enterNSFW = () => window.loadImages('nsfw');
 
-  // Carga inicial
-  loadImages('ILUSTRACION', null);
+  // Inicio automático
+  window.loadImages('ILUSTRACION');
 </script>
-
 </body>
 </html>
-
