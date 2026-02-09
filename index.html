@@ -45,7 +45,7 @@ section.active{display:block;}
 .chat-input{display:flex;padding:10px;gap:10px;background:#111;border-top:1px solid #222;}
 .chat-input input{flex:1;padding:12px;border-radius:10px;border:none;background:#050505;color:white;}
 .chat-input button{background:#ff4b2b;border:none;padding:12px 18px;border-radius:10px;font-weight:bold;cursor:pointer;}
-#loginPanel{max-width:400px;margin:80px auto;padding:25px;background:#111;border-radius:20px;border:2px solid #ff4b2b;text-align:center;}
+#loginPanel{display:block; max-width:400px;margin:80px auto;padding:25px;background:#111;border-radius:20px;border:2px solid #ff4b2b;text-align:center;}
 #loginPanel input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:none;background:#050505;color:white;}
 #loginPanel button{width:100%;padding:12px;border-radius:10px;border:none;background:#ff4b2b;font-weight:bold;cursor:pointer;}
 #loginPanel h2{color:#ff4b2b;}
@@ -79,7 +79,7 @@ section.active{display:block;}
 </section>
 
 <!-- GALERÍA -->
-<section id="galeria" class="active">
+<section id="galeria">
 <div id="gallery"></div>
 </section>
 
@@ -160,7 +160,7 @@ loadRanking();
 },{onlyOnce:true});
 }
 
-// GALERÍA IMÁGENES
+// GALERÍA
 const images={
 ILUSTRACION:["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png"],
 sfw:["sfw/1.png"],
@@ -270,6 +270,9 @@ rankingList.innerHTML+=`
 });
 });
 }
+
+// MODAL
+window.openModal=src=>{modalImg.src=src;modal.classList.add("active");}
 </script>
 </body>
 </html>
