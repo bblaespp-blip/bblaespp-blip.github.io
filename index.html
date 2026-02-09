@@ -3,123 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BETTO BLAESPP - PORTAFOLIO PRO</title>
+<title>BETTO BLAESPP - PORTAFOLIO</title>
+
 <style>
 *{box-sizing:border-box;}
-body{margin:0;background:#0f0f0f;color:#eee;font-family:sans-serif;}
-header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,#ff4b2b);}
-.filters{text-align:center;padding:10px;position:sticky;top:0;background:#0f0f0f;z-index:99;}
-.filters button{border:2px solid #ff4b2b;background:none;color:#fff;padding:10px 20px;margin:5px;border-radius:30px;font-weight:bold;cursor:pointer;}
-.filters button.active{background:#ff4b2b;color:#111;}
-section{display:none;max-width:1300px;margin:auto;padding:20px;}
-section.active{display:block;}
-#gallery, #galleryNSFW{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;}
-.image-container{background:#1a1a1a;padding:12px;border-radius:12px;border:1px solid #333;}
-.image-container img{width:100%;border-radius:8px;cursor:pointer;}
-.like-btn{width:100%;padding:10px;border:none;background:#ff4b2b;color:white;border-radius:6px;font-weight:bold;margin-top:10px;cursor:pointer;}
-.comment-list{font-size:13px;color:#ccc;max-height:100px;overflow:auto;margin:8px 0;}
-.comment-input{width:100%;padding:8px;background:#111;border:1px solid #333;color:white;border-radius:5px;}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:9999;}
+body{margin:0;background:#0f0f0f;font-family:sans-serif;color:#eee;}
+header{background:linear-gradient(135deg,#ff416c,#ff4b2b);padding:40px 20px;text-align:center;}
+header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
+.filters{text-align:center;margin:20px 0;position:sticky;top:0;background:#0f0f0f;padding:10px;z-index:10;border-bottom:1px solid #333;}
+.filters button{background:transparent;border:2px solid #ff4b2b;color:#fff;padding:10px 18px;margin:5px;border-radius:25px;cursor:pointer;font-weight:bold;transition:0.3s;}
+.filters button.active{background:#ff4b2b;}
+
+#gallery{display:grid;gap:20px;padding:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));max-width:1200px;margin:auto;}
+.image-container{background:#1a1a1a;padding:15px;border-radius:12px;border:1px solid #333; animation:fadeIn 0.5s ease;}
+.image-container img{width:100%;border-radius:8px;cursor:pointer;height:300px;object-fit:cover;}
+.like-btn{background:#ff4b2b;border:none;color:white;padding:10px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;}
+
+.comment-list{font-size:13px;color:#ccc;max-height:120px;overflow-y:auto;margin-bottom:8px;}
+.comment-item{background:#222;margin:4px 0;padding:8px;border-radius:5px;display:flex;flex-direction:column;gap:2px;}
+.comment-item b{color:#ff4b2b;font-size:11px;}
+.comment-input{width:100%;padding:10px;background:#000;border:1px solid #444;color:#fff;border-radius:5px;}
+
+/* SECCIONES */
+#infoSection,#chatSection{background:#1a1a1a;padding:30px;margin:20px auto;border-radius:15px;text-align:center;max-width:600px;border:1px solid #ff4b2b;display:none;}
+
+/* CHAT */
+#chat-box{height:400px;overflow-y:auto;background:#000;border-radius:10px;padding:15px;text-align:left;margin-bottom:15px;border:1px solid #333;}
+.msg{margin-bottom:10px;padding:8px;border-radius:5px;background:#222;}
+.msg b{color:#ff4b2b;display:block;font-size:12px;}
+.msg span{font-size:14px;}
+.msg.me{border-left:4px solid #ff4b2b;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;z-index:1000;}
 .modal.active{display:flex;}
 .modal img{max-width:90%;max-height:90%;border-radius:10px;}
-#chatPanel{display:none;max-width:1100px;margin:40px auto;background:#0b0b0b;border-radius:20px;overflow:hidden;border:2px solid #ff4b2b;}
-.chat-layout{display:grid;grid-template-columns:280px 1fr;height:600px;}
-.chat-users{background:#0f0f0f;border-right:1px solid #222;padding:15px;overflow:auto;}
-.chat-users h3{margin:0 0 10px;color:#ff4b2b;text-align:center;}
-.user-card{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;margin-bottom:6px;transition:.2s;}
-.user-card:hover{background:#1c1c1c}
-.user-card img{width:36px;height:36px;border-radius:50%;object-fit:cover;}
-.rank{font-weight:bold;font-size:12px;}
-.rank.master{color:#ff4b2b}
-.rank.pro{color:#00bfff}
-.rank.user{color:#aaa}
-.badge{font-size:12px;margin-left:5px;color:#ffd700;font-weight:bold;}
-.chat-main{display:flex;flex-direction:column;background:#050505;}
-.chat-box{flex:1;overflow:auto;padding:15px;}
-.msg{display:flex;gap:10px;margin-bottom:10px;}
-.msg img{width:40px;height:40px;border-radius:50%;}
-.msg-content{background:#111;padding:10px 14px;border-radius:15px;max-width:70%;}
-.msg-name{font-weight:bold;font-size:13px;}
-.msg-text{font-size:14px;}
-.msg-time{font-size:11px;color:#777;}
-.chat-input{display:flex;padding:10px;gap:10px;background:#111;border-top:1px solid #222;}
-.chat-input input{flex:1;padding:12px;border-radius:10px;border:none;background:#050505;color:white;}
-.chat-input button{background:#ff4b2b;border:none;padding:12px 18px;border-radius:10px;font-weight:bold;cursor:pointer;}
-#loginPanel{display:block; max-width:400px;margin:80px auto;padding:25px;background:#111;border-radius:20px;border:2px solid #ff4b2b;text-align:center;}
-#loginPanel input{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:none;background:#050505;color:white;}
-#loginPanel button{width:100%;padding:12px;border-radius:10px;border:none;background:#ff4b2b;font-weight:bold;cursor:pointer;}
-#loginPanel h2{color:#ff4b2b;}
-#contacto{text-align:center;font-size:18px;line-height:1.8;}
-#contacto a{color:#ff4b2b;text-decoration:none;font-weight:bold;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
+
 <body>
 
 <header>
+<img src="curriculum.jpg" alt="BETTO">
 <h1>BETTO BLAESPP</h1>
-<p>ILUSTRADOR DIGITAL · CÓMIC · MANGA</p>
+<p>Artista Visual</p>
+<p>ILUSTRACIÓN · CÓMIC · WEB MANGA</p>
 </header>
 
 <div class="filters">
-<button class="active" onclick="showSection('galeria',event)">ILUSTRACIÓN</button>
-<button onclick="showSection('chatPanel',event)">CHAT ONLINE</button>
-<button onclick="showSection('contacto',event)">CONTACTO</button>
-<button onclick="askNSFW(event)">NSFW 🔞</button>
-<button onclick="loadImages('FONDOS',event)">FONDOS</button>
-<button onclick="loadImages('COMICS',event)">CÓMICS</button>
+<button onclick="showInfo(event)">CONTACTO</button>
+<button class="filter-btn active" onclick="loadImages('ILUSTRACION',event)">ILUSTRACIÓN</button>
+<button class="filter-btn" onclick="loadImages('SFW',event)">SFW</button>
+<button class="filter-btn" onclick="askNSFW(event)">NSFW 🔞</button>
+<button class="filter-btn" onclick="loadImages('FONDOS',event)">FONDOS</button>
+<button class="filter-btn" onclick="loadImages('COMICS',event)">CÓMICS</button>
+<button onclick="showChat(event)" style="border-color:#55acee;">💬 CHAT GLOBAL</button>
 </div>
 
-<!-- LOGIN PANEL -->
-<section id="loginPanel">
-<h2>🔥 ACCESO COMUNIDAD 🔥</h2>
-<input id="loginUser" placeholder="Usuario">
-<input id="loginPass" placeholder="Contraseña" type="password">
-<button onclick="login()">ENTRAR</button>
-<p style="text-align:center;margin-top:10px;color:#aaa">Si no existe, se crea automáticamente</p>
-</section>
-
-<!-- GALERÍA -->
-<section id="galeria">
 <div id="gallery"></div>
-</section>
 
-<!-- NSFW -->
-<section id="nsfw">
-<div id="galleryNSFW"></div>
-</section>
-
-<!-- CHAT -->
-<section id="chatPanel">
-<div class="chat-layout">
-  <div class="chat-users">
-    <h3>🏆 RANKING</h3>
-    <div id="rankingList"></div>
-  </div>
-  <div class="chat-main">
-    <div class="chat-box" id="chatBox"></div>
-    <div class="chat-input">
-      <input id="chatMsg" placeholder="Mensaje...">
-      <button onclick="sendMsg()">ENVIAR</button>
-    </div>
-  </div>
+<div id="infoSection">
+<h2>👤 SOBRE MÍ</h2>
+<p><strong>BETTO BLAESPP</strong></p>
+<p>ILUSTRADOR DIGITAL · CÓMIC · MANGA</p>
+<h3>📬 CONTACTO</h3>
+<p>EMAIL: <strong>bblaespp@gmail.com</strong></p>
+<p>📸 Instagram: <a href="https://instagram.com/BBLAESPP" target="_blank" style="color:#ff4b2b">@BBLAESPP</a></p>
 </div>
-</section>
 
-<!-- CONTACTO -->
-<section id="contacto">
-<h2>📩 CONTACTO</h2>
-<p>Instagram: <a href="#">@bettoblaespp</a></p>
-<p>Email: contacto@bettoblaespp.com</p>
-</section>
+<div id="chatSection">
+<h2>💬 CHAT GLOBAL</h2>
+<p id="user-display" style="font-size:12px;color:#888;"></p>
+<div id="chat-box"></div>
+<input type="text" id="chat-input" class="comment-input" placeholder="Escribe un mensaje y pulsa Enter...">
+</div>
 
-<!-- MODAL -->
 <div class="modal" id="modal" onclick="this.classList.remove('active')">
 <img id="modalImg">
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, push, onValue, runTransaction, set, update, query, orderByChild, endAt } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, push, onValue, runTransaction, get, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
@@ -130,149 +96,145 @@ storageBucket:"base-de-datos-para-pagina.firebasestorage.app",
 messagingSenderId:"427794640215",
 appId:"1:427794640215:web:22ce4fa44954e572c3e212"
 };
+
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
 
-let USER=null;
-if(!localStorage.getItem("uid")) localStorage.setItem("uid","u_"+Math.random().toString(36).slice(2));
-const UID=localStorage.getItem("uid");
+// USUARIO
+if(!localStorage.getItem("user_token")) localStorage.setItem("user_token","u_"+Math.random().toString(36).substr(2,9));
+const myToken=localStorage.getItem("user_token");
 
-// SECCIONES
-window.showSection=function(id,e){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-if(e){document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));e.target.classList.add('active');}
+let myName = localStorage.getItem("user_name");
+if(!myName){
+    myName = prompt("¡Bienvenido! Introduce tu nombre de usuario:") || "Anónimo_" + Math.floor(Math.random()*999);
+    localStorage.setItem("user_name", myName);
 }
+document.getElementById('user-display').textContent="Conectado como: "+myName;
 
-// LOGIN
-window.login=function(){
-const u=loginUser.value.trim();
-const p=loginPass.value.trim();
-if(!u||!p) return alert("Completa los datos");
-const userRef=ref(db,"users/"+u);
-onValue(userRef,s=>{
-if(!s.exists()) set(userRef,{pass:p,rank:"user",xp:0,avatar:"https://i.pravatar.cc/150?u="+u});
-USER=u;
-loginPanel.style.display="none";
-showSection('chatPanel');
-loadChat();
-loadRanking();
-},{onlyOnce:true});
-}
-
-// GALERÍA
+// IMÁGENES
 const images={
 ILUSTRACION:["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png"],
-sfw:["sfw/1.png"],
-nsfw:["nsfw/1.png"],
+SFW:["sfw/1.png"],
+NSFW:["nsfw/1.png"],
 FONDOS:["FONDOS/X.png"],
-COMICS:["COMICS/3.png","COMICS/4.png","COMICS/PAG1.png","COMICS/PAG2.png"]
+COMICS:["COMICS/3.png","COMICS/4.png","COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png","COMICS/PAG4.png","COMICS/PAG5.png"]
 };
 const sanitize=p=>p.replace(/[.#$[\]]/g,"_");
 
-window.loadImages=function(cat,e){
-if(e){document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');}
-const g=(cat=='nsfw'?document.getElementById("galleryNSFW"):document.getElementById("gallery"));
-g.innerHTML="";
-(images[cat]||[]).forEach(src=>{
+// OCULTAR TODO
+function hideAll(){
+document.getElementById("gallery").style.display="none";
+document.getElementById("infoSection").style.display="none";
+document.getElementById("chatSection").style.display="none";
+document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+}
+
+// GALERÍAS
+window.loadImages=(cat,e)=>{
+hideAll();
+if(e) e.target.classList.add("active");
+const gallery=document.getElementById("gallery");
+gallery.innerHTML="";
+gallery.style.display="grid";
+
+const catMayus=cat.toUpperCase();
+(images[catMayus]||[]).forEach(src=>{
 const id=sanitize(src);
-const div=document.createElement("div");
-div.className="image-container";
-div.innerHTML=`
-<img src="${src}" onclick="openModal('${src}')">
-<button class="like-btn" id="like-${id}">❤️</button>
-<div class="comment-list" id="c-${id}"></div>
-<input class="comment-input" id="i-${id}" placeholder="Comentario...">
+const card=document.createElement("div");
+card.className="image-container";
+card.innerHTML=`
+<img src="${src}" onclick="document.getElementById('modalImg').src='${src}';document.getElementById('modal').classList.add('active')">
+<button class="like-btn" id="like-${id}">❤️ ME GUSTA</button>
+<div class="comment-list" id="list-${id}"></div>
+<input class="comment-input" id="input-${id}" placeholder="Escribe un comentario...">
 `;
-g.appendChild(div);
-const likeRef=ref(db,"likes/"+id+"/"+UID);
-const countRef=ref(db,"likeCount/"+id);
-onValue(countRef,s=>document.getElementById(`like-${id}`).textContent=`❤️ ${s.val()||0}`);
-document.getElementById(`like-${id}`).onclick=()=>{runTransaction(likeRef,v=>v?null:true);runTransaction(countRef,v=>v||0);};
-const cRef=ref(db,"comments/"+id);
-onValue(cRef,snap=>{
-const cl=document.getElementById(`c-${id}`);
-cl.innerHTML="";
-snap.forEach(c=>cl.innerHTML+=`<div>${c.val().text}</div>`);
-});
-document.getElementById(`i-${id}`).onkeydown=e=>{if(e.key==="Enter" && e.target.value.trim()){push(cRef,{text:e.target.value.trim(),uid:UID,time:Date.now()});e.target.value="";}};
-});
-}
-loadImages('ILUSTRACION');
+gallery.appendChild(card);
 
-// NSFW
-window.askNSFW=function(e){
-if(!localStorage.getItem("nsfw_allowed")){
-const ok=confirm("⚠️ Contenido NSFW 🔞\n¿Eres mayor de edad?");
-if(!ok) return;
-localStorage.setItem("nsfw_allowed","true");
-}
-loadImages('nsfw', e);
-showSection('nsfw', e);
-}
+// LIKES
+onValue(ref(db,`likes/${id}`),snap=>{
+const total=snap.exists()?Object.keys(snap.val()).length:0;
+if(document.getElementById(`like-${id}`)) document.getElementById(`like-${id}`).textContent=`❤️ ME GUSTA (${total})`;
+});
+document.getElementById(`like-${id}`).onclick=async()=>{
+const likeRef=ref(db,`likes/${id}/${myToken}`);
+const snap=await get(likeRef);
+if(snap.exists()) return alert("YA DISTE LIKE ❤️");
+runTransaction(likeRef,()=>true);
+};
 
-// CHAT PRO
-const chatRef=ref(db,"chat");
-function loadChat(){
-onValue(chatRef,snap=>{
-const chatBox=document.getElementById("chatBox");
+// COMENTARIOS
+onValue(ref(db,`comments/${id}`),snap=>{
+const list=document.getElementById(`list-${id}`);
+if(!list) return;
+list.innerHTML="";
+snap.forEach(child=>{
+const d=child.val();
+const div=document.createElement("div");
+div.className="comment-item";
+div.innerHTML=`<b>${d.user}:</b> <span>${d.text}</span>`;
+list.appendChild(div);
+});
+});
+document.getElementById(`input-${id}`).onkeydown=(ev)=>{
+if(ev.key==="Enter" && ev.target.value.trim()){
+push(ref(db,`comments/${id}`),{
+text:ev.target.value.trim(),
+user:myName,
+authorToken:myToken
+});
+ev.target.value="";
+}
+};
+});
+};
+
+// CHAT
+window.showChat=(e)=>{
+hideAll();
+e.target.classList.add("active");
+document.getElementById("chatSection").style.display="block";
+};
+
+const chatBox=document.getElementById("chat-box");
+const chatInput=document.getElementById("chat-input");
+
+onValue(query(ref(db,'chat'),limitToLast(50)),snap=>{
 chatBox.innerHTML="";
-snap.forEach(m=>{
-const d=m.val();
-chatBox.innerHTML+=`
-<div class="msg">
-<img src="${d.avatar||'https://i.pravatar.cc/150?u='+d.user}">
-<div class="msg-content">
-<div class="msg-name"><span class="rank ${d.rank}">${d.rank.toUpperCase()}</span> ${d.user} ${d.badge||''}</div>
-<div class="msg-text">${d.text}</div>
-<div class="msg-time">${new Date(d.time).toLocaleTimeString()}</div>
-</div>
-</div>`;
+snap.forEach(child=>{
+const d=child.val();
+const div=document.createElement("div");
+div.className=`msg ${d.token===myToken?'me':''}`;
+div.innerHTML=`<b>${d.user}</b><span>${d.text}</span>`;
+chatBox.appendChild(div);
 });
 chatBox.scrollTop=chatBox.scrollHeight;
 });
-}
 
-window.sendMsg=function(){
-if(!chatMsg.value.trim())return;
-const userRef=ref(db,"users/"+USER);
-onValue(userRef,s=>{
-const u=s.val();
-push(chatRef,{user:USER,text:chatMsg.value,time:Date.now(),rank:u.rank,avatar:u.avatar,badge:getBadge(u.xp)});
-update(userRef,{xp:(u.xp||0)+5});
-chatMsg.value="";
-},{onlyOnce:true});
-}
-
-// BADGES Y NIVELES
-function getBadge(xp){
-if(!xp) return '';
-if(xp>=500) return '🏅';
-if(xp>=200) return '🥈';
-if(xp>=50) return '🥉';
-return '';
-}
-
-// RANKING PRO
-function loadRanking(){
-onValue(ref(db,"users"),snap=>{
-let arr=[];snap.forEach(u=>arr.push({name:u.key,...u.val()}));
-arr.sort((a,b)=>(b.xp||0)-(a.xp||0));
-const rankingList=document.getElementById("rankingList");
-rankingList.innerHTML="";
-arr.slice(0,10).forEach((u,i)=>{
-rankingList.innerHTML+=`
-<div class="user-card">
-<img src="${u.avatar}">
-<div><b>#${i+1} ${u.name}</b> ${getBadge(u.xp)}<br>
-<span class="rank ${u.rank}">${u.rank.toUpperCase()}</span> · ⭐ ${u.xp||0}</div>
-</div>`;
+chatInput.onkeydown=(e)=>{
+if(e.key==="Enter" && chatInput.value.trim()){
+push(ref(db,'chat'),{
+user:myName,
+text:chatInput.value.trim(),
+token:myToken,
+time:serverTimestamp()
 });
-});
+chatInput.value="";
 }
+};
 
-// MODAL
-window.openModal=src=>{modalImg.src=src;modal.classList.add("active");}
+// CONTACTO
+window.showInfo=(e)=>{ hideAll(); e.target.classList.add("active"); document.getElementById("infoSection").style.display="block"; };
+
+// NSFW
+window.askNSFW=(e)=>{
+if(confirm("🔞 Contenido para adultos. ¿Eres mayor de edad?")){
+loadImages("NSFW");
+if(e) e.target.classList.add("active");
+}
+};
+
+// CARGA INICIAL
+loadImages("ILUSTRACION");
 </script>
 </body>
 </html>
