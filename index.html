@@ -1,559 +1,163 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BETTO BLAESPP - Portafolio</title>
-<style>
-  /* Reset y básicos */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; padding: 0;
-    background: #0f0f0f;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #eee;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  a {
-    color: #ff4b2b;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-  header {
-    background: linear-gradient(135deg, #ff416c, #ff4b2b);
-    color: #fff;
-    padding: 60px 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-  }
-  header img {
-    max-width: 190px;
-    border-radius: 10px;
-    flex-shrink: 0;
-  }
-  header .text-content {
-    max-width: 550px;
-    text-align: center;
-  }
-  header h1 {
-    font-size: 3rem;
-    margin: 0 0 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-  }
-  header p {
-    font-size: 1.1rem;
-    line-height: 1.4;
-    margin: 4px 0;
-  }
-  section {
-    max-width: 1300px;
-    margin: 40px auto 80px;
-    padding: 0 20px;
-    flex-grow: 1;
-  }
-  .filters {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .filters button {
-    background: transparent;
-    border: 2px solid #ff4b2b;
-    color: #eee;
-    padding: 10px 26px;
-    margin: 0 10px 10px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .filters button:hover,
-  .filters button.active {
-    background: #ff4b2b;
-    color: #111;
-  }
-  #gallery {
-    display: grid;
-    gap: 22px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  /* Contenedor de cada imagen con botones y comentarios */
-  .image-container {
-    display: flex;
-    flex-direction: column;
-    background: #181818;
-    padding: 12px;
-    border-radius: 12px;
-    transition: box-shadow 0.3s ease;
-  }
-  .image-container:hover {
-    box-shadow: 0 10px 30px rgba(255, 75, 43, 0.6);
-  }
-  .image-container img {
-    border-radius: 12px;
-    cursor: pointer;
-    width: 100%;
-    object-fit: cover;
-    max-height: 250px;
-    transition: transform 0.3s ease;
-  }
-  .image-container img:hover {
-    transform: scale(1.06);
-  }
-  .like-btn {
-    margin-top: 8px;
-    cursor: pointer;
-    padding: 8px 18px;
-    border-radius: 20px;
-    border: none;
-    background: #ff4b2b;
-    color: #fff;
-    font-weight: 700;
-    width: fit-content;
-    user-select: none;
-    font-size: 16px;
-    align-self: flex-start;
-    transition: background-color 0.3s ease;
-  }
-  .like-btn:hover {
-    background-color: #d63927;
-  }
-  .comment-section {
-    margin-top: 12px;
-    border-top: 1px solid #444;
-    padding-top: 10px;
-  }
-  .comment-list {
-    max-height: 100px;
-    overflow-y: auto;
-    font-size: 14px;
-    color: #bbb;
-    line-height: 1.4;
-    margin-bottom: 6px;
-  }
-  .comment-list.empty {
-    font-style: italic;
-    color: #777;
-  }
-  .comment-list p {
-    margin: 4px 0;
-  }
-  .comment-input {
-    padding: 8px 10px;
-    border-radius: 10px;
-    width: 100%;
-    border: 1px solid #555;
-    background: #222;
-    color: #eee;
-    font-size: 14px;
-    outline-offset: 2px;
-    outline-color: transparent;
-    transition: outline-color 0.3s ease;
-  }
-  .comment-input:focus {
-    outline-color: #ff4b2b;
-  }
-  #infoSection {
-    background: #181818;
-    padding: 28px 30px;
-    border-radius: 20px;
-    font-size: 1.15rem;
-    line-height: 1.7;
-  }
-  #infoSection h2,
-  #infoSection h3 {
-    color: #ff4b2b;
-    margin-top: 10px;
-  }
-  #infoSection ul {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 15px;
-  }
-  #infoSection ul li {
-    margin-bottom: 8px;
-    font-size: 1.1rem;
-  }
-  #ageCheck {
-    max-width: 380px;
-    margin: 40px auto;
-    background: #1a1a1a;
-    border: 2px solid #ff4b2b;
-    border-radius: 20px;
-    padding: 40px 30px;
-    text-align: center;
-    font-size: 1.25rem;
-    color: #eee;
-  }
-  #ageCheck button {
-    margin-top: 20px;
-    background: #ff4b2b;
-    border: none;
-    color: #111;
-    font-weight: 700;
-    font-size: 1.15rem;
-    padding: 12px 30px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  #ageCheck button:hover {
-    background-color: #d63927;
-  }
-  footer {
-    padding: 18px 10px;
-    font-size: 14px;
-    color: #666;
-    background: #000;
-    text-align: center;
-    user-select: none;
-  }
-  /* Modal */
-  .modal {
-    position: fixed;
-    inset: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0,0,0,0.9);
-    z-index: 1100;
-  }
-  .modal.active {
-    display: flex;
-  }
-  .modal img {
-    max-width: 90vw;
-    max-height: 90vh;
-    box-shadow: 0 5px 25px rgba(255, 75, 43, 0.8);
-    border-radius: 14px;
-  }
-  .modal span.close-btn {
-    position: absolute;
-    top: 25px;
-    right: 35px;
-    font-size: 40px;
-    color: #ff4b2b;
-    cursor: pointer;
-    font-weight: 900;
-    user-select: none;
-    transition: color 0.3s ease;
-  }
-  .modal span.close-btn:hover {
-    color: #d63927;
-  }
-  @media (max-width: 480px) {
-    header {
-      flex-direction: column;
-    }
-    header img {
-      max-width: 140px;
-    }
-    header h1 {
-      font-size: 2rem;
-    }
-    .filters button {
-      margin: 6px 6px;
-      font-size: 14px;
-      padding: 8px 14px;
-    }
-  }
-</style>
-</head>
-<body>
+<script type="module">
+  // Importamos las funciones necesarias de Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, set, push, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-<header>
-  <img src="curriculum.jpg" alt="Curriculum - Betto Blaespp" />
-  <div class="text-content">
-    <h1>BETTO BLAESPP</h1>
-    <p>Artista Visual</p>
-    <p>ILUSTRACIÓN ° SFW ° NSFW</p>
-  </div>
-</header>
+  // Tu configuración de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
+    authDomain: "base-de-datos-para-pagina.firebaseapp.com",
+    databaseURL: "https://base-de-datos-para-pagina-default-rtdb.firebaseio.com",
+    projectId: "base-de-datos-para-pagina",
+    storageBucket: "base-de-datos-para-pagina.firebasestorage.app",
+    messagingSenderId: "427794640215",
+    appId: "1:427794640215:web:22ce4fa44954e572c3e212",
+    measurementId: "G-9BRCR8ZBCB"
+  };
 
-<section>
-  <div class="filters" role="navigation" aria-label="Selector de categorías">
-    <button type="button" onclick="showInfo(event)">CONTACTO</button>
-    <button type="button" class="active" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
-    <button type="button" onclick="loadImages('sfw', event)">SFW</button>
-    <button type="button" onclick="askNSFW(event)">NSFW 🔞</button>
-    <button type="button" onclick="loadImages('FONDOS', event)">FONDOS</button>
-    <button type="button" onclick="loadImages('COMICS', event)">CÓMICS</button>
-  </div>
+  // Inicializar Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-  <div id="gallery" class="gallery" aria-live="polite" aria-label="Galería de imágenes"></div>
-
-  <article id="infoSection" style="display:none;" aria-label="Información de contacto y sobre mí" tabindex="0">
-    <h2>👤 SOBRE MÍ</h2>
-    <p>
-      Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.<br />
-      Soy Betto Blaespp, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración 
-      es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. Creo arte original, cómics y comisiones 
-      que transforman ideas en imágenes que no se olvidan. Si buscas ilustración con carácter, energía y narrativa visual real… aquí empieza tu historia.
-    </p>
-    <h3>📬 CONTACTO</h3>
-    <ul>
-      <li>📧 Email: <a href="mailto:bblaespp@gmail.com" target="_blank" rel="noopener noreferrer">bblaespp@gmail.com</a></li>
-      <li>📸 Instagram: <a href="https://instagram.com/BBLAESPP" target="_blank" rel="noopener noreferrer">@BBLAESPP</a></li>
-      <li>📱 WhatsApp: <a href="https://wa.me/3152395773" target="_blank" rel="noopener noreferrer">3152395773</a></li>
-    </ul>
-  </article>
-
-  <section id="ageCheck" class="age-warning" style="display:none;" aria-label="Aviso de contenido para adultos" tabindex="0">
-    <h2>🔞 Contenido para adultos</h2>
-    <p>Este contenido es solo para mayores de 18 años.</p>
-    <button type="button" onclick="enterNSFW()">Soy mayor de 18</button>
-  </section>
-</section>
-
-<footer>
-  © 2026 · Portafolio Profesional - Betto Blaespp
-</footer>
-
-<!-- Modal para imagen -->
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-  <span class="close-btn" onclick="closeModal()" aria-label="Cerrar imagen modal" role="button" tabindex="0">&times;</span>
-  <img id="modalImg" alt="Imagen ampliada" />
-</div>
-
-<script>
   const images = {
-    ILUSTRACION: [
-      "ILUSTRACION/1.png",
-      "ILUSTRACION/2.png",
-      "ILUSTRACION/3.png",
-    ],
-    sfw: [
-      "sfw/1.png",
-    ],
-    nsfw: [
-      "nsfw/1.png",
-    ],
-    FONDOS: [
-      "FONDOS/X.png",
-    ],
-    COMICS: [
-      "COMICS/3.png",
-      "COMICS/4.png",
-      "COMICS/PAG1.png",
-      "COMICS/PAG2.png",
-      "COMICS/PAG3.png",
-      "COMICS/PAG4.png",
-      "COMICS/PAG5.png",
-    ],
+    ILUSTRACION: ["ILUSTRACION/1.png", "ILUSTRACION/2.png", "ILUSTRACION/3.png"],
+    sfw: ["sfw/1.png"],
+    nsfw: ["nsfw/1.png"],
+    FONDOS: ["FONDOS/X.png"],
+    COMICS: ["COMICS/3.png", "COMICS/4.png", "COMICS/PAG1.png", "COMICS/PAG2.png", "COMICS/PAG3.png", "COMICS/PAG4.png", "COMICS/PAG5.png"],
   };
 
   const imagesPerPage = 20;
-  let currentCategory = null;
+  let currentCategory = 'ILUSTRACION';
   let currentPage = 1;
 
-  function setActive(e) {
-    if (!e) return;
-    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-  }
+  // Función para limpiar nombres de archivos (Firebase no acepta algunos caracteres en las rutas)
+  const sanitizeKey = (path) => path.replace(/[.#$[\]]/g, "_");
 
-  function loadImages(category, e, page = 1) {
+  window.loadImages = function(category, e, page = 1) {
     currentCategory = category;
     currentPage = page;
-    if (e) setActive(e);
+    
+    // UI Updates
+    if (e) {
+        document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+    }
+    
     document.getElementById("ageCheck").style.display = "none";
     document.getElementById("infoSection").style.display = "none";
-
     const gallery = document.getElementById("gallery");
     gallery.style.display = "grid";
     gallery.innerHTML = "";
 
     const categoryImages = images[category] || [];
-    if (categoryImages.length === 0) {
-      gallery.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-style:italic; color:#777;">No hay imágenes para esta categoría.</p>';
-      return;
-    }
-
-    const totalPages = Math.ceil(categoryImages.length / imagesPerPage);
-    if (currentPage > totalPages) currentPage = totalPages;
-    if (currentPage < 1) currentPage = 1;
-
     const start = (currentPage - 1) * imagesPerPage;
-    const end = start + imagesPerPage;
-    const pageImages = categoryImages.slice(start, end);
+    const pageImages = categoryImages.slice(start, start + imagesPerPage);
 
     pageImages.forEach(src => {
+      const imgId = sanitizeKey(src);
       const container = document.createElement("div");
       container.className = "image-container";
 
+      // Imagen
       const img = document.createElement("img");
       img.src = src;
-      img.alt = "Ilustración " + src.split("/").pop();
-      img.onerror = () => {
-        console.warn("No se pudo cargar la imagen:", src);
-        img.alt = "Imagen no disponible";
-        img.style.filter = "grayscale(100%)";
-        img.style.opacity = "0.5";
-        img.style.cursor = "default";
-      };
       img.onclick = () => openModal(img);
-
-      // Me gusta
+      
+      // Botón Like
       const likeBtn = document.createElement("button");
       likeBtn.className = "like-btn";
-      const likeKey = "likes_" + src;
-      let likes = parseInt(localStorage.getItem(likeKey) || "0");
-      likeBtn.textContent = `❤️ Me gusta (${likes})`;
-      likeBtn.setAttribute("aria-pressed", likes > 0 ? "true" : "false");
-      likeBtn.onclick = () => {
-        likes++;
-        localStorage.setItem(likeKey, likes);
-        likeBtn.textContent = `❤️ Me gusta (${likes})`;
-        likeBtn.setAttribute("aria-pressed", "true");
-      };
-      likeBtn.title = "Me gusta esta imagen";
+      likeBtn.textContent = `❤️ Me gusta (0)`;
 
-      // Comentarios
+      // Escuchar Likes en tiempo real
+      const likeRef = ref(db, `likes/${imgId}`);
+      onValue(likeRef, (snapshot) => {
+        const count = snapshot.val() || 0;
+        likeBtn.textContent = `❤️ Me gusta (${count})`;
+      });
+
+      likeBtn.onclick = () => {
+        runTransaction(likeRef, (currentCount) => {
+          return (currentCount || 0) + 1;
+        });
+      };
+
+      // Sección Comentarios
       const commentSection = document.createElement("div");
       commentSection.className = "comment-section";
-
       const commentList = document.createElement("div");
       commentList.className = "comment-list";
 
-      const commentKey = "comments_" + src;
-      let storedComments = JSON.parse(localStorage.getItem(commentKey) || "[]");
-
-      function renderComments() {
+      // Escuchar Comentarios en tiempo real
+      const commentsRef = ref(db, `comments/${imgId}`);
+      onValue(commentsRef, (snapshot) => {
         commentList.innerHTML = "";
-        if (storedComments.length === 0) {
-          commentList.textContent = "Sin comentarios aún.";
-          commentList.classList.add("empty");
-        } else {
-          commentList.classList.remove("empty");
-          storedComments.forEach(c => {
+        const data = snapshot.val();
+        if (data) {
+          Object.values(data).forEach(msg => {
             const p = document.createElement("p");
-            p.textContent = c;
+            p.textContent = msg;
             commentList.appendChild(p);
           });
-        }
-      }
-      renderComments();
-
-      const commentInput = document.createElement("input");
-      commentInput.className = "comment-input";
-      commentInput.type = "text";
-      commentInput.placeholder = "Agregar comentario...";
-      commentInput.ariaLabel = "Ingrese un comentario y presione Enter para enviar";
-      commentInput.addEventListener("keydown", (evt) => {
-        if (evt.key === "Enter" && commentInput.value.trim() !== "") {
-          storedComments.push(commentInput.value.trim());
-          localStorage.setItem(commentKey, JSON.stringify(storedComments));
-          commentInput.value = "";
-          renderComments();
+        } else {
+          commentList.innerHTML = "<p class='empty'>Sin comentarios aún.</p>";
         }
       });
 
-      commentSection.appendChild(commentList);
-      commentSection.appendChild(commentInput);
+      const commentInput = document.createElement("input");
+      commentInput.className = "comment-input";
+      commentInput.placeholder = "Escribe un comentario...";
+      commentInput.onkeydown = (evt) => {
+        if (evt.key === "Enter" && commentInput.value.trim() !== "") {
+          push(commentsRef, commentInput.value.trim());
+          commentInput.value = "";
+        }
+      };
 
-      container.appendChild(img);
-      container.appendChild(likeBtn);
-      container.appendChild(commentSection);
-
+      commentSection.append(commentList, commentInput);
+      container.append(img, likeBtn, commentSection);
       gallery.appendChild(container);
     });
+  };
 
-    // Controles de paginación si hay más de una página
-    if (totalPages > 1) {
-      const paginationDiv = document.createElement("div");
-      paginationDiv.style.gridColumn = "1 / -1";
-      paginationDiv.style.textAlign = "center";
-      paginationDiv.style.marginTop = "20px";
-
-      const prevBtn = document.createElement("button");
-      prevBtn.textContent = "Anterior";
-      prevBtn.disabled = currentPage === 1;
-      prevBtn.onclick = () => loadImages(currentCategory, null, currentPage - 1);
-
-      const nextBtn = document.createElement("button");
-      nextBtn.textContent = "Siguiente";
-      nextBtn.disabled = currentPage === totalPages;
-      nextBtn.onclick = () => loadImages(currentCategory, null, currentPage + 1);
-
-      const pageInfo = document.createElement("span");
-      pageInfo.textContent = ` Página ${currentPage} de ${totalPages} `;
-      pageInfo.style.margin = "0 10px";
-      pageInfo.style.color = "#ff4b2b";
-      pageInfo.style.fontWeight = "600";
-
-      paginationDiv.appendChild(prevBtn);
-      paginationDiv.appendChild(pageInfo);
-      paginationDiv.appendChild(nextBtn);
-
-      gallery.appendChild(paginationDiv);
-    }
-  }
-
-  function showInfo(e) {
-    setActive(e);
+  // Funciones Globales para los botones HTML
+  window.showInfo = (e) => {
+    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
     document.getElementById("gallery").style.display = "none";
     document.getElementById("infoSection").style.display = "block";
     document.getElementById("ageCheck").style.display = "none";
-  }
+  };
 
-  function askNSFW(e) {
-    setActive(e);
+  window.askNSFW = (e) => {
+    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
     document.getElementById("gallery").innerHTML = "";
     document.getElementById("gallery").style.display = "none";
     document.getElementById("ageCheck").style.display = "block";
     document.getElementById("infoSection").style.display = "none";
-  }
+  };
 
-  function enterNSFW() {
+  window.enterNSFW = () => {
     document.getElementById("ageCheck").style.display = "none";
-    loadImages('nsfw', null, 1);
-  }
+    window.loadImages('nsfw', null, 1);
+  };
 
-  function openModal(img) {
-    if (!img.src) return;
+  window.openModal = (img) => {
     const modal = document.getElementById("modal");
     const modalImg = document.getElementById("modalImg");
     modalImg.src = img.src;
-    modalImg.alt = img.alt || "Imagen ampliada";
     modal.classList.add("active");
-    modal.focus();
-  }
-
-  function closeModal() {
-    const modal = document.getElementById("modal");
-    modal.classList.remove("active");
-    document.querySelector('.filters button.active')?.focus();
-  }
-
-  // Cerrar modal con Escape
-  document.addEventListener('keydown', e => {
-    if (e.key === "Escape") {
-      closeModal();
-    }
-  });
-
-  // Cerrar modal con clic fuera de imagen
-  document.getElementById("modal").addEventListener('click', e => {
-    if (e.target.id === "modal") {
-      closeModal();
-    }
-  });
-
-  // Inicializar con ILUSTRACION y página 1
-  window.onload = () => {
-    loadImages('ILUSTRACION', null, 1);
   };
-</script>
 
-</body>
-</html>
+  window.closeModal = () => {
+    document.getElementById("modal").classList.remove("active");
+  };
+
+  // Eventos de cierre modal
+  document.addEventListener('keydown', e => { if (e.key === "Escape") closeModal(); });
+  document.getElementById("modal").onclick = (e) => { if (e.target.id === "modal") closeModal(); };
+
+  // Carga inicial
+  window.loadImages('ILUSTRACION', null, 1);
+</script>
