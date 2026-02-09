@@ -5,109 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BETTO BLAESPP - Portafolio</title>
   <style>
-    /* Reset y básicos */
     * { box-sizing: border-box; }
     body {
       margin: 0; padding: 0;
       background: #0f0f0f;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: sans-serif;
       color: #eee;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
-    a { color: #ff4b2b; text-decoration: none; }
-    a:hover { text-decoration: underline; }
     header {
       background: linear-gradient(135deg, #ff416c, #ff4b2b);
       color: #fff;
       padding: 60px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 40px;
+      text-align: center;
     }
-    header img { max-width: 190px; border-radius: 10px; flex-shrink: 0; }
-    header .text-content { max-width: 550px; text-align: center; }
-    header h1 { font-size: 3rem; margin: 0 0 10px; font-weight: 700; letter-spacing: 1.5px; }
-    header p { font-size: 1.1rem; line-height: 1.4; margin: 4px 0; }
-    section { max-width: 1300px; margin: 40px auto 80px; padding: 0 20px; flex-grow: 1; }
-    .filters { text-align: center; margin-bottom: 30px; }
+    header img { max-width: 150px; border-radius: 10px; }
+    .filters { text-align: center; margin: 20px 0; }
     .filters button {
       background: transparent;
       border: 2px solid #ff4b2b;
       color: #eee;
-      padding: 10px 26px;
-      margin: 0 10px 10px;
+      padding: 10px 20px;
+      margin: 5px;
       border-radius: 30px;
-      font-size: 16px;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    .filters button:hover, .filters button.active { background: #ff4b2b; color: #111; }
-    #gallery { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .image-container {
-      display: flex;
-      flex-direction: column;
-      background: #181818;
-      padding: 12px;
-      border-radius: 12px;
-      transition: box-shadow 0.3s ease;
+    .filters button.active { background: #ff4b2b; color: #111; }
+    #gallery {
+      display: grid;
+      gap: 20px;
+      padding: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
-    .image-container:hover { box-shadow: 0 10px 30px rgba(255, 75, 43, 0.6); }
-    .image-container img {
-      border-radius: 12px;
-      cursor: pointer;
-      width: 100%;
-      object-fit: cover;
-      max-height: 250px;
-      transition: transform 0.3s ease;
-    }
-    .image-container img:hover { transform: scale(1.06); }
-    .like-btn {
-      margin: 10px 0;
-      cursor: pointer;
-      padding: 8px 18px;
-      border-radius: 20px;
-      border: none;
-      background: #ff4b2b;
-      color: #fff;
-      font-weight: 700;
-      font-size: 14px;
-      transition: background 0.3s;
-    }
-    .comment-section { margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
-    .comment-list { max-height: 120px; overflow-y: auto; font-size: 13px; color: #ccc; margin-bottom: 8px; }
-    .comment-list p { margin: 5px 0; background: #222; padding: 5px; border-radius: 5px; }
-    .comment-input {
-      width: 100%;
-      padding: 8px;
-      background: #111;
-      border: 1px solid #444;
-      color: #fff;
-      border-radius: 5px;
-    }
-    #infoSection, #ageCheck { background: #181818; padding: 30px; border-radius: 20px; text-align: center; }
-    footer { padding: 20px; color: #666; background: #000; text-align: center; }
-    .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      display: none; justify-content: center; align-items: center; z-index: 2000;
-    }
+    .image-container { background: #181818; padding: 15px; border-radius: 12px; border: 1px solid #333; }
+    .image-container img { width: 100%; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+    .image-container img:hover { transform: scale(1.02); }
+    .like-btn { background: #ff4b2b; border: none; color: white; padding: 8px; margin: 10px 0; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+    .comment-list { font-size: 13px; color: #bbb; max-height: 120px; overflow-y: auto; margin-bottom: 10px; border-top: 1px solid #333; padding-top: 5px; }
+    .comment-item { display: flex; justify-content: space-between; align-items: center; background: #222; margin: 4px 0; padding: 6px; border-radius: 4px; }
+    .del-btn { color: #ff416c; cursor: pointer; font-size: 16px; margin-left: 8px; border: none; background: none; }
+    .comment-input { width: 100%; padding: 8px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; }
+    #infoSection, #ageCheck { background: #181818; padding: 40px; margin: 20px; border-radius: 20px; text-align: center; border: 1px solid #ff4b2b; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 100; }
     .modal.active { display: flex; }
-    .modal img { max-width: 90%; max-height: 90%; border-radius: 10px; }
-    .close-btn { position: absolute; top: 20px; right: 30px; font-size: 40px; color: #ff4b2b; cursor: pointer; }
+    .modal img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px #ff4b2b; }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="curriculum.jpg" alt="Betto Blaespp" />
-  <div class="text-content">
-    <h1>BETTO BLAESPP</h1>
-    <p>Artista Visual | ILUSTRACIÓN ° SFW ° NSFW</p>
-  </div>
+  <img src="curriculum.jpg" alt="Betto Blaespp" onerror="this.style.display='none'">
+  <h1>BETTO BLAESPP</h1>
+  <p>Ilustración • SFW • NSFW</p>
 </header>
 
 <section>
@@ -122,34 +71,27 @@
 
   <div id="gallery"></div>
 
-  <article id="infoSection" style="display:none;">
+  <div id="infoSection" style="display:none;">
     <h2>👤 SOBRE MÍ</h2>
-    <p> Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.<br />
-      Soy Betto Blaespp, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración 
-      es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. Creo arte original, cómics y comisiones 
-      que transforman ideas en imágenes que no se olvidan. Si buscas ilustración con carácter, energía y narrativa visual real… aquí empieza tu historia..</p>
-    <h3>📬 CONTACTO</h3>
-    <p>Email: <a href="mailto:bblaespp@gmail.com">bblaespp@gmail.com</a></p>
-    <p>Instagram: <a href="https://instagram.com/BBLAESPP" target="_blank">@BBLAESPP</a></p>
-  </article>
+    <p>Ilustrador digital enfocado en narrativa visual.</p>
+    <p>Contacto: <a href="mailto:bblaespp@gmail.com" style="color:#ff4b2b;">bblaespp@gmail.com</a></p>
+  </div>
 
   <div id="ageCheck" style="display:none;">
     <h2>🔞 Contenido Adulto</h2>
-    <p>Debes ser mayor de 18 años para ver esta sección.</p>
+    <p>Debes ser mayor de 18 años.</p>
     <button onclick="enterNSFW()" style="padding:10px 20px; background:#ff4b2b; border:none; color:white; border-radius:10px; cursor:pointer;">Soy mayor de 18</button>
   </div>
 </section>
 
-<footer>© 2026 · Betto Blaespp</footer>
-
-<div class="modal" id="modal">
-  <span class="close-btn" onclick="closeModal()">&times;</span>
-  <img id="modalImg" src="" />
+<div class="modal" id="modal" onclick="this.classList.remove('active')">
+  <img id="modalImg" src="">
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  // Importamos 'remove' para poder borrar datos
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getDatabase, ref, push, onValue, runTransaction, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
@@ -172,64 +114,72 @@
     COMICS: ["COMICS/3.png", "COMICS/4.png", "COMICS/PAG1.png", "COMICS/PAG2.png", "COMICS/PAG3.png", "COMICS/PAG4.png", "COMICS/PAG5.png"],
   };
 
-  const sanitizeKey = (path) => path.replace(/[.#$[\]]/g, "_");
+  const sanitize = (path) => path.replace(/[.#$[\]]/g, "_");
 
-  window.loadImages = function(category, e) {
+  // Función para borrar comentario
+  window.deleteComment = (imgId, commentKey) => {
+    if(confirm("¿Seguro que quieres borrar este comentario?")) {
+      const itemRef = ref(db, `comments/${imgId}/${commentKey}`);
+      remove(itemRef);
+    }
+  };
+
+  window.loadImages = (category, e) => {
     if (e) {
       document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
     }
+    document.getElementById("gallery").style.display = "grid";
     document.getElementById("infoSection").style.display = "none";
     document.getElementById("ageCheck").style.display = "none";
+    
     const gallery = document.getElementById("gallery");
-    gallery.style.display = "grid";
     gallery.innerHTML = "";
 
     (images[category] || []).forEach(src => {
-      const imgId = sanitizeKey(src);
-      const container = document.createElement("div");
-      container.className = "image-container";
+      const id = sanitize(src);
+      const card = document.createElement("div");
+      card.className = "image-container";
       
-      const img = document.createElement("img");
-      img.src = src;
-      img.onclick = () => {
-        document.getElementById("modalImg").src = src;
-        document.getElementById("modal").classList.add("active");
-      };
+      card.innerHTML = `
+        <img src="${src}" onclick="document.getElementById('modalImg').src='${src}'; document.getElementById('modal').classList.add('active')">
+        <button class="like-btn" id="like-${id}">❤️ ...</button>
+        <div class="comment-list" id="list-${id}"></div>
+        <input type="text" class="comment-input" placeholder="Escribir comentario..." id="input-${id}">
+      `;
+      gallery.appendChild(card);
 
-      const likeBtn = document.createElement("button");
-      likeBtn.className = "like-btn";
-      const likeRef = ref(db, `likes/${imgId}`);
-      onValue(likeRef, (snap) => { likeBtn.textContent = `❤️ Me gusta (${snap.val() || 0})`; });
-      likeBtn.onclick = () => { runTransaction(likeRef, (count) => (count || 0) + 1); };
+      const likeRef = ref(db, `likes/${id}`);
+      onValue(likeRef, (s) => { document.getElementById(`like-${id}`).textContent = `❤️ Me gusta (${s.val() || 0})`; });
+      document.getElementById(`like-${id}`).onclick = () => { runTransaction(likeRef, (v) => (v || 0) + 1); };
 
-      const commSection = document.createElement("div");
-      commSection.className = "comment-section";
-      const commList = document.createElement("div");
-      commList.className = "comment-list";
-      const commRef = ref(db, `comments/${imgId}`);
-      onValue(commRef, (snap) => {
-        commList.innerHTML = "";
-        if (snap.exists()) {
-          Object.values(snap.val()).forEach(t => {
-            const p = document.createElement("p"); p.textContent = t; commList.appendChild(p);
+      const commRef = ref(db, `comments/${id}`);
+      onValue(commRef, (s) => {
+        const list = document.getElementById(`list-${id}`);
+        list.innerHTML = "";
+        if (s.exists()) {
+          // Usamos forEach para obtener la llave (key) de cada comentario
+          s.forEach((childSnapshot) => {
+            const commentText = childSnapshot.val();
+            const commentKey = childSnapshot.key;
+            
+            const item = document.createElement("div");
+            item.className = "comment-item";
+            item.innerHTML = `
+              <span>${commentText}</span>
+              <button class="del-btn" onclick="deleteComment('${id}', '${commentKey}')" title="Borrar">🗑️</button>
+            `;
+            list.appendChild(item);
           });
         }
       });
 
-      const input = document.createElement("input");
-      input.className = "comment-input";
-      input.placeholder = "Comentar...";
-      input.onkeydown = (ev) => {
-        if (ev.key === "Enter" && input.value.trim()) {
-          push(commRef, input.value.trim());
-          input.value = "";
+      document.getElementById(`input-${id}`).onkeydown = (ev) => {
+        if (ev.key === "Enter" && ev.target.value.trim()) {
+          push(commRef, ev.target.value.trim());
+          ev.target.value = "";
         }
       };
-
-      commSection.append(commList, input);
-      container.append(img, likeBtn, commSection);
-      gallery.appendChild(container);
     });
   };
 
@@ -249,13 +199,9 @@
     document.getElementById("ageCheck").style.display = "block";
   };
 
-  window.enterNSFW = () => { window.loadImages('nsfw', null); };
-  window.closeModal = () => { document.getElementById("modal").classList.remove("active"); };
+  window.enterNSFW = () => loadImages('nsfw', null);
 
-  // Inicio
-  window.loadImages('ILUSTRACION', null);
+  loadImages('ILUSTRACION', null);
 </script>
-
 </body>
 </html>
-
