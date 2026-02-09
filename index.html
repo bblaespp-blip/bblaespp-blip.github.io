@@ -81,6 +81,7 @@
       font-weight: 700; 
       transition: 0.3s; 
     }
+    .like-btn:disabled { background: #444; cursor: default; opacity: 0.7; }
     
     .comment-section { border-top: 1px solid #444; padding-top: 10px; }
     .comment-list { max-height: 120px; overflow-y: auto; font-size: 14px; margin-bottom: 8px; }
@@ -104,7 +105,6 @@
       color: #eee; 
     }
 
-    /* SECCIÓN CONTACTO (Mantenida como pediste) */
     #infoSection { background: #181818; padding: 28px 30px; border-radius: 20px; font-size: 1.15rem; line-height: 1.7; }
     #infoSection h2, #infoSection h3 { color: #ff4b2b; margin-top: 10px; }
     #infoSection ul { list-style: none; padding-left: 0; margin-top: 15px; }
@@ -175,9 +175,8 @@
 </div>
 
 <script type="module">
-  // --- FIREBASE CONFIG ---
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getDatabase, ref, push, onValue, runTransaction, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+  import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
@@ -192,7 +191,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  // --- ID ÚNICO DE USUARIO ---
   if (!localStorage.getItem('my_author_id')) {
     localStorage.setItem('my_author_id', 'user_' + Math.random().toString(36).substr(2, 9));
   }
@@ -213,38 +211,46 @@
       document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
     }
-    document.getElementById("gallery").style.display = "grid";
+    const gallery = document.getElementById("gallery");
+    gallery.style.display = "grid";
     document.getElementById("infoSection").style.display = "none";
     document.getElementById("ageCheck").style.display = "none";
-    
-    const gallery = document.getElementById("gallery");
     gallery.innerHTML = "";
 
     (images[category] || []).forEach(src => {
       const id = sanitize(src);
       const container = document.createElement("div");
       container.className = "image-container";
-
       container.innerHTML = `
-        <img src="${src}" onclick="openModal('${src}')" onerror="this.src='https://via.placeholder.com/300?text=Error+al+cargar'">
+        <img src="${src}" onclick="openModal('${src}')">
         <button class="like-btn" id="like-${id}">❤️ Me gusta</button>
         <div class="comment-section">
           <div class="comment-list" id="list-${id}"></div>
-          <input type="text" class="comment-input" placeholder="Agregar comentario..." id="input-${id}">
+          <input type="text" class="comment-input" placeholder="Comentar..." id="input-${id}">
         </div>
       `;
       gallery.appendChild(container);
 
-      // Lógica de Likes (Firebase)
-      const likeRef = ref(db, `likes/${id}`);
-      onValue(likeRef, (s) => {
-        document.getElementById(`like-${id}`).textContent = `❤️ Me gusta (${s.val() || 0})`;
+      // Lógica de "Un Me Gusta por Usuario"
+      const votesRef = ref(db, `votes/${id}`);
+      onValue(votesRef, (snapshot) => {
+        const votes = snapshot.val() || {};
+        const count = Object.keys(votes).length;
+        const btn = document.getElementById(`like-${id}`);
+        btn.textContent = `❤️ Me gusta (${count})`;
+        
+        // Si el usuario ya votó, deshabilitamos el botón
+        if (votes[myId]) {
+          btn.disabled = true;
+          btn.textContent = `✅ Ya te gusta (${count})`;
+        }
       });
+
       document.getElementById(`like-${id}`).onclick = () => {
-        runTransaction(likeRef, (count) => (count || 0) + 1);
+        set(ref(db, `votes/${id}/${myId}`), true);
       };
 
-      // Lógica de Comentarios (Firebase)
+      // Comentarios (Igual que antes)
       const commRef = ref(db, `comments/${id}`);
       onValue(commRef, (snapshot) => {
         const list = document.getElementById(`list-${id}`);
@@ -253,23 +259,14 @@
           const data = child.val();
           const item = document.createElement("div");
           item.className = "comment-item";
-          // Solo mostramos el botón de borrar si el ID del comentario coincide con el del navegador actual
-          const canDelete = data.authorId === myId;
-          item.innerHTML = `
-            <span>${data.text}</span>
-            ${canDelete ? `<button class="del-btn" onclick="deleteComment('${id}', '${child.key}')">🗑️</button>` : ''}
-          `;
+          item.innerHTML = `<span>${data.text}</span>${data.authorId === myId ? `<button class="del-btn" onclick="deleteComment('${id}', '${child.key}')">🗑️</button>` : ''}`;
           list.appendChild(item);
         });
       });
 
-      // Enviar Comentario
       document.getElementById(`input-${id}`).onkeydown = (evt) => {
-        if (evt.key === "Enter" && evt.target.value.trim() !== "") {
-          push(commRef, {
-            text: evt.target.value.trim(),
-            authorId: myId // Guardamos el ID secreto del autor
-          });
+        if (evt.key === "Enter" && evt.target.value.trim()) {
+          push(commRef, { text: evt.target.value.trim(), authorId: myId });
           evt.target.value = "";
         }
       };
@@ -277,9 +274,7 @@
   };
 
   window.deleteComment = (imgId, commentKey) => {
-    if(confirm("¿Quieres borrar tu comentario?")) {
-      remove(ref(db, `comments/${imgId}/${commentKey}`));
-    }
+    if(confirm("¿Borrar tu comentario?")) remove(ref(db, `comments/${imgId}/${commentKey}`));
   };
 
   window.showInfo = (e) => {
@@ -304,17 +299,13 @@
   };
 
   window.openModal = (src) => {
-    const modal = document.getElementById("modal");
     document.getElementById("modalImg").src = src;
-    modal.classList.add("active");
+    document.getElementById("modal").classList.add("active");
   };
 
-  window.closeModal = () => {
-    document.getElementById("modal").classList.remove("active");
-  };
+  window.closeModal = () => document.getElementById("modal").classList.remove("active");
 
   window.onload = () => { loadImages('ILUSTRACION', null); };
 </script>
-
 </body>
 </html>
