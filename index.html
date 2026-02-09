@@ -15,14 +15,19 @@ header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
 .filters button.active{background:#ff4b2b;}
 
 #gallery{display:grid;gap:20px;padding:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));max-width:1200px;margin:auto;}
-.image-container{background:#1a1a1a;padding:15px;border-radius:12px;border:1px solid #333; animation:fadeIn 0.5s ease;}
+.image-container{background:#1a1a1a;padding:15px;border-radius:12px;border:1px solid #333;animation:fadeIn 0.5s ease;}
 .image-container img{width:100%;border-radius:8px;cursor:pointer;height:300px;object-fit:cover;}
-.like-btn{background:#ff4b2b;border:none;color:white;padding:10px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;}
+.like-btn{background:#ff4b2b;border:none;color:white;padding:10px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;transition:0.2s;}
+.like-btn:hover{opacity:0.9;}
 
+/* Comentarios */
 .comment-list{font-size:13px;color:#ccc;max-height:120px;overflow-y:auto;margin-bottom:8px;}
-.comment-item{background:#222;margin:4px 0;padding:8px;border-radius:5px;display:flex;flex-direction:column;gap:2px;}
+.comment-item{background:#222;margin:4px 0;padding:8px;border-radius:5px;display:flex;justify-content:space-between;align-items:center;}
+.comment-item span{flex:1;margin-left:5px;}
 .comment-item b{color:#ff4b2b;font-size:11px;}
 .comment-input{width:100%;padding:10px;background:#000;border:1px solid #444;color:#fff;border-radius:5px;}
+.delete-btn{background:#ff4b2b;color:#fff;border:none;padding:3px 6px;border-radius:4px;margin-left:5px;cursor:pointer;font-size:11px;transition:0.2s;}
+.delete-btn:hover{opacity:0.8;}
 
 /* SECCIONES */
 #infoSection,#chatSection{background:#1a1a1a;padding:30px;margin:20px auto;border-radius:15px;text-align:center;max-width:600px;border:1px solid #ff4b2b;display:none;}
@@ -48,7 +53,7 @@ header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
 <img src="curriculum.jpg" alt="BETTO">
 <h1>BETTO BLAESPP</h1>
 <p>Artista Visual</p>
-<p>ILUSTRACIÓN · CÓMIC · WEB MANGA</p>
+<p>ILUSTRACIÓN · CÓMIC · WEB MANGA · COMISIONES</p>
 </header>
 
 <div class="filters">
@@ -66,10 +71,19 @@ header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
 <div id="infoSection">
 <h2>👤 SOBRE MÍ</h2>
 <p><strong>BETTO BLAESPP</strong></p>
-<p>ILUSTRADOR DIGITAL · CÓMIC · MANGA</p>
+<p>ILUSTRADOR DIGITAL · CÓMIC · MANGA · COMISIONES</p>
+    <p>
+      Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.<br />
+      Soy Betto, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración 
+      es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. Creo arte original, cómics y comisiones 
+      que transforman ideas en imágenes que no se olvidan. Si buscas ilustración con carácter, energía y narrativa visual real… aquí empieza tu historia.
+    </p>
 <h3>📬 CONTACTO</h3>
-<p>EMAIL: <strong>bblaespp@gmail.com</strong></p>
-<p>📸 Instagram: <a href="https://instagram.com/BBLAESPP" target="_blank" style="color:#ff4b2b">@BBLAESPP</a></p>
+<ul>
+      <li>📧 Email: <a href="mailto:bblaespp@gmail.com" target="_blank" rel="noopener noreferrer">bblaespp@gmail.com</a></li>
+      <li>📸 Instagram: <a href="https://instagram.com/BBLAESPP" target="_blank" rel="noopener noreferrer">@BBLAESPP</a></li>
+      <li>📱 WhatsApp: <a href="https://wa.me/3152395773" target="_blank" rel="noopener noreferrer">3152395773</a></li>
+    </ul>
 </div>
 
 <div id="chatSection">
@@ -85,7 +99,7 @@ header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, push, onValue, runTransaction, get, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, push, onValue, runTransaction, get, serverTimestamp, query, limitToLast, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
@@ -169,12 +183,25 @@ if(!list) return;
 list.innerHTML="";
 snap.forEach(child=>{
 const d=child.val();
+const key=child.key;
 const div=document.createElement("div");
 div.className="comment-item";
 div.innerHTML=`<b>${d.user}:</b> <span>${d.text}</span>`;
+
+// BOTÓN BORRAR SOLO SI ES TU COMENTARIO
+if(d.authorToken===myToken){
+const btn=document.createElement("button");
+btn.className="delete-btn";
+btn.textContent="✖";
+btn.onclick=()=>remove(ref(db,`comments/${id}/${key}`));
+div.appendChild(btn);
+}
+
 list.appendChild(div);
 });
 });
+
+// NUEVO COMENTARIO
 document.getElementById(`input-${id}`).onkeydown=(ev)=>{
 if(ev.key==="Enter" && ev.target.value.trim()){
 push(ref(db,`comments/${id}`),{
