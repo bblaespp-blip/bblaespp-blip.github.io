@@ -36,7 +36,7 @@ header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,
 .chat-main{display:flex;flex-direction:column;background:#050505}
 .chat-box{flex:1;overflow:auto;padding:15px}
 
-.msg{display:flex;gap:10px;margin-bottom:10px}
+.msg{display:flex;gap:10px;margin-bottom:10px;cursor:pointer}
 .msg img{width:40px;height:40px;border-radius:50%}
 .msg-content{background:#111;padding:10px 14px;border-radius:15px;max-width:70%}
 .msg-name{font-weight:bold;font-size:13px}
@@ -71,6 +71,35 @@ header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,
 /* CONTACTO */
 #contactSection{display:none;max-width:900px;margin:50px auto;padding:25px;background:#141414;border-radius:20px;border:2px solid #ff4b2b;text-align:center}
 #contactSection h2{color:#ff4b2b}
+
+/* NOTIFICACIONES */
+#notifyBell{
+position:fixed;top:20px;right:20px;
+background:#111;border:2px solid #ff4b2b;
+width:52px;height:52px;border-radius:50%;
+display:none;align-items:center;justify-content:center;
+font-size:24px;cursor:pointer;z-index:9999;
+}
+
+#notifyCount{
+position:absolute;top:-6px;right:-6px;
+background:red;color:white;font-size:11px;
+padding:3px 6px;border-radius:50%;
+display:none;
+}
+
+#notifyPanel{
+position:fixed;top:80px;right:20px;
+width:300px;max-height:400px;
+background:#111;border:2px solid #ff4b2b;
+border-radius:15px;overflow:auto;
+display:none;z-index:9999;
+}
+
+.notify-item{
+padding:10px;border-bottom:1px solid #222;font-size:13px
+}
+.notify-item small{color:#777}
 </style>
 </head>
 
@@ -118,12 +147,17 @@ header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,
 
 <section id="contactSection">
 <h2>📩 CONTACTO</h2>
-<p>🎨 Ilustración · Cómic · Manga</p>
 <p><b>Instagram:</b> @betto.blaespp</p>
 <p><b>Email:</b> contacto@tudominio.com</p>
 <p><b>WhatsApp:</b> +57 300 000 0000</p>
-<p style="margin-top:15px;color:#aaa">Disponible para comisiones y proyectos.</p>
 </section>
+
+<div id="notifyBell" onclick="toggleNotify()">
+🔔
+<div id="notifyCount">0</div>
+</div>
+
+<div id="notifyPanel"></div>
 
 <div class="profile-card" id="profileCard">
 <img id="pAvatar">
@@ -147,9 +181,7 @@ apiKey:"TU_API_KEY",
 authDomain:"TU_DOMINIO",
 databaseURL:"TU_DATABASE",
 projectId:"TU_PROJECT",
-storageBucket:"",
-messagingSenderId:"",
-appId:""
+appId:"TU_APPID"
 };
 
 initializeApp(firebaseConfig);
@@ -157,6 +189,7 @@ const db=getDatabase();
 
 let USER=null;
 
+// GALERIAS
 const images={
 ILUSTRACION:["ILUSTRACION/1.png"],
 SFW:["SFW/1.png"],
@@ -172,6 +205,7 @@ gallery.style.display="grid";
 chatSection.style.display="none";
 loginPanel.style.display="none";
 contactSection.style.display="none";
+notifyBell.style.display="none";
 loadImages(cat);
 }
 
@@ -190,6 +224,7 @@ gallery.style.display="none";
 chatSection.style.display="none";
 loginPanel.style.display="none";
 contactSection.style.display="block";
+notifyBell.style.display="none";
 }
 
 window.askNSFW=function(e){
@@ -227,8 +262,10 @@ set(userRef,{pass:p,xp:0,rank:"user",avatar:"https://i.pravatar.cc/150?u="+u});
 USER=u;
 loginPanel.style.display="none";
 chatSection.style.display="block";
+notifyBell.style.display="flex";
 loadChat();
 loadRanking();
+loadNotifications();
 },{onlyOnce:true});
 }
 
@@ -258,14 +295,24 @@ const userRef=ref(db,"users/"+USER);
 
 onValue(userRef,s=>{
 const u=s.val();
+const oldLevel = Math.floor(Math.sqrt((u.xp||0)/50))+1;
+
 push(ref(db,"chat"),{
-user:USER,
-text:chatMsg.value,
-time:Date.now(),
-rank:u.rank,
-avatar:u.avatar
+user:USER,text:chatMsg.value,time:Date.now(),
+rank:u.rank,avatar:u.avatar
 });
-update(userRef,{xp:(u.xp||0)+5});
+
+const newXP=(u.xp||0)+5;
+const newLevel = Math.floor(Math.sqrt(newXP/50))+1;
+
+update(userRef,{xp:newXP});
+
+sendNotify(USER,"💬 Mensaje enviado");
+
+if(newLevel>oldLevel){
+sendNotify(USER,"⭐ Subiste al nivel "+newLevel+"!");
+}
+
 chatMsg.value="";
 },{onlyOnce:true});
 }
@@ -310,6 +357,33 @@ if(xp>=200)pBadges.innerHTML+=`<span class="badge plata">ACTIVO</span>`;
 if(xp>=600)pBadges.innerHTML+=`<span class="badge oro">PRO</span>`;
 if(xp>=1500)pBadges.innerHTML+=`<span class="badge legend">LEGEND</span>`;
 },{onlyOnce:true});
+}
+
+// NOTIFICACIONES
+function sendNotify(user,text){
+push(ref(db,"notifications/"+user),{text,time:Date.now(),read:false});
+}
+
+window.toggleNotify=function(){
+notifyPanel.style.display = notifyPanel.style.display=="block"?"none":"block";
+}
+
+function loadNotifications(){
+const nRef=ref(db,"notifications/"+USER);
+onValue(nRef,snap=>{
+let unread=0;
+notifyPanel.innerHTML="";
+snap.forEach(n=>{
+const d=n.val();
+if(!d.read) unread++;
+notifyPanel.innerHTML=`
+<div class="notify-item">${d.text}<br>
+<small>${new Date(d.time).toLocaleString()}</small></div>`
++ notifyPanel.innerHTML;
+});
+notifyCount.textContent=unread;
+notifyCount.style.display=unread?"block":"none";
+});
 }
 
 showGallery('ILUSTRACION',{target:document.querySelector('.filters button')});
