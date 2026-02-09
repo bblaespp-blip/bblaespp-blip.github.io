@@ -3,103 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BETTO BLAESPP — PORTAFOLIO PRO</title>
+<title>BETTO BLAESPP - PORTAFOLIO</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0f0f0f;color:#eee;font-family:sans-serif}
+*{box-sizing:border-box;}
+body{margin:0;background:#0f0f0f;color:#eee;font-family:sans-serif;}
+header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,#ff4b2b);}
 
-header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,#ff4b2b)}
+.filters{
+text-align:center;
+padding:10px;
+position:sticky;
+top:0;
+background:#0f0f0f;
+z-index:99;
+}
 
-.filters{text-align:center;padding:10px;position:sticky;top:0;background:#0f0f0f;z-index:99}
-.filters button{border:2px solid #ff4b2b;background:none;color:white;padding:10px 18px;margin:4px;border-radius:30px;font-weight:bold;cursor:pointer}
-.filters button.active{background:#ff4b2b;color:#111}
+.filters button{
+border:2px solid #ff4b2b;
+background:none;
+color:#fff;
+padding:10px 20px;
+margin:5px;
+border-radius:30px;
+font-weight:bold;
+cursor:pointer;
+}
 
-#gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;padding:20px;max-width:1300px;margin:auto}
+.filters button.active{
+background:#ff4b2b;
+color:#111;
+}
 
-.image-container{background:#1a1a1a;padding:12px;border-radius:12px;border:1px solid #333}
-.image-container img{width:100%;border-radius:8px;cursor:pointer}
+section{
+max-width:1300px;
+margin:auto;
+padding:20px;
+display:none;
+}
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center}
-.modal.active{display:flex}
-.modal img{max-width:90%;max-height:90%;border-radius:10px}
+section.active{display:block;}
+
+#gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+}
+
+.image-container{
+background:#1a1a1a;
+padding:12px;
+border-radius:12px;
+border:1px solid #333;
+}
+
+.image-container img{
+width:100%;
+border-radius:8px;
+cursor:pointer;
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.9);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.modal.active{display:flex;}
+
+.modal img{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+}
 
 /* CHAT */
-#chatSection{display:none;max-width:1100px;margin:40px auto;background:#0b0b0b;border-radius:20px;overflow:hidden;border:2px solid #ff4b2b}
-.chat-layout{display:grid;grid-template-columns:260px 1fr;height:600px}
 
-.chat-users{background:#0f0f0f;border-right:1px solid #222;padding:15px;overflow:auto}
-.chat-users h3{text-align:center;color:#ff4b2b;margin-top:0}
+#chatBox{
+height:320px;
+overflow:auto;
+background:#000;
+padding:12px;
+border-radius:10px;
+margin-bottom:10px;
+border:1px solid #333;
+}
 
-.user-card{display:flex;gap:10px;align-items:center;margin-bottom:6px;padding:6px;border-radius:10px;background:#151515}
+.chat-msg span{color:#ff4b2b;font-weight:bold;}
 
-.chat-main{display:flex;flex-direction:column;background:#050505}
-.chat-box{flex:1;overflow:auto;padding:15px}
+.chat-controls{
+display:flex;
+gap:8px;
+}
 
-.msg{display:flex;gap:10px;margin-bottom:10px;cursor:pointer}
-.msg img{width:40px;height:40px;border-radius:50%}
-.msg-content{background:#111;padding:10px 14px;border-radius:15px;max-width:70%}
-.msg-name{font-weight:bold;font-size:13px}
-.msg-text{font-size:14px}
-.msg-time{font-size:11px;color:#777}
+.chat-controls input{
+flex:1;
+padding:10px;
+background:#111;
+border:1px solid #333;
+color:white;
+border-radius:8px;
+}
 
-.chat-input{display:flex;padding:10px;gap:10px;background:#111;border-top:1px solid #222}
-.chat-input input{flex:1;padding:12px;border-radius:10px;border:none;background:#050505;color:white}
-.chat-input button{background:#ff4b2b;border:none;padding:12px 18px;border-radius:10px;font-weight:bold;cursor:pointer}
-
-.rank.master{color:#ff4b2b}
-.rank.pro{color:#00bfff}
-.rank.user{color:#aaa}
-
-/* LOGIN */
-#loginPanel{display:none;max-width:400px;margin:80px auto;padding:25px;background:#111;border-radius:20px;border:2px solid #ff4b2b}
-#loginPanel h2{text-align:center;color:#ff4b2b}
-#loginPanel input,#loginPanel button{width:100%;padding:12px;border-radius:10px;border:none;margin:8px 0}
-
-/* PERFIL */
-.profile-card{position:fixed;right:20px;bottom:20px;width:260px;background:#111;border:2px solid #ff4b2b;border-radius:18px;padding:15px;z-index:999;display:none}
-.profile-card img{width:70px;height:70px;border-radius:50%;display:block;margin:auto;border:3px solid #ff4b2b}
-.profile-card h3{text-align:center;margin:10px 0 0}
-.profile-card p{text-align:center;margin:4px 0;color:#aaa;font-size:13px}
-
-.badge{display:inline-block;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:bold;margin:2px}
-.badge.bronce{background:#cd7f32}
-.badge.plata{background:#c0c0c0;color:black}
-.badge.oro{background:#ffd700;color:black}
-.badge.legend{background:linear-gradient(45deg,#ff4b2b,#ff00ff)}
-
-/* CONTACTO */
-#contactSection{display:none;max-width:900px;margin:50px auto;padding:25px;background:#141414;border-radius:20px;border:2px solid #ff4b2b;text-align:center}
-#contactSection h2{color:#ff4b2b}
+.chat-controls button{
+background:#ff4b2b;
+border:none;
+color:white;
+padding:10px 18px;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
 
 /* NOTIFICACIONES */
+
 #notifyBell{
-position:fixed;top:20px;right:20px;
-background:#111;border:2px solid #ff4b2b;
-width:52px;height:52px;border-radius:50%;
-display:none;align-items:center;justify-content:center;
-font-size:24px;cursor:pointer;z-index:9999;
+position:fixed;
+top:20px;
+right:20px;
+background:#111;
+border:2px solid #ff4b2b;
+width:52px;
+height:52px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+z-index:9999;
 }
 
 #notifyCount{
-position:absolute;top:-6px;right:-6px;
-background:red;color:white;font-size:11px;
-padding:3px 6px;border-radius:50%;
+position:absolute;
+top:-6px;
+right:-6px;
+background:red;
+color:white;
+font-size:11px;
+padding:3px 6px;
+border-radius:50%;
 display:none;
 }
 
 #notifyPanel{
-position:fixed;top:80px;right:20px;
-width:300px;max-height:400px;
-background:#111;border:2px solid #ff4b2b;
-border-radius:15px;overflow:auto;
-display:none;z-index:9999;
+position:fixed;
+top:80px;
+right:20px;
+width:300px;
+max-height:400px;
+background:#111;
+border:2px solid #ff4b2b;
+border-radius:15px;
+overflow:auto;
+display:none;
+z-index:9999;
 }
 
 .notify-item{
-padding:10px;border-bottom:1px solid #222;font-size:13px
+padding:10px;
+border-bottom:1px solid #222;
+font-size:13px;
 }
-.notify-item small{color:#777}
+
+/* CONTACTO */
+
+#contacto{
+text-align:center;
+font-size:18px;
+line-height:1.8;
+}
+
+#contacto a{
+color:#ff4b2b;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* RANKING */
+
+#rankingList div{
+padding:8px;
+border-bottom:1px solid #222;
+}
+
+.rank{color:#ff4b2b;font-weight:bold;}
+
 </style>
 </head>
 
@@ -107,50 +200,45 @@ padding:10px;border-bottom:1px solid #222;font-size:13px
 
 <header>
 <h1>BETTO BLAESPP</h1>
-<p>ILUSTRADOR · CÓMIC · MANGA — COMUNIDAD INTERACTIVA</p>
+<p>ILUSTRADOR DIGITAL · CÓMIC · MANGA</p>
 </header>
 
 <div class="filters">
-<button class="active" onclick="showGallery('ILUSTRACION',event)">ILUSTRACIÓN</button>
-<button onclick="showGallery('SFW',event)">SFW</button>
-<button onclick="askNSFW(event)">NSFW 🔞</button>
-<button onclick="showGallery('FONDOS',event)">FONDOS</button>
-<button onclick="showGallery('COMICS',event)">CÓMICS</button>
-<button onclick="showChat(event)">💬 CHAT ONLINE</button>
-<button onclick="showContact(event)">📩 CONTACTO</button>
+<button class="active" onclick="showSection('galeria')">ILUSTRACIÓN</button>
+<button onclick="showSection('chat')">CHAT ONLINE</button>
+<button onclick="showSection('ranking')">RANKING</button>
+<button onclick="askNSFW()">NSFW 🔞</button>
+<button onclick="showSection('contacto')">CONTACTO</button>
 </div>
 
+<section id="galeria" class="active">
 <div id="gallery"></div>
-
-<section id="loginPanel">
-<h2>🔥 ACCESO COMUNIDAD 🔥</h2>
-<input id="loginUser" placeholder="Usuario">
-<input id="loginPass" type="password" placeholder="Contraseña">
-<button onclick="login()">ENTRAR</button>
 </section>
 
-<section id="chatSection">
-<div class="chat-layout">
-<div class="chat-users">
-<h3>🏆 RANKING</h3>
-<div id="rankingList"></div>
-</div>
-<div class="chat-main">
-<div class="chat-box" id="chatBox"></div>
-<div class="chat-input">
+<section id="chat">
+<h2>💬 CHAT GLOBAL</h2>
+<div id="chatBox"></div>
+<div class="chat-controls">
+<input id="chatName" maxlength="16">
 <input id="chatMsg" placeholder="Mensaje...">
-<button onclick="sendMsg()">ENVIAR</button>
-</div>
-</div>
+<button onclick="sendMessage()">ENVIAR</button>
 </div>
 </section>
 
-<section id="contactSection">
-<h2>📩 CONTACTO</h2>
-<p><b>Instagram:</b> @betto.blaespp</p>
-<p><b>Email:</b> contacto@tudominio.com</p>
-<p><b>WhatsApp:</b> +57 300 000 0000</p>
+<section id="ranking">
+<h2>🏆 RANKING DE USUARIOS</h2>
+<div id="rankingList"></div>
 </section>
+
+<section id="contacto">
+<h2>📩 CONTACTO</h2>
+<p>Instagram: <a href="#">@bettoblaespp</a></p>
+<p>Email: contacto@bettoblaespp.com</p>
+</section>
+
+<div class="modal" id="modal" onclick="this.classList.remove('active')">
+<img id="modalImg">
+</div>
 
 <div id="notifyBell" onclick="toggleNotify()">
 🔔
@@ -159,234 +247,99 @@ padding:10px;border-bottom:1px solid #222;font-size:13px
 
 <div id="notifyPanel"></div>
 
-<div class="profile-card" id="profileCard">
-<img id="pAvatar">
-<h3 id="pName"></h3>
-<p>⭐ Nivel <span id="pLevel"></span></p>
-<p>XP: <span id="pXP"></span></p>
-<div id="pBadges"></div>
-</div>
-
-<div class="modal" id="modal" onclick="this.classList.remove('active')">
-<img id="modalImg">
-</div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, update } 
+import { getDatabase, ref, push, onValue, set, update, query, orderByChild, limitToLast } 
 from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig={
-apiKey:"TU_API_KEY",
-authDomain:"TU_DOMINIO",
-databaseURL:"TU_DATABASE",
-projectId:"TU_PROJECT",
-appId:"TU_APPID"
+apiKey:"AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
+authDomain:"base-de-datos-para-pagina.firebaseapp.com",
+databaseURL:"https://base-de-datos-para-pagina-default-rtdb.firebaseio.com",
+projectId:"base-de-datos-para-pagina",
+storageBucket:"base-de-datos-para-pagina.firebasestorage.app",
+messagingSenderId:"427794640215",
+appId:"1:427794640215:web:22ce4fa44954e572c3e212"
 };
 
-initializeApp(firebaseConfig);
-const db=getDatabase();
+const app=initializeApp(firebaseConfig);
+const db=getDatabase(app);
 
-let USER=null;
+if(!localStorage.getItem("user")){
+localStorage.setItem("user","USER#"+Math.floor(1000+Math.random()*9000));
+}
+const USER=localStorage.getItem("user");
+chatName.value=USER;
 
-// GALERIAS
+// SECCIONES
+window.showSection=function(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+event.target.classList.add("active");
+}
+
+// IMÁGENES
 const images={
-ILUSTRACION:["ILUSTRACION/1.png"],
-SFW:["SFW/1.png"],
-NSFW:["NSFW/1.png"],
-FONDOS:["FONDOS/X.png"],
-COMICS:["COMICS/1.png","COMICS/2.png"]
+ILUSTRACION:["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png"]
 };
 
-window.showGallery=function(cat,e){
-document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-e.target.classList.add('active');
-gallery.style.display="grid";
-chatSection.style.display="none";
-loginPanel.style.display="none";
-contactSection.style.display="none";
-notifyBell.style.display="none";
-loadImages(cat);
-}
-
-window.showChat=function(e){
-document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-e.target.classList.add('active');
-gallery.style.display="none";
-contactSection.style.display="none";
-loginPanel.style.display="block";
-}
-
-window.showContact=function(e){
-document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-e.target.classList.add('active');
-gallery.style.display="none";
-chatSection.style.display="none";
-loginPanel.style.display="none";
-contactSection.style.display="block";
-notifyBell.style.display="none";
-}
-
-window.askNSFW=function(e){
-if(confirm("Zona NSFW protegida 🔞 ¿Eres mayor de edad?")){
-showGallery('NSFW',e);
-}
-}
-
-function loadImages(cat){
+function loadImages(){
 gallery.innerHTML="";
-(images[cat]||[]).forEach(src=>{
-const div=document.createElement("div");
-div.className="image-container";
-div.innerHTML=`<img src="${src}" onclick="openModal('${src}')">`;
-gallery.appendChild(div);
+images.ILUSTRACION.forEach(src=>{
+gallery.innerHTML+=`
+<div class="image-container">
+<img src="${src}" onclick="openModal('${src}')">
+</div>`;
 });
 }
-
-window.openModal=src=>{
-modalImg.src=src;
-modal.classList.add("active");
-}
-
-// LOGIN
-window.login=function(){
-const u=loginUser.value.trim();
-const p=loginPass.value.trim();
-if(!u||!p)return alert("Completa los datos");
-
-const userRef=ref(db,"users/"+u);
-onValue(userRef,s=>{
-if(!s.exists()){
-set(userRef,{pass:p,xp:0,rank:"user",avatar:"https://i.pravatar.cc/150?u="+u});
-}
-USER=u;
-loginPanel.style.display="none";
-chatSection.style.display="block";
-notifyBell.style.display="flex";
-loadChat();
-loadRanking();
-loadNotifications();
-},{onlyOnce:true});
-}
+loadImages();
 
 // CHAT
-function loadChat(){
-onValue(ref(db,"chat"),snap=>{
+const chatRef=ref(db,"chat");
+
+window.sendMessage=function(){
+if(!chatMsg.value.trim())return;
+push(chatRef,{name:chatName.value,text:chatMsg.value,time:Date.now()});
+chatMsg.value="";
+}
+
+onValue(chatRef,snap=>{
 chatBox.innerHTML="";
-snap.forEach(m=>{
-const d=m.val();
-chatBox.innerHTML+=`
-<div class="msg" onclick="showProfile('${d.user}')">
-<img src="${d.avatar}">
-<div class="msg-content">
-<div class="msg-name"><span class="rank ${d.rank}">${d.rank.toUpperCase()}</span> ${d.user}</div>
-<div class="msg-text">${d.text}</div>
-<div class="msg-time">${new Date(d.time).toLocaleTimeString()}</div>
-</div>
-</div>`;
+snap.forEach(c=>{
+chatBox.innerHTML+=`<div class="chat-msg"><span>${c.val().name}:</span> ${c.val().text}</div>`;
 });
 chatBox.scrollTop=chatBox.scrollHeight;
 });
-}
-
-window.sendMsg=function(){
-if(!chatMsg.value.trim())return;
-const userRef=ref(db,"users/"+USER);
-
-onValue(userRef,s=>{
-const u=s.val();
-const oldLevel = Math.floor(Math.sqrt((u.xp||0)/50))+1;
-
-push(ref(db,"chat"),{
-user:USER,text:chatMsg.value,time:Date.now(),
-rank:u.rank,avatar:u.avatar
-});
-
-const newXP=(u.xp||0)+5;
-const newLevel = Math.floor(Math.sqrt(newXP/50))+1;
-
-update(userRef,{xp:newXP});
-
-sendNotify(USER,"💬 Mensaje enviado");
-
-if(newLevel>oldLevel){
-sendNotify(USER,"⭐ Subiste al nivel "+newLevel+"!");
-}
-
-chatMsg.value="";
-},{onlyOnce:true});
-}
 
 // RANKING
-function loadRanking(){
-onValue(ref(db,"users"),snap=>{
-let arr=[];
-snap.forEach(u=>arr.push({name:u.key,...u.val()}));
-arr.sort((a,b)=>(b.xp||0)-(a.xp||0));
+const usersRef=ref(db,"users");
 
+onValue(usersRef,snap=>{
 rankingList.innerHTML="";
-arr.slice(0,10).forEach((u,i)=>{
-rankingList.innerHTML+=`
-<div class="user-card">
-<img src="${u.avatar}">
-<div>
-<b>#${i+1} ${u.name}</b><br>
-⭐ ${u.xp||0}
-</div>
-</div>`;
+const arr=[];
+snap.forEach(u=>arr.push(u.val()));
+arr.sort((a,b)=>b.xp-a.xp);
+arr.forEach((u,i)=>{
+rankingList.innerHTML+=`<div>#${i+1} <b>${u.name}</b> — <span class="rank">${u.xp||0} XP</span></div>`;
 });
 });
-}
-
-// PERFIL
-window.showProfile=function(user){
-onValue(ref(db,"users/"+user),s=>{
-const u=s.val();
-const xp=u.xp||0;
-const lvl=Math.floor(Math.sqrt(xp/50))+1;
-
-profileCard.style.display="block";
-pAvatar.src=u.avatar;
-pName.textContent=user;
-pLevel.textContent=lvl;
-pXP.textContent=xp;
-
-pBadges.innerHTML="";
-if(xp>=50)pBadges.innerHTML+=`<span class="badge bronce">INICIADO</span>`;
-if(xp>=200)pBadges.innerHTML+=`<span class="badge plata">ACTIVO</span>`;
-if(xp>=600)pBadges.innerHTML+=`<span class="badge oro">PRO</span>`;
-if(xp>=1500)pBadges.innerHTML+=`<span class="badge legend">LEGEND</span>`;
-},{onlyOnce:true});
-}
 
 // NOTIFICACIONES
-function sendNotify(user,text){
-push(ref(db,"notifications/"+user),{text,time:Date.now(),read:false});
-}
-
 window.toggleNotify=function(){
 notifyPanel.style.display = notifyPanel.style.display=="block"?"none":"block";
 }
 
-function loadNotifications(){
-const nRef=ref(db,"notifications/"+USER);
-onValue(nRef,snap=>{
-let unread=0;
-notifyPanel.innerHTML="";
-snap.forEach(n=>{
-const d=n.val();
-if(!d.read) unread++;
-notifyPanel.innerHTML=`
-<div class="notify-item">${d.text}<br>
-<small>${new Date(d.time).toLocaleString()}</small></div>`
-+ notifyPanel.innerHTML;
-});
-notifyCount.textContent=unread;
-notifyCount.style.display=unread?"block":"none";
-});
+// NSFW
+window.askNSFW=function(){
+alert("Zona NSFW protegida 🔞 Acceso restringido");
 }
 
-showGallery('ILUSTRACION',{target:document.querySelector('.filters button')});
+// MODAL
+window.openModal=function(src){
+modalImg.src=src;
+modal.classList.add("active");
+}
 </script>
 
 </body>
