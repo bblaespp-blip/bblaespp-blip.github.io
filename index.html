@@ -1,187 +1,228 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BETTO BLAESPP - Portafolio</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 0; background: #0f0f0f; font-family: sans-serif; color: #eee; }
-    header { background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; padding: 40px 20px; text-align: center; }
-    header img { max-width: 120px; border-radius: 15px; border: 2px solid #fff; margin-bottom: 10px; }
-    .filters { text-align: center; margin: 20px 0; position: sticky; top: 0; background: #0f0f0f; padding: 10px; z-index: 10; }
-    .filters button { background: transparent; border: 2px solid #ff4b2b; color: #eee; padding: 10px 18px; margin: 5px; border-radius: 25px; cursor: pointer; font-weight: bold; }
-    .filters button.active { background: #ff4b2b; color: #fff; }
-    #gallery { display: grid; gap: 20px; padding: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 1200px; margin: auto; }
-    .image-container { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
-    .image-container img { width: 100%; border-radius: 8px; cursor: pointer; display: block; }
-    .like-btn { background: #ff4b2b; border: none; color: white; padding: 10px; margin: 10px 0; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
-    .comment-list { font-size: 13px; color: #ccc; max-height: 120px; overflow-y: auto; margin-bottom: 10px; }
-    .comment-item { display: flex; justify-content: space-between; align-items: center; background: #222; margin: 4px 0; padding: 8px; border-radius: 5px; }
-    .del-btn { color: #ff416c; cursor: pointer; border: none; background: none; font-size: 16px; font-weight: bold; }
-    .comment-input { width: 100%; padding: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 5px; outline: none; }
-    #infoSection, #ageCheck { background: #1a1a1a; padding: 30px; margin: 20px auto; border-radius: 15px; text-align: center; max-width: 500px; border: 1px solid #ff4b2b; display: none; }
-    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .modal.active { display: flex; }
-    .modal img { max-width: 90%; max-height: 90%; border-radius: 10px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BETTO BLAESPP | Portafolio</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f0f0f;color:#eee;font-family:'Segoe UI',sans-serif}
+
+header{
+background:linear-gradient(135deg,#ff416c,#ff4b2b);
+padding:40px 20px;
+text-align:center
+}
+header img{max-width:120px;border-radius:15px;border:2px solid #fff;margin-bottom:10px}
+header h1{font-size:2.5em}
+header p{opacity:.9}
+
+.filters{
+position:sticky;top:0;background:#0f0f0f;
+display:flex;flex-wrap:wrap;justify-content:center;
+padding:12px;border-bottom:1px solid #222;z-index:10
+}
+.filters button{
+background:transparent;border:2px solid #ff4b2b;
+color:#eee;padding:10px 18px;margin:5px;
+border-radius:25px;font-weight:700;cursor:pointer;
+transition:.25s
+}
+.filters button:hover,
+.filters button.active{background:#ff4b2b;color:#fff}
+
+#gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;padding:25px;max-width:1200px;margin:auto
+}
+
+.image-container{
+background:#1a1a1a;padding:15px;border-radius:14px;
+border:1px solid #333;transition:.3s
+}
+.image-container:hover{transform:scale(1.02)}
+.image-container img{width:100%;border-radius:10px;cursor:pointer}
+
+.like-btn{
+width:100%;background:#ff4b2b;border:none;color:#fff;
+padding:10px;margin:10px 0;border-radius:8px;
+font-weight:bold;cursor:pointer
+}
+
+.comment-list{font-size:13px;color:#ccc;max-height:120px;overflow-y:auto;margin-bottom:8px}
+.comment-item{display:flex;justify-content:space-between;background:#222;padding:6px 8px;margin:4px 0;border-radius:6px}
+
+.del-btn{background:none;border:none;color:#ff4b2b;font-size:16px;cursor:pointer}
+
+.comment-input{
+width:100%;padding:8px;background:#000;border:1px solid #444;
+border-radius:6px;color:#fff
+}
+
+#infoSection,#ageCheck{
+display:none;background:#1a1a1a;
+padding:30px;margin:30px auto;border-radius:15px;
+text-align:center;max-width:500px;border:1px solid #ff4b2b
+}
+
+.modal{
+position:fixed;inset:0;
+background:rgba(0,0,0,.95);
+display:none;justify-content:center;align-items:center;
+z-index:999
+}
+.modal.active{display:flex}
+.modal img{max-width:95%;max-height:95%;border-radius:10px}
+</style>
 </head>
+
 <body>
 
 <header>
-  <img src="curriculum.jpg" alt="Betto" onerror="this.style.display='none'">
-  <h1>BETTO BLAESPP</h1>
-  <p>Portafolio de Ilustración</p>
+<img src="curriculum.jpg" onerror="this.style.display='none'">
+<h1>BETTO BLAESPP</h1>
+<p>Portafolio Profesional de Ilustración</p>
 </header>
 
 <div class="filters">
-  <button onclick="showInfo(event)">CONTACTO</button>
-  <button class="active" onclick="window.loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
-  <button onclick="window.loadImages('sfw', event)">SFW</button>
-  <button onclick="askNSFW(event)">NSFW 🔞</button>
-  <button onclick="window.loadImages('FONDOS', event)">FONDOS</button>
-  <button onclick="window.loadImages('COMICS', event)">CÓMICS</button>
+<button onclick="showInfo(event)">CONTACTO</button>
+<button class="active" onclick="loadImages('ILUSTRACION',event)">ILUSTRACIÓN</button>
+<button onclick="loadImages('sfw',event)">SFW</button>
+<button onclick="askNSFW(event)">NSFW 🔞</button>
+<button onclick="loadImages('FONDOS',event)">FONDOS</button>
+<button onclick="loadImages('COMICS',event)">CÓMICS</button>
 </div>
 
 <div id="gallery"></div>
 
 <div id="infoSection">
-  <h2>📬 CONTACTO</h2>
-  <p>Email: <strong>bblaespp@gmail.com</strong></p>
+<h2>📬 CONTACTO</h2>
+<p>Email: <strong>bblaespp@gmail.com</strong></p>
 </div>
 
 <div id="ageCheck">
-  <h2>🔞 CONTENIDO ADULTO</h2>
-  <button onclick="enterNSFW()" style="padding:10px 20px; background:#ff4b2b; border:none; color:white; border-radius:10px; cursor:pointer;">Entrar</button>
+<h2>🔞 CONTENIDO ADULTO</h2>
+<p>Debes confirmar que eres mayor de edad</p>
+<button onclick="enterNSFW()" class="like-btn">Entrar</button>
 </div>
 
 <div class="modal" id="modal" onclick="this.classList.remove('active')">
-  <img id="modalImg" src="">
+<img id="modalImg">
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-  import { getDatabase, ref, push, onValue, runTransaction, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, push, onValue, runTransaction, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
-    authDomain: "base-de-datos-para-pagina.firebaseapp.com",
-    databaseURL: "https://base-de-datos-para-pagina-default-rtdb.firebaseio.com",
-    projectId: "base-de-datos-para-pagina",
-    storageBucket: "base-de-datos-para-pagina.firebasestorage.app",
-    messagingSenderId: "427794640215",
-    appId: "1:427794640215:web:22ce4fa44954e572c3e212"
-  };
+const firebaseConfig = {
+apiKey: "AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
+authDomain: "base-de-datos-para-pagina.firebaseapp.com",
+databaseURL: "https://base-de-datos-para-pagina-default-rtdb.firebaseio.com",
+projectId: "base-de-datos-para-pagina",
+storageBucket: "base-de-datos-para-pagina.firebasestorage.app",
+messagingSenderId: "427794640215",
+appId: "1:427794640215:web:22ce4fa44954e572c3e212"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-  // Lista de imágenes manual (ajusta según tus carpetas en GitHub)
-  const images = {
-    ILUSTRACION: ["ILUSTRACION/1.png", "ILUSTRACION/2.png", "ILUSTRACION/3.png"],
-    sfw: ["sfw/1.png"],
-    nsfw: ["nsfw/1.png"],
-    FONDOS: ["FONDOS/X.png"],
-    COMICS: ["COMICS/3.png", "COMICS/4.png", "COMICS/PAG1.png", "COMICS/PAG2.png", "COMICS/PAG3.png", "COMICS/PAG4.png", "COMICS/PAG5.png"]
-  };
+const images={
+ILUSTRACION:["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png"],
+sfw:["sfw/1.png"],
+nsfw:["nsfw/1.png"],
+FONDOS:["FONDOS/X.png"],
+COMICS:["COMICS/3.png","COMICS/4.png","COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png"]
+};
 
-  // Crear ID único para el usuario si no existe
-  if (!localStorage.getItem('user_token')) {
-    localStorage.setItem('user_token', 'u_' + Math.random().toString(36).substr(2, 9));
-  }
-  const myToken = localStorage.getItem('user_token');
+if(!localStorage.getItem('user_token')){
+localStorage.setItem('user_token','u_'+Math.random().toString(36).substr(2,9));
+}
+const myToken=localStorage.getItem('user_token');
+const sanitize=p=>p.replace(/[.#$[\]]/g,"_");
 
-  const sanitize = (path) => path.replace(/[.#$[\]]/g, "_");
+window.deleteComment=(img,key)=>{
+if(confirm("¿Eliminar comentario?")){
+remove(ref(db,`comments/${img}/${key}`));
+}
+};
 
-  window.deleteComment = (imgId, commentKey) => {
-    if(confirm("¿Quieres borrar tu comentario?")) {
-      remove(ref(db, `comments/${imgId}/${commentKey}`));
-    }
-  };
+window.loadImages=(cat,e)=>{
+if(e){
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+e.target.classList.add('active');
+}
+gallery.innerHTML="";
+gallery.style.display="grid";
+infoSection.style.display="none";
+ageCheck.style.display="none";
 
-  window.loadImages = function(category, e) {
-    if (e) {
-      document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-    }
-    
-    const gallery = document.getElementById("gallery");
-    gallery.style.display = "grid";
-    document.getElementById("infoSection").style.display = "none";
-    document.getElementById("ageCheck").style.display = "none";
-    gallery.innerHTML = "";
+(images[cat]||[]).forEach(src=>{
+const id=sanitize(src);
+const card=document.createElement("div");
+card.className="image-container";
+card.innerHTML=`
+<img src="${src}" onclick="modalImg.src='${src}';modal.classList.add('active')">
+<button class="like-btn" id="like-${id}">❤️ Me gusta</button>
+<div class="comment-list" id="list-${id}"></div>
+<input class="comment-input" placeholder="Escribe y presiona Enter..." id="input-${id}">
+`;
+gallery.appendChild(card);
 
-    (images[category] || []).forEach(src => {
-      const id = sanitize(src);
-      const card = document.createElement("div");
-      card.className = "image-container";
-      card.innerHTML = `
-        <img src="${src}" onclick="document.getElementById('modalImg').src='${src}'; document.getElementById('modal').classList.add('active')">
-        <button class="like-btn" id="like-${id}">❤️ Me gusta</button>
-        <div class="comment-list" id="list-${id}"></div>
-        <input type="text" class="comment-input" placeholder="Escribe un comentario..." id="input-${id}">
-      `;
-      gallery.appendChild(card);
+onValue(ref(db,`likes/${id}`),(s)=>{
+document.getElementById(`like-${id}`).textContent=`❤️ Me gusta (${s.val()||0})`;
+});
 
-      // Sincronizar Likes
-      onValue(ref(db, `likes/${id}`), (s) => {
-        document.getElementById(`like-${id}`).textContent = `❤️ Me gusta (${s.val() || 0})`;
-      });
-      document.getElementById(`like-${id}`).onclick = () => {
-        runTransaction(ref(db, `likes/${id}`), (v) => (v || 0) + 1);
-      };
+document.getElementById(`like-${id}`).onclick=()=>{
+runTransaction(ref(db,`likes/${id}`),(v)=>(v||0)+1);
+};
 
-      // Sincronizar Comentarios
-      onValue(ref(db, `comments/${id}`), (snapshot) => {
-        const cList = document.getElementById(`list-${id}`);
-        if (!cList) return;
-        cList.innerHTML = "";
-        snapshot.forEach((child) => {
-          const data = child.val();
-          const isMine = data.authorToken === myToken; // Solo yo puedo borrarlo
-          const item = document.createElement("div");
-          item.className = "comment-item";
-          item.innerHTML = `
-            <span>${data.text}</span>
-            ${isMine ? `<button class="del-btn" onclick="deleteComment('${id}', '${child.key}')">🗑️</button>` : ''}
-          `;
-          cList.appendChild(item);
-        });
-      });
+onValue(ref(db,`comments/${id}`),(snap)=>{
+const list=document.getElementById(`list-${id}`);
+if(!list) return;
+list.innerHTML="";
+snap.forEach(c=>{
+const d=c.val();
+const mine=d.authorToken===myToken;
+list.innerHTML+=`
+<div class="comment-item">
+<span>${d.text}</span>
+${mine?`<button class="del-btn" onclick="deleteComment('${id}','${c.key}')">🗑</button>`:""}
+</div>`;
+});
+});
 
-      // Enviar Comentario
-      document.getElementById(`input-${id}`).onkeydown = (ev) => {
-        if (ev.key === "Enter" && ev.target.value.trim()) {
-          push(ref(db, `comments/${id}`), {
-            text: ev.target.value.trim(),
-            authorToken: myToken
-          });
-          ev.target.value = "";
-        }
-      };
-    });
-  };
+document.getElementById(`input-${id}`).onkeydown=(ev)=>{
+if(ev.key==="Enter" && ev.target.value.trim()){
+push(ref(db,`comments/${id}`),{text:ev.target.value.trim(),authorToken:myToken});
+ev.target.value="";
+}
+};
+});
+};
 
-  window.showInfo = (e) => {
-    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    document.getElementById("gallery").style.display = "none";
-    document.getElementById("ageCheck").style.display = "none";
-    document.getElementById("infoSection").style.display = "block";
-  };
+window.showInfo=(e)=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+e.target.classList.add('active');
+gallery.style.display="none";
+ageCheck.style.display="none";
+infoSection.style.display="block";
+};
 
-  window.askNSFW = (e) => {
-    document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    document.getElementById("gallery").style.display = "none";
-    document.getElementById("infoSection").style.display = "none";
-    document.getElementById("ageCheck").style.display = "block";
-  };
+window.askNSFW=(e)=>{
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+e.target.classList.add('active');
+gallery.style.display="none";
+infoSection.style.display="none";
+ageCheck.style.display="block";
+};
 
-  window.enterNSFW = () => window.loadImages('nsfw');
+window.enterNSFW=()=>loadImages('nsfw');
 
-  // Inicio automático
-  window.loadImages('ILUSTRACION');
+loadImages('ILUSTRACION');
 </script>
+
 </body>
 </html>
