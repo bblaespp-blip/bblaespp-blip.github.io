@@ -105,12 +105,12 @@
       color: #eee; 
     }
 
-    #infoSection { background: #181818; padding: 28px 30px; border-radius: 20px; font-size: 1.15rem; line-height: 1.7; }
+    #infoSection { background: #181818; padding: 28px 30px; border-radius: 20px; font-size: 1.15rem; line-height: 1.7; display: none; }
     #infoSection h2, #infoSection h3 { color: #ff4b2b; margin-top: 10px; }
     #infoSection ul { list-style: none; padding-left: 0; margin-top: 15px; }
     #infoSection ul li { margin-bottom: 8px; font-size: 1.1rem; }
 
-    #ageCheck { max-width: 380px; margin: 40px auto; background: #1a1a1a; border: 2px solid #ff4b2b; border-radius: 20px; padding: 40px 30px; text-align: center; }
+    #ageCheck { max-width: 380px; margin: 40px auto; background: #1a1a1a; border: 2px solid #ff4b2b; border-radius: 20px; padding: 40px 30px; text-align: center; display: none; }
     #ageCheck button { background: #ff4b2b; border: none; color: #111; font-weight: 700; padding: 12px 30px; border-radius: 15px; cursor: pointer; }
 
     footer { padding: 20px; font-size: 14px; color: #666; background: #000; text-align: center; }
@@ -144,7 +144,7 @@
 
   <div id="gallery"></div>
 
-  <article id="infoSection" style="display:none;">
+  <article id="infoSection">
     <h2>👤 SOBRE MÍ</h2>
     <p>
       Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.<br />
@@ -160,7 +160,7 @@
     </ul>
   </article>
 
-  <div id="ageCheck" style="display:none;">
+  <div id="ageCheck">
     <h2>🔞 Contenido para adultos</h2>
     <p>Debes ser mayor de 18 años.</p>
     <button type="button" onclick="enterNSFW()">Soy mayor de 18</button>
@@ -206,6 +206,7 @@
 
   const sanitize = (path) => path.replace(/[.#$[\]/g, "_");
 
+  // HACER LAS FUNCIONES GLOBALES PARA QUE LOS BOTONES LAS VEAN
   window.loadImages = function(category, e) {
     if (e) {
       document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
@@ -231,29 +232,24 @@
       `;
       gallery.appendChild(container);
 
-      // Lógica de "Un Me Gusta por Usuario"
-      const votesRef = ref(db, `votes/${id}`);
-      onValue(votesRef, (snapshot) => {
+      // Lógica de Likes (Un solo voto)
+      onValue(ref(db, `votes/${id}`), (snapshot) => {
         const votes = snapshot.val() || {};
         const count = Object.keys(votes).length;
         const btn = document.getElementById(`like-${id}`);
-        btn.textContent = `❤️ Me gusta (${count})`;
-        
-        // Si el usuario ya votó, deshabilitamos el botón
-        if (votes[myId]) {
-          btn.disabled = true;
-          btn.textContent = `✅ Ya te gusta (${count})`;
-        }
+        if(!btn) return;
+        btn.textContent = votes[myId] ? `✅ Ya te gusta (${count})` : `❤️ Me gusta (${count})`;
+        btn.disabled = !!votes[myId];
       });
 
       document.getElementById(`like-${id}`).onclick = () => {
         set(ref(db, `votes/${id}/${myId}`), true);
       };
 
-      // Comentarios (Igual que antes)
-      const commRef = ref(db, `comments/${id}`);
-      onValue(commRef, (snapshot) => {
+      // Comentarios
+      onValue(ref(db, `comments/${id}`), (snapshot) => {
         const list = document.getElementById(`list-${id}`);
+        if(!list) return;
         list.innerHTML = "";
         snapshot.forEach((child) => {
           const data = child.val();
@@ -266,7 +262,7 @@
 
       document.getElementById(`input-${id}`).onkeydown = (evt) => {
         if (evt.key === "Enter" && evt.target.value.trim()) {
-          push(commRef, { text: evt.target.value.trim(), authorId: myId });
+          push(ref(db, `comments/${id}`), { text: evt.target.value.trim(), authorId: myId });
           evt.target.value = "";
         }
       };
@@ -294,7 +290,6 @@
   };
 
   window.enterNSFW = () => {
-    document.getElementById("ageCheck").style.display = "none";
     window.loadImages('nsfw', null);
   };
 
@@ -305,7 +300,8 @@
 
   window.closeModal = () => document.getElementById("modal").classList.remove("active");
 
-  window.onload = () => { loadImages('ILUSTRACION', null); };
+  // Carga inicial al terminar de leer el script
+  window.loadImages('ILUSTRACION', null);
 </script>
 </body>
 </html>
