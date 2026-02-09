@@ -1,73 +1,136 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BETTO BLAESPP - PORTAFOLIO</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BETTO BLAESPP — PORTAFOLIO PRO</title>
 
 <style>
-*{box-sizing:border-box;}
-body{margin:0;background:#0f0f0f;font-family:sans-serif;color:#eee;}
-header{background:linear-gradient(135deg,#ff416c,#ff4b2b);padding:40px 20px;text-align:center;}
-header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
-.filters{text-align:center;margin:20px 0;position:sticky;top:0;background:#0f0f0f;padding:10px;z-index:10;}
-.filters button{background:transparent;border:2px solid #ff4b2b;color:#fff;padding:10px 18px;margin:5px;border-radius:25px;cursor:pointer;font-weight:bold;}
-.filters button.active{background:#ff4b2b;}
-#gallery{display:grid;gap:20px;padding:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));max-width:1200px;margin:auto;}
-.image-container{background:#1a1a1a;padding:15px;border-radius:12px;border:1px solid #333;}
-.image-container img{width:100%;border-radius:8px;cursor:pointer;}
-.like-btn{background:#ff4b2b;border:none;color:white;padding:10px;margin:10px 0;border-radius:6px;width:100%;font-weight:bold;cursor:pointer;}
-.comment-list{font-size:13px;color:#ccc;max-height:120px;overflow-y:auto;margin-bottom:8px;}
-.comment-item{background:#222;margin:4px 0;padding:8px;border-radius:5px;display:flex;justify-content:space-between;}
-.comment-input{width:100%;padding:10px;background:#000;border:1px solid #444;color:#fff;border-radius:5px;}
-#infoSection,#ageCheck{background:#1a1a1a;padding:30px;margin:20px auto;border-radius:15px;text-align:center;max-width:500px;border:1px solid #ff4b2b;display:none;}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;}
-.modal.active{display:flex;}
-.modal img{max-width:90%;max-height:90%;border-radius:10px;}
+*{box-sizing:border-box}
+body{margin:0;background:#0f0f0f;color:#eee;font-family:sans-serif}
+
+header{text-align:center;padding:40px;background:linear-gradient(135deg,#ff416c,#ff4b2b)}
+
+.filters{text-align:center;padding:10px;position:sticky;top:0;background:#0f0f0f;z-index:99}
+.filters button{border:2px solid #ff4b2b;background:none;color:white;padding:10px 18px;margin:4px;border-radius:30px;font-weight:bold;cursor:pointer}
+.filters button.active{background:#ff4b2b;color:#111}
+
+#gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;padding:20px;max-width:1300px;margin:auto}
+
+.image-container{background:#1a1a1a;padding:12px;border-radius:12px;border:1px solid #333}
+.image-container img{width:100%;border-radius:8px;cursor:pointer}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center}
+.modal.active{display:flex}
+.modal img{max-width:90%;max-height:90%;border-radius:10px}
+
+/* CHAT */
+#chatSection{display:none;max-width:1100px;margin:40px auto;background:#0b0b0b;border-radius:20px;overflow:hidden;border:2px solid #ff4b2b}
+.chat-layout{display:grid;grid-template-columns:260px 1fr;height:600px}
+
+.chat-users{background:#0f0f0f;border-right:1px solid #222;padding:15px;overflow:auto}
+.chat-users h3{text-align:center;color:#ff4b2b;margin-top:0}
+
+.user-card{display:flex;gap:10px;align-items:center;margin-bottom:6px;padding:6px;border-radius:10px;background:#151515}
+
+.chat-main{display:flex;flex-direction:column;background:#050505}
+.chat-box{flex:1;overflow:auto;padding:15px}
+
+.msg{display:flex;gap:10px;margin-bottom:10px}
+.msg img{width:40px;height:40px;border-radius:50%}
+.msg-content{background:#111;padding:10px 14px;border-radius:15px;max-width:70%}
+.msg-name{font-weight:bold;font-size:13px}
+.msg-text{font-size:14px}
+.msg-time{font-size:11px;color:#777}
+
+.chat-input{display:flex;padding:10px;gap:10px;background:#111;border-top:1px solid #222}
+.chat-input input{flex:1;padding:12px;border-radius:10px;border:none;background:#050505;color:white}
+.chat-input button{background:#ff4b2b;border:none;padding:12px 18px;border-radius:10px;font-weight:bold;cursor:pointer}
+
+.rank.master{color:#ff4b2b}
+.rank.pro{color:#00bfff}
+.rank.user{color:#aaa}
+
+/* LOGIN */
+#loginPanel{display:none;max-width:400px;margin:80px auto;padding:25px;background:#111;border-radius:20px;border:2px solid #ff4b2b}
+#loginPanel h2{text-align:center;color:#ff4b2b}
+#loginPanel input,#loginPanel button{width:100%;padding:12px;border-radius:10px;border:none;margin:8px 0}
+
+/* PERFIL */
+.profile-card{position:fixed;right:20px;bottom:20px;width:260px;background:#111;border:2px solid #ff4b2b;border-radius:18px;padding:15px;z-index:999;display:none}
+.profile-card img{width:70px;height:70px;border-radius:50%;display:block;margin:auto;border:3px solid #ff4b2b}
+.profile-card h3{text-align:center;margin:10px 0 0}
+.profile-card p{text-align:center;margin:4px 0;color:#aaa;font-size:13px}
+
+.badge{display:inline-block;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:bold;margin:2px}
+.badge.bronce{background:#cd7f32}
+.badge.plata{background:#c0c0c0;color:black}
+.badge.oro{background:#ffd700;color:black}
+.badge.legend{background:linear-gradient(45deg,#ff4b2b,#ff00ff)}
+
+/* CONTACTO */
+#contactSection{display:none;max-width:900px;margin:50px auto;padding:25px;background:#141414;border-radius:20px;border:2px solid #ff4b2b;text-align:center}
+#contactSection h2{color:#ff4b2b}
 </style>
 </head>
 
 <body>
 
 <header>
-<img src="curriculum.jpg" alt="BETTO">
 <h1>BETTO BLAESPP</h1>
-<p>Artista Visual</p>
-<p>ILUSTRACIÓN · CÓMIC · WEB MANGA · COMISIONES ABIERTAS</p>
+<p>ILUSTRADOR · CÓMIC · MANGA — COMUNIDAD INTERACTIVA</p>
 </header>
 
 <div class="filters">
-<button onclick="showInfo(event)">CONTACTO</button>
-<button class="active" onclick="loadImages('ILUSTRACION',event)">ILUSTRACIÓN</button>
-<button onclick="loadImages('SFW',event)">SFW</button>
+<button class="active" onclick="showGallery('ILUSTRACION',event)">ILUSTRACIÓN</button>
+<button onclick="showGallery('SFW',event)">SFW</button>
 <button onclick="askNSFW(event)">NSFW 🔞</button>
-<button onclick="loadImages('FONDOS',event)">FONDOS</button>
-<button onclick="loadImages('COMICS',event)">CÓMICS</button>
+<button onclick="showGallery('FONDOS',event)">FONDOS</button>
+<button onclick="showGallery('COMICS',event)">CÓMICS</button>
+<button onclick="showChat(event)">💬 CHAT ONLINE</button>
+<button onclick="showContact(event)">📩 CONTACTO</button>
 </div>
 
 <div id="gallery"></div>
 
-<div id="infoSection">
-<h2>👤 SOBRE MÍ</h2>
-<p><strong>BETTO BLAESPP</strong></p>
-<p>ILUSTRADOR DIGITAL · CÓMIC · MANGA</p>
-  <p>
-      Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.<br />
-      Soy Betto Blaespp, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración 
-      es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. Creo arte original, cómics y comisiones 
-      que transforman ideas en imágenes que no se olvidan. Si buscas ilustración con carácter, energía y narrativa visual real… aquí empieza tu historia.
-    </p>
-  <h3>📬 CONTACTO</h3>
-  <ul>
-<p>EMAIL: <strong>bblaespp@gmail.com</strong></p>
-  <li>📸 Instagram: <a href="https://instagram.com/BBLAESPP" target="_blank" rel="noopener noreferrer">@BBLAESPP</a></li>
-  <li>📱 WhatsApp: <a href="https://wa.me/3152395773" target="_blank" rel="noopener noreferrer">3152395773</a></li>
-    </ul>
-</div>
+<section id="loginPanel">
+<h2>🔥 ACCESO COMUNIDAD 🔥</h2>
+<input id="loginUser" placeholder="Usuario">
+<input id="loginPass" type="password" placeholder="Contraseña">
+<button onclick="login()">ENTRAR</button>
+</section>
 
-<div id="ageCheck">
-<h2>🔞 CONTENIDO ADULTO</h2>
-<button onclick="enterNSFW()" class="like-btn">ENTRAR</button>
+<section id="chatSection">
+<div class="chat-layout">
+<div class="chat-users">
+<h3>🏆 RANKING</h3>
+<div id="rankingList"></div>
+</div>
+<div class="chat-main">
+<div class="chat-box" id="chatBox"></div>
+<div class="chat-input">
+<input id="chatMsg" placeholder="Mensaje...">
+<button onclick="sendMsg()">ENVIAR</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="contactSection">
+<h2>📩 CONTACTO</h2>
+<p>🎨 Ilustración · Cómic · Manga</p>
+<p><b>Instagram:</b> @betto.blaespp</p>
+<p><b>Email:</b> contacto@tudominio.com</p>
+<p><b>WhatsApp:</b> +57 300 000 0000</p>
+<p style="margin-top:15px;color:#aaa">Disponible para comisiones y proyectos.</p>
+</section>
+
+<div class="profile-card" id="profileCard">
+<img id="pAvatar">
+<h3 id="pName"></h3>
+<p>⭐ Nivel <span id="pLevel"></span></p>
+<p>XP: <span id="pXP"></span></p>
+<div id="pBadges"></div>
 </div>
 
 <div class="modal" id="modal" onclick="this.classList.remove('active')">
@@ -76,112 +139,181 @@ header img{max-width:120px;border-radius:15px;border:2px solid #fff;}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getDatabase, ref, push, onValue, runTransaction, remove, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getDatabase, ref, push, onValue, set, update } 
+from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 const firebaseConfig={
-apiKey:"AIzaSyAUlqdn5gBdF3J4dfk690t48xXF_oofqFc",
-authDomain:"base-de-datos-para-pagina.firebaseapp.com",
-databaseURL:"https://base-de-datos-para-pagina-default-rtdb.firebaseio.com",
-projectId:"base-de-datos-para-pagina",
-storageBucket:"base-de-datos-para-pagina.firebasestorage.app",
-messagingSenderId:"427794640215",
-appId:"1:427794640215:web:22ce4fa44954e572c3e212"
+apiKey:"TU_API_KEY",
+authDomain:"TU_DOMINIO",
+databaseURL:"TU_DATABASE",
+projectId:"TU_PROJECT",
+storageBucket:"",
+messagingSenderId:"",
+appId:""
 };
 
-const app=initializeApp(firebaseConfig);
-const db=getDatabase(app);
+initializeApp(firebaseConfig);
+const db=getDatabase();
 
-if(!localStorage.getItem("user_token")){
-localStorage.setItem("user_token","u_"+Math.random().toString(36).substr(2,9));
-}
-const myToken=localStorage.getItem("user_token");
+let USER=null;
 
 const images={
-ILUSTRACION:["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png"],
-SFW:["sfw/1.png"],
-nsfw:["nsfw/1.png"],
+ILUSTRACION:["ILUSTRACION/1.png"],
+SFW:["SFW/1.png"],
+NSFW:["NSFW/1.png"],
 FONDOS:["FONDOS/X.png"],
-COMICS:["COMICS/3.png","COMICS/4.png","COMICS/PAG1.png","COMICS/PAG2.png"]
+COMICS:["COMICS/1.png","COMICS/2.png"]
 };
 
-const sanitize=(p)=>p.replace(/[.#$[\]]/g,"_");
-
-window.loadImages=(cat,e)=>{
-if(e){document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));e.target.classList.add("active");}
-gallery.innerHTML="";
+window.showGallery=function(cat,e){
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+e.target.classList.add('active');
 gallery.style.display="grid";
-infoSection.style.display="none";
-ageCheck.style.display="none";
-
-(images[cat]||[]).forEach(src=>{
-const id=sanitize(src);
-const card=document.createElement("div");
-card.className="image-container";
-card.innerHTML=`
-<img src="${src}" onclick="modalImg.src='${src}';modal.classList.add('active')">
-<button class="like-btn" id="like-${id}">❤️ ME GUSTA</button>
-<div class="comment-list" id="list-${id}"></div>
-<input class="comment-input" id="input-${id}" placeholder="ESCRIBE UN COMENTARIO">
-`;
-gallery.appendChild(card);
-
-onValue(ref(db,`likes/${id}`),snap=>{
-const total=snap.exists()?Object.keys(snap.val()).length:0;
-document.getElementById(`like-${id}`).textContent=`❤️ ME GUSTA (${total})`;
-});
-
-document.getElementById(`like-${id}`).onclick=async()=>{
-const likeRef=ref(db,`likes/${id}/${myToken}`);
-const snap=await get(likeRef);
-if(snap.exists()) return alert("YA DISTE LIKE ❤️");
-runTransaction(likeRef,()=>true);
-};
-
-onValue(ref(db,`comments/${id}`),snap=>{
-const list=document.getElementById(`list-${id}`);
-list.innerHTML="";
-snap.forEach(child=>{
-const d=child.val();
-const mine=d.authorToken===myToken;
-const div=document.createElement("div");
-div.className="comment-item";
-div.innerHTML=`<span>${d.text}</span>${mine?`<button onclick="deleteComment('${id}','${child.key}')">🗑</button>`:""}`;
-list.appendChild(div);
-});
-});
-
-document.getElementById(`input-${id}`).onkeydown=(ev)=>{
-if(ev.key==="Enter"&&ev.target.value.trim()){
-push(ref(db,`comments/${id}`),{text:ev.target.value.trim(),authorToken:myToken});
-ev.target.value="";
+chatSection.style.display="none";
+loginPanel.style.display="none";
+contactSection.style.display="none";
+loadImages(cat);
 }
-};
+
+window.showChat=function(e){
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+e.target.classList.add('active');
+gallery.style.display="none";
+contactSection.style.display="none";
+loginPanel.style.display="block";
+}
+
+window.showContact=function(e){
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+e.target.classList.add('active');
+gallery.style.display="none";
+chatSection.style.display="none";
+loginPanel.style.display="none";
+contactSection.style.display="block";
+}
+
+window.askNSFW=function(e){
+if(confirm("Zona NSFW protegida 🔞 ¿Eres mayor de edad?")){
+showGallery('NSFW',e);
+}
+}
+
+function loadImages(cat){
+gallery.innerHTML="";
+(images[cat]||[]).forEach(src=>{
+const div=document.createElement("div");
+div.className="image-container";
+div.innerHTML=`<img src="${src}" onclick="openModal('${src}')">`;
+gallery.appendChild(div);
 });
-};
+}
 
-window.deleteComment=(id,key)=>remove(ref(db,`comments/${id}/${key}`));
+window.openModal=src=>{
+modalImg.src=src;
+modal.classList.add("active");
+}
 
-window.showInfo=(e)=>{
-document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-e.target.classList.add("active");
-gallery.style.display="none";
-ageCheck.style.display="none";
-infoSection.style.display="block";
-};
+// LOGIN
+window.login=function(){
+const u=loginUser.value.trim();
+const p=loginPass.value.trim();
+if(!u||!p)return alert("Completa los datos");
 
-window.askNSFW=(e)=>{
-document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
-e.target.classList.add("active");
-gallery.style.display="none";
-infoSection.style.display="none";
-ageCheck.style.display="block";
-};
+const userRef=ref(db,"users/"+u);
+onValue(userRef,s=>{
+if(!s.exists()){
+set(userRef,{pass:p,xp:0,rank:"user",avatar:"https://i.pravatar.cc/150?u="+u});
+}
+USER=u;
+loginPanel.style.display="none";
+chatSection.style.display="block";
+loadChat();
+loadRanking();
+},{onlyOnce:true});
+}
 
-window.enterNSFW=()=>loadImages("nsfw");
+// CHAT
+function loadChat(){
+onValue(ref(db,"chat"),snap=>{
+chatBox.innerHTML="";
+snap.forEach(m=>{
+const d=m.val();
+chatBox.innerHTML+=`
+<div class="msg" onclick="showProfile('${d.user}')">
+<img src="${d.avatar}">
+<div class="msg-content">
+<div class="msg-name"><span class="rank ${d.rank}">${d.rank.toUpperCase()}</span> ${d.user}</div>
+<div class="msg-text">${d.text}</div>
+<div class="msg-time">${new Date(d.time).toLocaleTimeString()}</div>
+</div>
+</div>`;
+});
+chatBox.scrollTop=chatBox.scrollHeight;
+});
+}
 
-loadImages("ILUSTRACION");
+window.sendMsg=function(){
+if(!chatMsg.value.trim())return;
+const userRef=ref(db,"users/"+USER);
+
+onValue(userRef,s=>{
+const u=s.val();
+push(ref(db,"chat"),{
+user:USER,
+text:chatMsg.value,
+time:Date.now(),
+rank:u.rank,
+avatar:u.avatar
+});
+update(userRef,{xp:(u.xp||0)+5});
+chatMsg.value="";
+},{onlyOnce:true});
+}
+
+// RANKING
+function loadRanking(){
+onValue(ref(db,"users"),snap=>{
+let arr=[];
+snap.forEach(u=>arr.push({name:u.key,...u.val()}));
+arr.sort((a,b)=>(b.xp||0)-(a.xp||0));
+
+rankingList.innerHTML="";
+arr.slice(0,10).forEach((u,i)=>{
+rankingList.innerHTML+=`
+<div class="user-card">
+<img src="${u.avatar}">
+<div>
+<b>#${i+1} ${u.name}</b><br>
+⭐ ${u.xp||0}
+</div>
+</div>`;
+});
+});
+}
+
+// PERFIL
+window.showProfile=function(user){
+onValue(ref(db,"users/"+user),s=>{
+const u=s.val();
+const xp=u.xp||0;
+const lvl=Math.floor(Math.sqrt(xp/50))+1;
+
+profileCard.style.display="block";
+pAvatar.src=u.avatar;
+pName.textContent=user;
+pLevel.textContent=lvl;
+pXP.textContent=xp;
+
+pBadges.innerHTML="";
+if(xp>=50)pBadges.innerHTML+=`<span class="badge bronce">INICIADO</span>`;
+if(xp>=200)pBadges.innerHTML+=`<span class="badge plata">ACTIVO</span>`;
+if(xp>=600)pBadges.innerHTML+=`<span class="badge oro">PRO</span>`;
+if(xp>=1500)pBadges.innerHTML+=`<span class="badge legend">LEGEND</span>`;
+},{onlyOnce:true});
+}
+
+showGallery('ILUSTRACION',{target:document.querySelector('.filters button')});
 </script>
+
 </body>
 </html>
-
-
