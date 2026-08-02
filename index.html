@@ -18,7 +18,6 @@ body {
 
 /* HEADER CON BANNER DE PORTADA Y AVATAR */
 header {
-    /* Si tienes portada.jpg cargará el fondo; si no, mostrará el degradado neón por defecto */
     background: linear-gradient(180deg, rgba(5, 5, 8, 0.4) 0%, rgba(5, 5, 8, 0.95) 100%),
                 url('portada.jpg') center/cover no-repeat,
                 linear-gradient(135deg, #00f3ff, #ff0055);
@@ -47,7 +46,7 @@ header {
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    background: #0b0b0b; /* Color mientras carga la imagen */
+    background: #0b0b0b;
     display: block;
 }
 
@@ -184,7 +183,7 @@ header p {
     .image-container img { height: 360px; border-radius: 12px; }
 }
 
-/* SECCIÓN SOBRE MÍ */
+/* SECCIÓN SOBRE MÍ Y COMISIONES */
 #infoSection {
     background: #0f0f14;
     padding: clamp(30px, 6vw, 50px) clamp(18px, 5vw, 35px);
@@ -215,6 +214,54 @@ header p {
     margin-bottom: 30px; 
 }
 .bio-text b { color: #ff0055; }
+
+/* SECCIÓN ESTADO Y PRECIOS DE COMISIONES */
+.commission-box {
+    background: #12121c;
+    border: 1px solid #00f3ff;
+    border-radius: 20px;
+    padding: 25px 15px;
+    margin: 35px 0;
+    box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.05);
+}
+
+.commission-badge {
+    display: inline-block;
+    background: rgba(0, 255, 136, 0.15);
+    border: 2px solid #00ff88;
+    color: #00ff88;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+}
+
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.pricing-table th, .pricing-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #222233;
+    text-align: left;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+}
+
+.pricing-table th {
+    color: #00f3ff;
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+.pricing-table td:last-child {
+    text-align: right;
+    color: #ff0055;
+    font-weight: bold;
+}
 
 #infoSection h3 {
     color: #ff0055;
@@ -313,12 +360,12 @@ header p {
 
 <div class="filters-container">
     <div class="filters">
-        <button id="btn-info" onclick="showInfo(event)">INICIO / CONTACTO</button>
-        <button class="filter-btn" onclick="loadImages('ILUSTRACION',event)">ILUSTRACIÓN</button>
-        <button class="filter-btn" onclick="loadImages('SFW',event)">SFW</button>
-        <button class="filter-btn" onclick="askNSFW(event)">NSFW 🔞</button>
-        <button class="filter-btn" onclick="loadImages('FONDOS',event)">FONDOS</button>
-        <button class="filter-btn" onclick="loadImages('COMICS',event)">CÓMICS</button>
+        <button id="btn-info" class="active" onclick="showInfo(event)">INICIO / CONTACTO</button>
+        <button class="filter-btn" data-cat="ILUSTRACION" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
+        <button class="filter-btn" data-cat="SFW" onclick="loadImages('SFW', event)">SFW</button>
+        <button class="filter-btn" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
+        <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
+        <button class="filter-btn" data-cat="COMICS" onclick="loadImages('COMICS', event)">CÓMICS</button>
     </div>
 </div>
 
@@ -331,6 +378,37 @@ header p {
         Soy Betto, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. <br><br>
         Si buscas ilustración con carácter, energía y narrativa visual real… <b>aquí empieza tu historia.</b>
     </p>
+
+    <!-- SECCIÓN DE PRECIOS Y ESTADO DE COMISIONES -->
+    <div class="commission-box">
+        <div class="commission-badge">🟢 COMISIONES ABIERTAS</div>
+        <table class="pricing-table">
+            <thead>
+                <tr>
+                    <th>TIPO DE TRABAJO</th>
+                    <th>PRECIO BASE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sketch / Boceto Limpio</td>
+                    <td>$15 USD</td>
+                </tr>
+                <tr>
+                    <td>Bust-up / Retrato a Color</td>
+                    <td>$30 USD</td>
+                </tr>
+                <tr>
+                    <td>Full Body / Personaje Completo</td>
+                    <td>$50 USD</td>
+                </tr>
+                <tr>
+                    <td>Página de Cómic / Manga</td>
+                    <td>Consultar</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <h3>📬 CANALES DE CONTACTO</h3>
     <div class="contact-grid">
@@ -351,10 +429,21 @@ const images = {
                  "ILUSTRACION/6.png","ILUSTRACION/7.png","ILUSTRACION/8.png","ILUSTRACION/9.png","ILUSTRACION/10.png",
                  "ILUSTRACION/11.png","ILUSTRACION/12.png","ILUSTRACION/13.png"],
     SFW: ["sfw/1.png"],
-    NSFW: ["nsfw/1.png","nsfw/2.png","nsfw/4.png","nsfw/5.png","nsfw/3.png"],
+    NSFW: ["nsfw/1.png","nsfw/2.png","nsfw/4.png","nsfw/5.png"],
     FONDOS: ["FONDOS/X.png"],
     COMICS: ["COMICS/3.png","COMICS/4.png","COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png","COMICS/PAG4.png","COMICS/PAG5.png"]
 };
+
+// ACTUALIZA LOS CONTADORES EN LOS BOTONES DE FILTRO
+function updateCounters() {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        const cat = btn.getAttribute('data-cat');
+        if (cat && images[cat]) {
+            const label = cat === 'NSFW' ? 'NSFW 🔞' : cat;
+            btn.textContent = `${label} (${images[cat].length})`;
+        }
+    });
+}
 
 function hideAll() {
     document.getElementById("gallery").style.display = "none";
@@ -364,7 +453,7 @@ function hideAll() {
 
 function loadImages(cat, e) {
     hideAll();
-    if (e) e.target.classList.add("active");
+    if (e && e.currentTarget) e.currentTarget.classList.add("active");
     
     const gallery = document.getElementById("gallery");
     gallery.innerHTML = "";
@@ -381,7 +470,7 @@ function loadImages(cat, e) {
 
 function showInfo(e) { 
     hideAll(); 
-    if (e) e.target.classList.add("active");
+    if (e && e.currentTarget) e.currentTarget.classList.add("active");
     else document.getElementById('btn-info').classList.add('active');
     document.getElementById("infoSection").style.display = "block"; 
 }
@@ -407,7 +496,8 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal();
 });
 
-// Carga la sección de inicio por defecto
+// Carga inicial
+updateCounters();
 showInfo();
 </script>
 </body>
