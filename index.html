@@ -130,8 +130,8 @@ header p {
     box-shadow: 0 0 15px #ff0055;
 }
 
-/* GALERÍA RESPONSIVA */
-#gallery {
+/* GALERÍA RESPONSIVA Y SECCIÓN CARPETAS */
+#gallery, #comicsContainer {
     display: grid;
     gap: 15px;
     padding: 20px 15px;
@@ -142,35 +142,36 @@ header p {
 }
 
 @media (min-width: 600px) {
-    #gallery {
+    #gallery, #comicsContainer {
         gap: 25px;
         padding: 30px;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
 }
 
-.image-container {
+.image-container, .folder-card {
     background: #0f0f14;
     padding: 8px;
     border-radius: 15px;
     border: 1px solid #1a1a24;
     animation: fadeIn 0.4s ease;
     transition: transform 0.3s ease, border-color 0.3s ease;
+    position: relative;
 }
 
 @media (min-width: 600px) {
-    .image-container { padding: 12px; border-radius: 20px; }
+    .image-container, .folder-card { padding: 12px; border-radius: 20px; }
 }
 
 @media (hover: hover) {
-    .image-container:hover {
+    .image-container:hover, .folder-card:hover {
         border-color: #ff0055;
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(255, 0, 85, 0.3);
     }
 }
 
-.image-container img {
+.image-container img, .folder-card img {
     width: 100%;
     height: 240px;
     border-radius: 10px;
@@ -180,7 +181,57 @@ header p {
 }
 
 @media (min-width: 600px) {
-    .image-container img { height: 360px; border-radius: 12px; }
+    .image-container img, .folder-card img { height: 360px; border-radius: 12px; }
+}
+
+/* ESTILOS DE TARJETA DE CARPETA/PROYECTO */
+.folder-card {
+    cursor: pointer;
+    text-align: center;
+}
+
+.folder-info {
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.folder-title {
+    color: #00f3ff;
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.folder-count {
+    color: #ff0055;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+/* BOTÓN VOLVER DENTRO DE CÓMICS */
+.back-btn-container {
+    max-width: 1300px;
+    margin: 15px auto 0;
+    padding: 0 15px;
+    display: none;
+}
+
+.back-btn {
+    background: transparent;
+    border: 2px solid #00f3ff;
+    color: #00f3ff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #00f3ff;
+    color: #000;
+    box-shadow: 0 0 10px #00f3ff;
 }
 
 /* SECCIÓN SOBRE MÍ Y COMISIONES */
@@ -350,7 +401,6 @@ header p {
 <body>
 
 <header>
-    <!-- ESPACIO PARA FOTO/AVATAR -->
     <div class="avatar-wrapper">
         <img src="avatar.jpg" alt="BETTO BLAESPP" onerror="this.style.display='none'; this.parentElement.innerHTML='🎨';">
     </div>
@@ -365,11 +415,16 @@ header p {
         <button class="filter-btn" data-cat="SFW" onclick="loadImages('SFW', event)">SFW</button>
         <button class="filter-btn" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
         <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
-        <button class="filter-btn" data-cat="COMICS" onclick="loadImages('COMICS', event)">CÓMICS</button>
+        <button class="filter-btn" id="btn-comics" onclick="showComicFolders(event)">CÓMICS</button>
     </div>
 </div>
 
+<div class="back-btn-container" id="backBtnContainer">
+    <button class="back-btn" onclick="showComicFolders()">⬅ Volver a Cómics</button>
+</div>
+
 <div id="gallery"></div>
+<div id="comicsContainer"></div>
 
 <div id="infoSection" style="display: block;">
     <h2>👤 SOBRE MÍ</h2>
@@ -419,18 +474,38 @@ header p {
 </div>
 
 <script>
-// IMÁGENES
+// GALERÍAS Y COMICS POR CARPETAS / PROYECTOS
 const images = {
     ILUSTRACION: ["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png","ILUSTRACION/4.png","ILUSTRACION/5.png",
                  "ILUSTRACION/6.png","ILUSTRACION/7.png","ILUSTRACION/8.png","ILUSTRACION/9.png","ILUSTRACION/10.png",
                  "ILUSTRACION/11.png","ILUSTRACION/12.png","ILUSTRACION/13.png"],
     SFW: ["sfw/1.png"],
     NSFW: ["nsfw/1.png","nsfw/2.png","nsfw/4.png","nsfw/5.png","nsfw/3.png"],
-    FONDOS: ["FONDOS/X.png"],
-    COMICS: ["COMICS/3.png","COMICS/4.png","COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png","COMICS/PAG4.png","COMICS/PAG5.png"]
+    FONDOS: ["FONDOS/X.png"]
 };
 
-// ACTUALIZA LOS CONTADORES EN LOS BOTONES DE FILTRO
+// AQUÍ AGREGAS O EDITAS TUS PROYECTOS DE CÓMIC / MANGA
+const comics = [
+    {
+        id: "ww1",
+        title: "Primera Guerra Mundial",
+        cover: "COMICS/PAG1.png", // Imagen de portada del proyecto
+        pages: ["COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png","COMICS/PAG4.png","COMICS/PAG5.png"]
+    },
+    {
+        id: "extra",
+        title: "Historias Cortas",
+        cover: "COMICS/3.png",
+        pages: ["COMICS/3.png","COMICS/4.png"]
+    }
+];
+
+// CALCULA TOTAL DE PÁGINAS DE CÓMIC ACUMULADAS
+function getTotalComicPages() {
+    return comics.reduce((sum, item) => sum + item.pages.length, 0);
+}
+
+// ACTUALIZA LOS CONTADORES EN BOTONES DE FILTRO
 function updateCounters() {
     document.querySelectorAll('.filter-btn').forEach(btn => {
         const cat = btn.getAttribute('data-cat');
@@ -439,11 +514,19 @@ function updateCounters() {
             btn.textContent = `${label} (${images[cat].length})`;
         }
     });
+
+    // Contador de Cómics (Suma todas las páginas de todas las carpetas)
+    const btnComics = document.getElementById('btn-comics');
+    if (btnComics) {
+        btnComics.textContent = `CÓMICS (${getTotalComicPages()})`;
+    }
 }
 
 function hideAll() {
     document.getElementById("gallery").style.display = "none";
+    document.getElementById("comicsContainer").style.display = "none";
     document.getElementById("infoSection").style.display = "none";
+    document.getElementById("backBtnContainer").style.display = "none";
     document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
 }
 
@@ -460,6 +543,53 @@ function loadImages(cat, e) {
         const card = document.createElement("div");
         card.className = "image-container";
         card.innerHTML = `<img src="${src}" loading="lazy" alt="Ilustración Betto Blaespp" onclick="openModal('${src}')">`;
+        gallery.appendChild(card);
+    });
+}
+
+// MOSTRAR LAS CARPETAS / PROYECTOS DE CÓMICS
+function showComicFolders(e) {
+    hideAll();
+    const btnComics = document.getElementById('btn-comics');
+    if (e && e.currentTarget) e.currentTarget.classList.add("active");
+    else btnComics.classList.add("active");
+
+    const container = document.getElementById("comicsContainer");
+    container.innerHTML = "";
+    container.style.display = "grid";
+
+    comics.forEach(comic => {
+        const folder = document.createElement("div");
+        folder.className = "folder-card";
+        folder.onclick = () => openComicPages(comic.id);
+        folder.innerHTML = `
+            <img src="${comic.cover}" loading="lazy" alt="${comic.title}">
+            <div class="folder-info">
+                <div class="folder-title">${comic.title}</div>
+                <div class="folder-count">📖 ${comic.pages.length} Páginas</div>
+            </div>
+        `;
+        container.appendChild(folder);
+    });
+}
+
+// MOSTRAR PÁGINAS DE UNA CARPETA ESPECÍFICA
+function openComicPages(comicId) {
+    const selectedComic = comics.find(c => c.id === comicId);
+    if (!selectedComic) return;
+
+    hideAll();
+    document.getElementById('btn-comics').classList.add("active");
+    document.getElementById("backBtnContainer").style.display = "block";
+
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+    gallery.style.display = "grid";
+
+    selectedComic.pages.forEach(src => {
+        const card = document.createElement("div");
+        card.className = "image-container";
+        card.innerHTML = `<img src="${src}" loading="lazy" alt="${selectedComic.title}" onclick="openModal('${src}')">`;
         gallery.appendChild(card);
     });
 }
