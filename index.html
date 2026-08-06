@@ -10,13 +10,18 @@
   --pink: #ff0055; 
   --bg: #050508; 
   --card-bg: #0f0f14; 
-  --bg-portada: url('portada.jpg'); /* <-- Variable para cambiar la portada fácilmente */
+  --bg-portada: url('portada.jpg');
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
 header {
-  background: linear-gradient(180deg, rgba(5,5,8,0.4), rgba(5,5,8,0.95)), var(--bg-portada) center/cover no-repeat, linear-gradient(135deg, var(--cyan), var(--pink));
+  /* Separamos el degradado y la imagen de fondo para evitar conflictos de renderizado */
+  background-color: var(--bg);
+  background-image: linear-gradient(180deg, rgba(5,5,8,0.4), rgba(5,5,8,0.95)), var(--bg-portada), linear-gradient(135deg, var(--cyan), var(--pink));
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   padding: clamp(35px, 8vw, 65px) 15px; text-align: center; border-bottom: 2px solid var(--cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
 }
 .avatar-wrapper {
@@ -44,7 +49,7 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 #gallery, #comicsContainer {
   display: grid; gap: 15px; padding: 20px 15px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); max-width: 1300px; margin: auto;
 }
-@media (min-width: 600px) { #gallery, #comicsContainer { gap: 25px; padding: 30px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+@media (min-width: 600px) { #gallery, #comicsContainer { gap: 25px; padding: 30px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
 
 .image-container, .folder-card {
   background: var(--card-bg); padding: 8px; border-radius: 15px; border: 1px solid #1a1a24; animation: fadeIn 0.4s ease; transition: transform 0.3s, border-color 0.3s;
@@ -92,9 +97,8 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 </head>
 <body>
 
-<header>
+<header id="main-header">
   <div class="avatar-wrapper">
-    <!-- El avatar busca en formato jpg, png, webp o jpeg automáticamente -->
     <img id="avatar-img" src="avatar.jpg" alt="BETTO BLAESPP" onerror="
       if (!this.dataset.retry) { this.dataset.retry = '1'; this.src='avatar.png'; }
       else if (this.dataset.retry === '1') { this.dataset.retry = '2'; this.src='avatar.webp'; }
