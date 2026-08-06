@@ -4,671 +4,146 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>BETTO BLAESPP - PORTAFOLIO</title>
-
 <style>
-/* BASE Y RESET */
+:root { --cyan: #00f3ff; --pink: #ff0055; --bg: #050508; --card-bg: #0f0f14; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    background: #050508;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: #fff;
-    overflow-x: hidden;
-    -webkit-tap-highlight-color: transparent;
-}
+body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-/* HEADER CON BANNER DE PORTADA Y AVATAR */
 header {
-    background: linear-gradient(180deg, rgba(5, 5, 8, 0.4) 0%, rgba(5, 5, 8, 0.95) 100%),
-                url('portada.jpg') center/cover no-repeat,
-                linear-gradient(135deg, #00f3ff, #ff0055);
-    padding: clamp(35px, 8vw, 65px) 15px;
-    text-align: center;
-    position: relative;
-    border-bottom: 2px solid #00f3ff;
-    box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+  background: linear-gradient(180deg, rgba(5,5,8,0.4), rgba(5,5,8,0.95)), url('portada.jpg') center/cover no-repeat, linear-gradient(135deg, var(--cyan), var(--pink));
+  padding: clamp(35px, 8vw, 65px) 15px; text-align: center; border-bottom: 2px solid var(--cyan); box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
 }
-
-/* CONTENEDOR DEL AVATAR / FOTO DE PERFIL */
 .avatar-wrapper {
-    position: relative;
-    width: clamp(110px, 25vw, 150px);
-    height: clamp(110px, 25vw, 150px);
-    margin: 0 auto 15px;
-    border-radius: 50%;
-    padding: 3px;
-    background: linear-gradient(135deg, #00f3ff, #ff0055);
-    box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: clamp(110px, 25vw, 150px); height: clamp(110px, 25vw, 150px); margin: 0 auto 15px; border-radius: 50%; padding: 3px;
+  background: linear-gradient(135deg, var(--cyan), var(--pink)); box-shadow: 0 0 25px rgba(0, 243, 255, 0.6); transition: transform .3s, box-shadow .3s;
 }
+.avatar-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #0b0b0b; display: block; }
+@media (hover: hover) { .avatar-wrapper:hover { transform: scale(1.05) rotate(-2deg); box-shadow: 0 0 35px var(--cyan); } }
 
-.avatar-wrapper img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    background: #0b0b0b;
-    display: block;
-}
+header h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 2px 10px #000, 0 0 15px rgba(0,243,255,0.6); }
+header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weight: 700; margin-top: 6px; letter-spacing: 1.5px; text-shadow: 0 2px 8px #000, 0 0 10px rgba(255,0,85,0.5); }
 
-@media (hover: hover) {
-    .avatar-wrapper:hover { 
-        transform: scale(1.05) rotate(-2deg); 
-        box-shadow: 0 0 35px #00f3ff;
-    }
-}
-
-header h1 { 
-    font-size: clamp(1.8rem, 5vw, 2.8rem); 
-    letter-spacing: 2px; 
-    text-transform: uppercase; 
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 243, 255, 0.6);
-}
-
-header p { 
-    font-size: clamp(0.75rem, 2.5vw, 1rem);
-    color: #ff0055;
-    font-weight: 700; 
-    margin-top: 6px;
-    letter-spacing: 1.5px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 0, 85, 0.5);
-}
-
-/* FILTROS CON SCROLL MÓVIL Y BOTONES ADAPTATIVOS */
-.filters-container {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(5, 5, 8, 0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 2px solid #00f3ff;
-    box-shadow: 0 4px 20px rgba(0, 243, 255, 0.2);
-}
-
-.filters {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 12px 15px;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 10px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
+.filters-container { position: sticky; top: 0; z-index: 100; background: rgba(5, 5, 8, 0.92); backdrop-filter: blur(12px); border-bottom: 2px solid var(--cyan); box-shadow: 0 4px 20px rgba(0,243,255,0.2); }
+.filters { display: flex; justify-content: flex-start; align-items: center; padding: 12px 15px; overflow-x: auto; gap: 10px; scrollbar-width: none; }
 .filters::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .filters { justify-content: center; } }
 
-@media (min-width: 768px) {
-    .filters { justify-content: center; }
+.filters button, .back-btn {
+  background: transparent; border: 2px solid var(--cyan); color: var(--cyan); padding: 8px 18px; border-radius: 25px;
+  cursor: pointer; font-weight: 700; transition: all 0.25s; font-size: clamp(11px, 2.8vw, 13px); flex-shrink: 0;
 }
+@media (hover: hover) { .filters button:hover, .back-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); } }
+.filters button.active { background: var(--pink); border-color: var(--pink); color: #fff; box-shadow: 0 0 15px var(--pink); }
 
-.filters button {
-    background: transparent;
-    border: 2px solid #00f3ff;
-    color: #00f3ff;
-    padding: 8px 18px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 700;
-    transition: all 0.25s ease;
-    font-size: clamp(11px, 2.8vw, 13px);
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
-}
-
-@media (hover: hover) {
-    .filters button:hover { 
-        background: #00f3ff;
-        color: #000;
-        box-shadow: 0 0 15px #00f3ff;
-    }
-}
-
-.filters button.active {
-    background: #ff0055;
-    border-color: #ff0055;
-    color: #fff;
-    box-shadow: 0 0 15px #ff0055;
-}
-
-/* GALERÍA RESPONSIVA Y SECCIÓN CARPETAS */
 #gallery, #comicsContainer {
-    display: grid;
-    gap: 15px;
-    padding: 20px 15px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    max-width: 1300px;
-    margin: auto;
-    display: none;
+  display: grid; gap: 15px; padding: 20px 15px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); max-width: 1300px; margin: auto;
 }
-
-@media (min-width: 600px) {
-    #gallery, #comicsContainer {
-        gap: 25px;
-        padding: 30px;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-}
+@media (min-width: 600px) { #gallery, #comicsContainer { gap: 25px; padding: 30px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
 
 .image-container, .folder-card {
-    background: #0f0f14;
-    padding: 8px;
-    border-radius: 15px;
-    border: 1px solid #1a1a24;
-    animation: fadeIn 0.4s ease;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    position: relative;
+  background: var(--card-bg); padding: 8px; border-radius: 15px; border: 1px solid #1a1a24; animation: fadeIn 0.4s ease; transition: transform 0.3s, border-color 0.3s;
 }
+@media (min-width: 600px) { .image-container, .folder-card { padding: 12px; border-radius: 20px; } }
+@media (hover: hover) { .image-container:hover, .folder-card:hover { border-color: var(--pink); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(255, 0, 85, 0.3); } }
 
-@media (min-width: 600px) {
-    .image-container, .folder-card { padding: 12px; border-radius: 20px; }
-}
+.image-container img, .folder-card img { width: 100%; height: 240px; border-radius: 10px; cursor: pointer; object-fit: cover; display: block; }
+@media (min-width: 600px) { .image-container img, .folder-card img { height: 360px; border-radius: 12px; } }
 
-@media (hover: hover) {
-    .image-container:hover, .folder-card:hover {
-        border-color: #ff0055;
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(255, 0, 85, 0.3);
-    }
-}
+.folder-card { cursor: pointer; text-align: center; }
+.folder-info { margin-top: 10px; padding: 5px; }
+.folder-title { color: var(--cyan); font-weight: bold; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+.folder-count { color: var(--pink); font-size: 0.85rem; margin-top: 4px; }
+.back-btn-container { max-width: 1300px; margin: 15px auto 0; padding: 0 15px; }
 
-.image-container img, .folder-card img {
-    width: 100%;
-    height: 240px;
-    border-radius: 10px;
-    cursor: pointer;
-    object-fit: cover;
-    display: block;
-}
-
-@media (min-width: 600px) {
-    .image-container img, .folder-card img { height: 360px; border-radius: 12px; }
-}
-
-/* ESTILOS DE TARJETA DE CARPETA/PROYECTO */
-.folder-card {
-    cursor: pointer;
-    text-align: center;
-}
-
-.folder-info {
-    margin-top: 10px;
-    padding: 5px;
-}
-
-.folder-title {
-    color: #00f3ff;
-    font-weight: bold;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.folder-count {
-    color: #ff0055;
-    font-size: 0.85rem;
-    margin-top: 4px;
-}
-
-/* BOTÓN VOLVER DENTRO DE CÓMICS */
-.back-btn-container {
-    max-width: 1300px;
-    margin: 15px auto 0;
-    padding: 0 15px;
-    display: none;
-}
-
-.back-btn {
-    background: transparent;
-    border: 2px solid #00f3ff;
-    color: #00f3ff;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-    background: #00f3ff;
-    color: #000;
-    box-shadow: 0 0 10px #00f3ff;
-}
-
-/* SECCIÓN SOBRE MÍ Y COMISIONES */
 #infoSection {
-    background: #0f0f14;
-    padding: clamp(30px, 6vw, 50px) clamp(18px, 5vw, 35px);
-    margin: 30px 15px;
-    border-radius: 25px;
-    text-align: center;
-    max-width: 850px;
-    border: 2px solid #00f3ff;
-    box-shadow: 0 0 25px rgba(0, 243, 255, 0.2);
-    animation: fadeIn 0.5s ease;
+  background: var(--card-bg); padding: clamp(30px, 6vw, 50px) clamp(18px, 5vw, 35px); margin: 30px 15px; border-radius: 25px;
+  text-align: center; max-width: 850px; border: 2px solid var(--cyan); box-shadow: 0 0 25px rgba(0, 243, 255, 0.2); animation: fadeIn 0.5s ease;
 }
+@media (min-width: 768px) { #infoSection { margin: 50px auto; } }
+#infoSection h2 { color: var(--cyan); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+.bio-text { font-size: clamp(0.95rem, 2.8vw, 1.15rem); line-height: 1.7; color: #e0e0e0; margin-bottom: 30px; }
+.bio-text b, #infoSection h3 { color: var(--pink); }
 
-@media (min-width: 768px) {
-    #infoSection { margin: 50px auto; }
-}
+.commission-box { background: #12121c; border: 1px solid var(--cyan); border-radius: 20px; padding: 25px 15px; margin: 35px 0; }
+.commission-badge { display: inline-block; background: rgba(0, 255, 136, 0.15); border: 2px solid #00ff88; color: #00ff88; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; margin-bottom: 20px; box-shadow: 0 0 12px rgba(0, 255, 136, 0.3); }
+.pricing-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.pricing-table th, .pricing-table td { padding: 12px 10px; border-bottom: 1px solid #222233; text-align: left; font-size: clamp(0.85rem, 2.5vw, 1rem); }
+.pricing-table th { color: var(--cyan); }
+.pricing-table td:last-child { text-align: right; color: var(--pink); font-weight: bold; }
 
-#infoSection h2 { 
-    color: #00f3ff; 
-    font-size: clamp(1.5rem, 4vw, 2.2rem); 
-    margin-bottom: 20px; 
-    text-transform: uppercase; 
-    letter-spacing: 2px;
-}
-.bio-text { 
-    font-size: clamp(0.95rem, 2.8vw, 1.15rem); 
-    line-height: 1.7; 
-    color: #e0e0e0; 
-    margin-bottom: 30px; 
-}
-.bio-text b { color: #ff0055; }
-
-/* SECCIÓN ESTADO Y PRECIOS DE COMISIONES */
-.commission-box {
-    background: #12121c;
-    border: 1px solid #00f3ff;
-    border-radius: 20px;
-    padding: 25px 15px;
-    margin: 35px 0;
-    box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.05);
-}
-
-.commission-badge {
-    display: inline-block;
-    background: rgba(0, 255, 136, 0.15);
-    border: 2px solid #00ff88;
-    color: #00ff88;
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
-}
-
-.pricing-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-.pricing-table th, .pricing-table td {
-    padding: 12px 10px;
-    border-bottom: 1px solid #222233;
-    text-align: left;
-    font-size: clamp(0.85rem, 2.5vw, 1rem);
-}
-
-.pricing-table th {
-    color: #00f3ff;
-    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
-}
-
-.pricing-table td:last-child {
-    text-align: right;
-    color: #ff0055;
-    font-weight: bold;
-}
-
-#infoSection h3 {
-    color: #ff0055;
-    font-size: clamp(1.1rem, 3vw, 1.4rem);
-    letter-spacing: 1.5px;
-}
-
-.contact-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    gap: 15px; 
-    margin-top: 20px; 
-}
-.contact-card {
-    background: #161622;
-    padding: 20px 15px;
-    border-radius: 16px;
-    text-decoration: none;
-    color: #fff;
-    transition: all 0.3s ease;
-    border: 1px solid #00f3ff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-}
-
-@media (hover: hover) {
-    .contact-card:hover {
-        background: linear-gradient(135deg, #00f3ff, #ff0055);
-        color: #000;
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 243, 255, 0.4);
-        font-weight: bold;
-    }
-}
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+.contact-card { background: #161622; padding: 20px 15px; border-radius: 16px; text-decoration: none; color: #fff; border: 1px solid var(--cyan); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.9rem; transition: all .3s; }
+@media (hover: hover) { .contact-card:hover { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #000; transform: translateY(-5px); font-weight: bold; } }
 .contact-card span { font-size: 1.8rem; }
 
-/* MODAL FULLSCREEN */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    padding: 15px;
-    backdrop-filter: blur(8px);
-}
-.modal.active { display: flex; }
-.modal img { 
-    max-width: 100%; 
-    max-height: 85vh; 
-    border-radius: 10px; 
-    box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
-    border: 1.5px solid #00f3ff;
-    object-fit: contain;
-}
-.close-modal {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: #fff;
-    font-size: 32px;
-    font-weight: bold;
-    cursor: pointer;
-    background: rgba(0,0,0,0.5);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 0;
-}
+.hidden { display: none !important; }
+.modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 15px; backdrop-filter: blur(8px); }
+.modal img { max-width: 100%; max-height: 85vh; border-radius: 10px; border: 1.5px solid var(--cyan); object-fit: contain; }
+.close-modal { position: absolute; top: 15px; right: 20px; color: #fff; font-size: 32px; font-weight: bold; cursor: pointer; background: rgba(0,0,0,0.5); width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
-
 <body>
 
 <header>
-    <div class="avatar-wrapper">
-        <img src="avatar.jpg" alt="BETTO BLAESPP" onerror="this.style.display='none'; this.parentElement.innerHTML='🎨';">
-    </div>
-    <h1>BETTO BLAESPP</h1>
-    <p>ILUSTRACIÓN · CÓMIC · WEB MANGA · COMISIONES</p>
+  <div class="avatar-wrapper"><img src="avatar.jpg" alt="BETTO BLAESPP" onerror="this.style.display='none'; this.parentElement.innerHTML='🎨';"></div>
+  <h1>BETTO BLAESPP</h1>
+  <p>ILUSTRACIÓN · CÓMIC · WEB MANGA · COMISIONES</p>
 </header>
 
 <div class="filters-container">
-    <div class="filters">
-        <button id="btn-info" class="active" onclick="showInfo(event)">INICIO / CONTACTO</button>
-        <button class="filter-btn" data-cat="ILUSTRACION" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
-        <button class="filter-btn" data-cat="SFW" onclick="loadImages('SFW', event)">SFW</button>
-        <button class="filter-btn" id="btn-nsfw" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
-        <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
-        <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
-    </div>
+  <div class="filters">
+    <button id="btn-info" class="active" onclick="showInfo(event)">INICIO / CONTACTO</button>
+    <button class="filter-btn" data-cat="ILUSTRACION" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
+    <button class="filter-btn" data-cat="SFW" onclick="loadImages('SFW', event)">SFW</button>
+    <button class="filter-btn" id="btn-nsfw" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
+    <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
+    <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
+  </div>
 </div>
 
-<div class="back-btn-container" id="backBtnContainer">
-    <button class="back-btn" id="backBtn" onclick="goBackToComics()">⬅ Volver a Cómics</button>
+<div class="back-btn-container hidden" id="backBtnContainer">
+  <button class="back-btn" onclick="showComicFolders(currentComicType)">⬅ Volver a Cómics</button>
 </div>
 
-<div id="gallery"></div>
-<div id="comicsContainer"></div>
+<div id="gallery" class="hidden"></div>
+<div id="comicsContainer" class="hidden"></div>
 
-<div id="infoSection" style="display: block;">
-    <h2>👤 SOBRE MÍ</h2>
-    <p class="bio-text">
-        <b>Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.</b><br><br>
-        Soy Betto, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar. <br><br>
-        Si buscas ilustración con carácter, energía y narrativa visual real… <b>aquí empieza tu historia.</b>
-    </p>
+<div id="infoSection">
+  <h2>👤 SOBRE MÍ</h2>
+  <p class="bio-text">
+    <b>Líneas que golpean, miradas que cuentan historias y mundos que nacen del trazo.</b><br><br>
+    Soy Betto, ilustrador digital que fusiona la potencia del cómic con la intensidad del manga. Cada ilustración es una escena viva, cada personaje tiene alma y cada obra está diseñada para impactar.<br><br>
+    Si buscas ilustración con carácter, energía y narrativa visual real… <b>aquí empieza tu historia.</b>
+  </p>
 
-    <!-- SECCIÓN DE PRECIOS Y ESTADO DE COMISIONES -->
-    <div class="commission-box">
-        <div class="commission-badge">🟢 COMISIONES ABIERTAS</div>
-        <table class="pricing-table">
-            <thead>
-                <tr>
-                    <th>TIPO DE TRABAJO</th>
-                    <th>PRECIO BASE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Sketch / Boceto Limpio</td>
-                    <td>$10 USD</td>
-                </tr>
-                <tr>
-                    <td>Full Body / Personaje Completo</td>
-                    <td>$20 USD</td>
-                </tr>
-                <tr>
-                    <td>Página de Cómic / Manga</td>
-                    <td>Consultar</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="commission-box">
+    <div class="commission-badge">🟢 COMISIONES ABIERTAS</div>
+    <table class="pricing-table">
+      <thead><tr><th>TIPO DE TRABAJO</th><th>PRECIO BASE</th></tr></thead>
+      <tbody>
+        <tr><td>Sketch / Boceto Limpio</td><td>$10 USD</td></tr>
+        <tr><td>Full Body / Personaje Completo</td><td>$20 USD</td></tr>
+        <tr><td>Página de Cómic / Manga</td><td>Consultar</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-    <h3>📬 CANALES DE CONTACTO</h3>
-    <div class="contact-grid">
-        <a href="mailto:bblaespp@gmail.com" class="contact-card"><span>📧</span> <b>Email</b><br>bblaespp@gmail.com</a>
-        <a href="https://wa.me/3152395773" target="_blank" class="contact-card"><span>📱</span> <b>WhatsApp</b><br>3152395773</a>
-    </div>
+  <h3>📬 CANALES DE CONTACTO</h3>
+  <div class="contact-grid">
+    <a href="mailto:bblaespp@gmail.com" class="contact-card"><span>📧</span><b>Email</b><br>bblaespp@gmail.com</a>
+    <a href="https://wa.me/3152395773" target="_blank" class="contact-card"><span>📱</span><b>WhatsApp</b><br>3152395773</a>
+  </div>
 </div>
 
-<div class="modal" id="modal" onclick="closeModal()">
-    <span class="close-modal">&times;</span>
-    <img id="modalImg" onclick="event.stopPropagation()">
+<div class="modal hidden" id="modal" onclick="closeModal()">
+  <span class="close-modal">&times;</span>
+  <img id="modalImg" onclick="event.stopPropagation()">
 </div>
 
-<script>
-// GALERÍAS DE IMÁGENES SUELTAS
-const images = {
-    ILUSTRACION: ["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png","ILUSTRACION/4.png","ILUSTRACION/5.png",
-                 "ILUSTRACION/6.png","ILUSTRACION/7.png","ILUSTRACION/8.png","ILUSTRACION/9.png","ILUSTRACION/10.png",
-                 "ILUSTRACION/11.png","ILUSTRACION/12.png","ILUSTRACION/13.png"],
-    SFW: ["sfw/1.png"],
-    NSFW: ["nsfw/1.png","nsfw/2.png","nsfw/4.png","nsfw/5.png","nsfw/3.png"],
-    FONDOS: ["FONDOS/X.png"]
-};
-
-// CÓMICS / MANGA NORMALES (SFW)
-const comicsSFW = [
-    {
-        id: "ww1",
-        title: "Primera Guerra Mundial",
-        cover: "COMICS/PAG1.png", 
-        pages: ["COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png","COMICS/PAG4.png","COMICS/PAG5.png"]
-    },
-    {
-        id: "extra",
-        title: "Historias Cortas",
-        cover: "COMICS/3.png",
-        pages: ["COMICS/3.png","COMICS/4.png"]
-    }
-];
-
-// CÓMICS / MANGA +18 (NSFW) -> AQUÍ AGREGAS TUS PROYECTOS NSFW
-const comicsNSFW = [
-    {
-        id: "nsfw_comic1",
-        title: "PRUEVA XD 🔞",
-        cover: "nsfw/1.png", // Imagen de portada de la carpeta NSFW
-        pages: ["nsfw/1.png", "nsfw/2.png", "nsfw/3.png",]
-    },
-];
-
-let nsfwUnlocked = false; // Guarda si ya confirmó que es +18
-let currentComicType = 'SFW'; // Controla si estamos navegando en cómics SFW o NSFW
-
-// CALCULA TOTAL DE PÁGINAS ACUMULADAS SEGÚN EL TIPO
-function getTotalComicPages(list) {
-    return list.reduce((sum, item) => sum + item.pages.length, 0);
-}
-
-// ACTUALIZA LOS CONTADORES EN BOTONES DE FILTRO
-function updateCounters() {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        const cat = btn.getAttribute('data-cat');
-        if (cat && images[cat]) {
-            const label = cat === 'NSFW' ? 'NSFW 🔞' : cat;
-            btn.textContent = `${label} (${images[cat].length})`;
-        }
-    });
-
-    // Contador de Cómics Normales
-    const btnComics = document.getElementById('btn-comics');
-    if (btnComics) {
-        btnComics.textContent = `CÓMICS (${getTotalComicPages(comicsSFW)})`;
-    }
-}
-
-function hideAll() {
-    document.getElementById("gallery").style.display = "none";
-    document.getElementById("comicsContainer").style.display = "none";
-    document.getElementById("infoSection").style.display = "none";
-    document.getElementById("backBtnContainer").style.display = "none";
-    document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-}
-
-function loadImages(cat, e) {
-    hideAll();
-    if (e && e.currentTarget) e.currentTarget.classList.add("active");
-    
-    const gallery = document.getElementById("gallery");
-    gallery.innerHTML = "";
-    gallery.style.display = "grid";
-
-    const catMayus = cat.toUpperCase();
-    (images[catMayus] || []).forEach(src => {
-        const card = document.createElement("div");
-        card.className = "image-container";
-        card.innerHTML = `<img src="${src}" loading="lazy" alt="Ilustración Betto Blaespp" onclick="openModal('${src}')">`;
-        gallery.appendChild(card);
-    });
-}
-
-// MOSTRAR LAS CARPETAS / PROYECTOS DE CÓMICS (SFW O NSFW)
-function showComicFolders(type = 'SFW', e) {
-    hideAll();
-    currentComicType = type;
-
-    const targetList = type === 'NSFW' ? comicsNSFW : comicsSFW;
-    const activeBtn = type === 'NSFW' ? document.getElementById('btn-nsfw') : document.getElementById('btn-comics');
-    
-    if (e && e.currentTarget) e.currentTarget.classList.add("active");
-    else if (activeBtn) activeBtn.classList.add("active");
-
-    // Primero mostramos la galería de imágenes sueltas NSFW si corresponde
-    if (type === 'NSFW' && images.NSFW.length > 0) {
-        const gallery = document.getElementById("gallery");
-        gallery.innerHTML = "";
-        gallery.style.display = "grid";
-        
-        images.NSFW.forEach(src => {
-            const card = document.createElement("div");
-            card.className = "image-container";
-            card.innerHTML = `<img src="${src}" loading="lazy" alt="NSFW Betto Blaespp" onclick="openModal('${src}')">`;
-            gallery.appendChild(card);
-        });
-    }
-
-    // Luego mostramos las carpetas de Cómics debajo
-    const container = document.getElementById("comicsContainer");
-    container.innerHTML = "";
-    container.style.display = "grid";
-
-    targetList.forEach(comic => {
-        const folder = document.createElement("div");
-        folder.className = "folder-card";
-        folder.onclick = () => openComicPages(comic.id, type);
-        folder.innerHTML = `
-            <img src="${comic.cover}" loading="lazy" alt="${comic.title}">
-            <div class="folder-info">
-                <div class="folder-title">${comic.title}</div>
-                <div class="folder-count">📖 ${comic.pages.length} Páginas</div>
-            </div>
-        `;
-        container.appendChild(folder);
-    });
-}
-
-// MOSTRAR PÁGINAS DE UNA CARPETA ESPECÍFICA
-function openComicPages(comicId, type = 'SFW') {
-    const targetList = type === 'NSFW' ? comicsNSFW : comicsSFW;
-    const selectedComic = targetList.find(c => c.id === comicId);
-    if (!selectedComic) return;
-
-    hideAll();
-    
-    const activeBtn = type === 'NSFW' ? document.getElementById('btn-nsfw') : document.getElementById('btn-comics');
-    if (activeBtn) activeBtn.classList.add("active");
-
-    const backBtnContainer = document.getElementById("backBtnContainer");
-    backBtnContainer.style.display = "block";
-
-    const gallery = document.getElementById("gallery");
-    gallery.innerHTML = "";
-    gallery.style.display = "grid";
-
-    selectedComic.pages.forEach(src => {
-        const card = document.createElement("div");
-        card.className = "image-container";
-        card.innerHTML = `<img src="${src}" loading="lazy" alt="${selectedComic.title}" onclick="openModal('${src}')">`;
-        gallery.appendChild(card);
-    });
-}
-
-// BOTÓN DE REGRESO
-function goBackToComics() {
-    showComicFolders(currentComicType);
-}
-
-function showInfo(e) { 
-    hideAll(); 
-    if (e && e.currentTarget) e.currentTarget.classList.add("active");
-    else document.getElementById('btn-info').classList.add('active');
-    document.getElementById("infoSection").style.display = "block"; 
-}
-
-// VALIDACIÓN +18 Y CARGA DE SECCIÓN NSFW
-function askNSFW(e) {
-    if (nsfwUnlocked || confirm("🔞 Contenido para adultos (+18). ¿Deseas continuar?")) {
-        nsfwUnlocked = true;
-        showComicFolders('NSFW', e);
-    }
-}
-
-// CONTROL DE MODAL
-function openModal(src) {
-    document.getElementById('modalImg').src = src;
-    document.getElementById('modal').classList.add('active');
-}
-
-function closeModal() {
-    document.getElementById('modal').classList.remove('active');
-}
-
-// Cierre con la tecla ESC en PC
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-});
-
-// Carga inicial
-updateCounters();
-showInfo();
-</script>
+<!-- CARGA DE TUS ARCHIVOS JS SEPARADOS -->
+<script src="config.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
