@@ -10,46 +10,18 @@
   --pink: #ff0055; 
   --bg: #050508; 
   --card-bg: #0f0f14; 
+  --bg-portada: url('portada.png');
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif; color: #fff; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
 header {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(35px, 8vw, 65px) 15px;
-  text-align: center;
-  border-bottom: 2px solid var(--cyan);
+  background: linear-gradient(180deg, rgba(5,5,8,0.4), rgba(5,5,8,0.95)), var(--bg-portada) center/cover no-repeat, linear-gradient(135deg, var(--cyan), var(--pink));
+  padding: clamp(35px, 8vw, 65px) 15px; 
+  text-align: center; 
+  border-bottom: 2px solid var(--cyan); 
   box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
-  background: #050508;
-}
-
-/* Imagen de la portada como fondo del header */
-.portada-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-  opacity: 0.6;
-}
-
-/* Degradado superpuesto sobre la portada */
-.header-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(5,5,8,0.4), rgba(5,5,8,0.95));
-  z-index: 1;
-}
-
-.header-content {
-  position: relative;
-  z-index: 2;
+  transition: background 0.3s ease-in-out;
 }
 
 .avatar-wrapper {
@@ -126,15 +98,11 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 <body>
 
 <header>
-  <img id="portada-img" class="portada-bg" src="portada.png" alt="Portada">
-  <div class="header-overlay"></div>
-  <div class="header-content">
-    <div class="avatar-wrapper">
-      <img id="avatar-img" src="avatar.jpg" alt="BETTO BLAESPP">
-    </div>
-    <h1>BETTO BLAESPP</h1>
-    <p>ILUSTRACIÓN · CÓMIC · WEB MANGA · COMISIONES</p>
+  <div class="avatar-wrapper">
+    <img id="avatar-img" src="avatar.jpg" alt="BETTO BLAESPP">
   </div>
+  <h1>BETTO BLAESPP</h1>
+  <p>ILUSTRACIÓN · CÓMIC · WEB MANGA · COMISIONES</p>
 </header>
 
 <div class="filters-container">
@@ -187,7 +155,6 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
   <img id="modalImg" onclick="event.stopPropagation()">
 </div>
 
-<!-- CARGA DE TUS ARCHIVOS JS SEPARADOS -->
 <script src="config.js"></script>
 <script src="script.js"></script>
 </body>
