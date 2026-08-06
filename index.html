@@ -413,14 +413,14 @@ header p {
         <button id="btn-info" class="active" onclick="showInfo(event)">INICIO / CONTACTO</button>
         <button class="filter-btn" data-cat="ILUSTRACION" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
         <button class="filter-btn" data-cat="SFW" onclick="loadImages('SFW', event)">SFW</button>
-        <button class="filter-btn" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
+        <button class="filter-btn" id="btn-nsfw" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
         <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
-        <button class="filter-btn" id="btn-comics" onclick="showComicFolders(event)">CÓMICS</button>
+        <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
     </div>
 </div>
 
 <div class="back-btn-container" id="backBtnContainer">
-    <button class="back-btn" onclick="showComicFolders()">⬅ Volver a Cómics</button>
+    <button class="back-btn" id="backBtn" onclick="goBackToComics()">⬅ Volver a Cómics</button>
 </div>
 
 <div id="gallery"></div>
@@ -474,7 +474,7 @@ header p {
 </div>
 
 <script>
-// GALERÍAS Y COMICS POR CARPETAS / PROYECTOS
+// GALERÍAS DE IMÁGENES SUELTAS
 const images = {
     ILUSTRACION: ["ILUSTRACION/1.png","ILUSTRACION/2.png","ILUSTRACION/3.png","ILUSTRACION/4.png","ILUSTRACION/5.png",
                  "ILUSTRACION/6.png","ILUSTRACION/7.png","ILUSTRACION/8.png","ILUSTRACION/9.png","ILUSTRACION/10.png",
@@ -484,12 +484,12 @@ const images = {
     FONDOS: ["FONDOS/X.png"]
 };
 
-// AQUÍ AGREGAS O EDITAS TUS PROYECTOS DE CÓMIC / MANGA
-const comics = [
+// CÓMICS / MANGA NORMALES (SFW)
+const comicsSFW = [
     {
         id: "ww1",
         title: "Primera Guerra Mundial",
-        cover: "COMICS/PAG1.png", // Imagen de portada del proyecto
+        cover: "COMICS/PAG1.png", 
         pages: ["COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png","COMICS/PAG4.png","COMICS/PAG5.png"]
     },
     {
@@ -500,9 +500,22 @@ const comics = [
     }
 ];
 
-// CALCULA TOTAL DE PÁGINAS DE CÓMIC ACUMULADAS
-function getTotalComicPages() {
-    return comics.reduce((sum, item) => sum + item.pages.length, 0);
+// CÓMICS / MANGA +18 (NSFW) -> AQUÍ AGREGAS TUS PROYECTOS NSFW
+const comicsNSFW = [
+    {
+        id: "nsfw_comic1",
+        title: "Proyecto Secreto 🔞",
+        cover: "nsfw/1.png", // Imagen de portada de la carpeta NSFW
+        pages: ["nsfw/1.png", "nsfw/2.png", "nsfw/3.png"]
+    }
+];
+
+let nsfwUnlocked = false; // Guarda si ya confirmó que es +18
+let currentComicType = 'SFW'; // Controla si estamos navegando en cómics SFW o NSFW
+
+// CALCULA TOTAL DE PÁGINAS ACUMULADAS SEGÚN EL TIPO
+function getTotalComicPages(list) {
+    return list.reduce((sum, item) => sum + item.pages.length, 0);
 }
 
 // ACTUALIZA LOS CONTADORES EN BOTONES DE FILTRO
@@ -515,10 +528,10 @@ function updateCounters() {
         }
     });
 
-    // Contador de Cómics (Suma todas las páginas de todas las carpetas)
+    // Contador de Cómics Normales
     const btnComics = document.getElementById('btn-comics');
     if (btnComics) {
-        btnComics.textContent = `CÓMICS (${getTotalComicPages()})`;
+        btnComics.textContent = `CÓMICS (${getTotalComicPages(comicsSFW)})`;
     }
 }
 
@@ -547,21 +560,40 @@ function loadImages(cat, e) {
     });
 }
 
-// MOSTRAR LAS CARPETAS / PROYECTOS DE CÓMICS
-function showComicFolders(e) {
+// MOSTRAR LAS CARPETAS / PROYECTOS DE CÓMICS (SFW O NSFW)
+function showComicFolders(type = 'SFW', e) {
     hideAll();
-    const btnComics = document.getElementById('btn-comics');
-    if (e && e.currentTarget) e.currentTarget.classList.add("active");
-    else btnComics.classList.add("active");
+    currentComicType = type;
 
+    const targetList = type === 'NSFW' ? comicsNSFW : comicsSFW;
+    const activeBtn = type === 'NSFW' ? document.getElementById('btn-nsfw') : document.getElementById('btn-comics');
+    
+    if (e && e.currentTarget) e.currentTarget.classList.add("active");
+    else if (activeBtn) activeBtn.classList.add("active");
+
+    // Primero mostramos la galería de imágenes sueltas NSFW si corresponde
+    if (type === 'NSFW' && images.NSFW.length > 0) {
+        const gallery = document.getElementById("gallery");
+        gallery.innerHTML = "";
+        gallery.style.display = "grid";
+        
+        images.NSFW.forEach(src => {
+            const card = document.createElement("div");
+            card.className = "image-container";
+            card.innerHTML = `<img src="${src}" loading="lazy" alt="NSFW Betto Blaespp" onclick="openModal('${src}')">`;
+            gallery.appendChild(card);
+        });
+    }
+
+    // Luego mostramos las carpetas de Cómics debajo
     const container = document.getElementById("comicsContainer");
     container.innerHTML = "";
     container.style.display = "grid";
 
-    comics.forEach(comic => {
+    targetList.forEach(comic => {
         const folder = document.createElement("div");
         folder.className = "folder-card";
-        folder.onclick = () => openComicPages(comic.id);
+        folder.onclick = () => openComicPages(comic.id, type);
         folder.innerHTML = `
             <img src="${comic.cover}" loading="lazy" alt="${comic.title}">
             <div class="folder-info">
@@ -574,13 +606,18 @@ function showComicFolders(e) {
 }
 
 // MOSTRAR PÁGINAS DE UNA CARPETA ESPECÍFICA
-function openComicPages(comicId) {
-    const selectedComic = comics.find(c => c.id === comicId);
+function openComicPages(comicId, type = 'SFW') {
+    const targetList = type === 'NSFW' ? comicsNSFW : comicsSFW;
+    const selectedComic = targetList.find(c => c.id === comicId);
     if (!selectedComic) return;
 
     hideAll();
-    document.getElementById('btn-comics').classList.add("active");
-    document.getElementById("backBtnContainer").style.display = "block";
+    
+    const activeBtn = type === 'NSFW' ? document.getElementById('btn-nsfw') : document.getElementById('btn-comics');
+    if (activeBtn) activeBtn.classList.add("active");
+
+    const backBtnContainer = document.getElementById("backBtnContainer");
+    backBtnContainer.style.display = "block";
 
     const gallery = document.getElementById("gallery");
     gallery.innerHTML = "";
@@ -594,6 +631,11 @@ function openComicPages(comicId) {
     });
 }
 
+// BOTÓN DE REGRESO
+function goBackToComics() {
+    showComicFolders(currentComicType);
+}
+
 function showInfo(e) { 
     hideAll(); 
     if (e && e.currentTarget) e.currentTarget.classList.add("active");
@@ -601,9 +643,11 @@ function showInfo(e) {
     document.getElementById("infoSection").style.display = "block"; 
 }
 
+// VALIDACIÓN +18 Y CARGA DE SECCIÓN NSFW
 function askNSFW(e) {
-    if (confirm("🔞 Contenido para adultos (+18). ¿Deseas continuar?")) {
-        loadImages("NSFW", e);
+    if (nsfwUnlocked || confirm("🔞 Contenido para adultos (+18). ¿Deseas continuar?")) {
+        nsfwUnlocked = true;
+        showComicFolders('NSFW', e);
     }
 }
 
