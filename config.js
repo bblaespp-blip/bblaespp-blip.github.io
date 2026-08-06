@@ -5,10 +5,7 @@
 const GALERIA = {
   // 1. ILUSTRACIONES SUELTAS
   ILUSTRACION: [
-    "ILUSTRACION/1.png",
-    "ILUSTRACION/2.png",
-    "ILUSTRACION/3.png",
-    "ILUSTRACION/4.png"
+    "ILUSTRACION/1.png", "ILUSTRACION/2.png", "ILUSTRACION/3.png", "ILUSTRACION/4.png"
   ],
 
   SFW: [
@@ -31,10 +28,7 @@ const GALERIA = {
       title: "Primera Guerra Mundial",
       cover: "COMICS/PAG1.png",
       pages: [
-        "COMICS/PAG1.png",
-        "COMICS/PAG2.png",
-        "COMICS/PAG3.png",
-        "COMICS/PAG4.png"
+        "COMICS/PAG1.png","COMICS/PAG2.png","COMICS/PAG3.png", "COMICS/PAG4.png"
       ]
     },
     {
@@ -55,8 +49,7 @@ const GALERIA = {
       title: "PRUEBA XD 🔞",
       cover: "nsfw/1.png",
       pages: [
-        "nsfw/1.png",
-        "nsfw/2.png"
+        "nsfw/1.png","nsfw/2.png"
       ]
     }
   ]
