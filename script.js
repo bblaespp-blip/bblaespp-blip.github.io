@@ -1,40 +1,49 @@
 let nsfwUnlocked = false;
 let currentComicType = 'SFW';
 
-// LISTA DE EXTENSIONES COMPATIBLES
 const EXTENSIONES = ['png', 'jpg', 'jpeg', 'webp', 'PNG', 'JPG', 'JPEG', 'WEBP'];
 
-// FUNCIÓN PARA CARGAR IMÁGENES PROBANDO CUALQUIER EXTENSIÓN AUTOMÁTICAMENTE
-function cargarImagenMultiExt(elementId, nombreBase) {
-  const imgEl = document.getElementById(elementId);
-  if (!imgEl) return;
-
+// Probar cuál extensión existe y aplicarla al CSS (--bg-portada) o a una etiqueta <img>
+function probarYAplicarImagen(nombreBase, callback) {
   let index = 0;
 
-  function intentarCargar() {
-    if (index >= EXTENSIONES.length) {
-      imgEl.style.display = 'none'; // Si no encuentra ninguna, oculta el elemento silenciosamente
-      return;
-    }
-    imgEl.style.display = 'block';
-    imgEl.onerror = () => {
-      index++;
-      intentarCargar();
+  function probar() {
+    if (index >= EXTENSIONES.length) return;
+    const ruta = `${nombreBase}.${EXTENSIONES[index]}`;
+    const imgTester = new Image();
+
+    imgTester.onload = () => {
+      callback(ruta);
     };
-    imgEl.src = `${nombreBase}.${EXTENSIONES[index]}`;
+    imgTester.onerror = () => {
+      index++;
+      probar();
+    };
+    imgTester.src = ruta;
   }
 
-  intentarCargar();
+  probar();
 }
 
-// CAMBIA ENTRE SFW Y NSFW SIN IMPORTAR LA EXTENSIÓN
+// CAMBIA ENTRE SFW Y NSFW (Soporta JPG, PNG, WEBP en avatar y portada)
 function cambiarTema(modo) {
-  if (modo === 'NSFW') {
-    cargarImagenMultiExt('portada-img', 'portada_nsfw');
-    cargarImagenMultiExt('avatar-img', 'avatar_nsfw');
-  } else {
-    cargarImagenMultiExt('portada-img', 'portada');
-    cargarImagenMultiExt('avatar-img', 'avatar');
+  const root = document.documentElement;
+  const avatar = document.getElementById('avatar-img');
+  const esNSFW = modo === 'NSFW';
+
+  const basePortada = esNSFW ? 'portada_nsfw' : 'portada';
+  const baseAvatar = esNSFW ? 'avatar_nsfw' : 'avatar';
+
+  // Actualiza la variable CSS de la portada en el header
+  probarYAplicarImagen(basePortada, (rutaCorrecta) => {
+    root.style.setProperty('--bg-portada', `url('${rutaCorrecta}')`);
+  });
+
+  // Actualiza la imagen del avatar
+  if (avatar) {
+    probarYAplicarImagen(baseAvatar, (rutaCorrecta) => {
+      avatar.src = rutaCorrecta;
+    });
   }
 }
 
@@ -126,10 +135,8 @@ window.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
 
 // INICIALIZACIÓN AUTOMÁTICA Y CONTADORES
 (function init() {
-  // Carga inicial dinámica
   cambiarTema('SFW');
 
-  // Contadores
   document.querySelectorAll('.filter-btn').forEach(btn => {
     const cat = btn.getAttribute('data-cat');
     if (cat && GALERIA[cat]) {
