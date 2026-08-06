@@ -1,47 +1,40 @@
 let nsfwUnlocked = false;
 let currentComicType = 'SFW';
 
-// FUNCIÓN PARA PROBAR EXTENSIONES DE LA PORTADA SI NO CARGA A LA PRIMERA
-function aplicarPortada(nombreBase) {
-  const root = document.documentElement;
-  const extensiones = ['png', 'jpg', 'jpeg', 'webp', 'PNG', 'JPG'];
-  
-  // Probamos la primera opción
-  let img = new Image();
+// LISTA DE EXTENSIONES COMPATIBLES
+const EXTENSIONES = ['png', 'jpg', 'jpeg', 'webp', 'PNG', 'JPG', 'JPEG', 'WEBP'];
+
+// FUNCIÓN PARA CARGAR IMÁGENES PROBANDO CUALQUIER EXTENSIÓN AUTOMÁTICAMENTE
+function cargarImagenMultiExt(elementId, nombreBase) {
+  const imgEl = document.getElementById(elementId);
+  if (!imgEl) return;
+
   let index = 0;
 
-  function intentarSiguiente() {
-    if (index >= extensiones.length) return;
-    const ruta = `${nombreBase}.${extensiones[index]}`;
-    img = new Image();
-    img.onload = () => {
-      root.style.setProperty('--bg-portada', `url('${ruta}')`);
-    };
-    img.onerror = () => {
+  function intentarCargar() {
+    if (index >= EXTENSIONES.length) {
+      imgEl.style.display = 'none'; // Si no encuentra ninguna, oculta el elemento silenciosamente
+      return;
+    }
+    imgEl.style.display = 'block';
+    imgEl.onerror = () => {
       index++;
-      intentarSiguiente();
+      intentarCargar();
     };
-    img.src = ruta;
+    imgEl.src = `${nombreBase}.${EXTENSIONES[index]}`;
   }
 
-  intentarSiguiente();
+  intentarCargar();
 }
 
+// CAMBIA ENTRE SFW Y NSFW SIN IMPORTAR LA EXTENSIÓN
 function cambiarTema(modo) {
-  const avatar = document.getElementById('avatar-img');
-
   if (modo === 'NSFW') {
-    aplicarPortada('portada_nsfw');
-    if (avatar) {
-      avatar.dataset.retry = '';
-      avatar.src = "avatar_nsfw.png"; 
-    }
+    cargarImagenMultiExt('portada-img', 'portada_nsfw');
+    cargarImagenMultiExt('avatar-img', 'avatar_nsfw');
   } else {
-    aplicarPortada('portada');
-    if (avatar) {
-      avatar.dataset.retry = '';
-      avatar.src = "avatar.jpg";
-    }
+    cargarImagenMultiExt('portada-img', 'portada');
+    cargarImagenMultiExt('avatar-img', 'avatar');
   }
 }
 
@@ -131,12 +124,12 @@ function closeModal() {
 
 window.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
 
-// INICIALIZACIÓN AUTOMÁTICA
+// INICIALIZACIÓN AUTOMÁTICA Y CONTADORES
 (function init() {
-  // Carga inicial del tema
+  // Carga inicial dinámica
   cambiarTema('SFW');
 
-  // Actualizar contadores
+  // Contadores
   document.querySelectorAll('.filter-btn').forEach(btn => {
     const cat = btn.getAttribute('data-cat');
     if (cat && GALERIA[cat]) {
