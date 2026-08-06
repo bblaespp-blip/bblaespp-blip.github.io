@@ -1,33 +1,47 @@
 let nsfwUnlocked = false;
 let currentComicType = 'SFW';
 
-// 🔄 DICCIONARIO DE IMÁGENES DE PORTADA Y AVATAR
-// Puedes cambiar las extensiones aquí si tus archivos se llaman distinto (.png, .webp, .jpeg)
-const TEMAS = {
-  SFW: {
-    portada: "portada.jpg",
-    avatar: "avatar.jpg"
-  },
-  NSFW: {
-    portada: "portada_nsfw.jpg",
-    avatar: "avatar_nsfw.jpg"
-  }
-};
-
-// 🔄 FUNCIÓN PARA CAMBIAR PORTADA Y AVATAR DINÁMICAMENTE
-function cambiarTema(modo) {
+// FUNCIÓN PARA PROBAR EXTENSIONES DE LA PORTADA SI NO CARGA A LA PRIMERA
+function aplicarPortada(nombreBase) {
   const root = document.documentElement;
+  const extensiones = ['png', 'jpg', 'jpeg', 'webp', 'PNG', 'JPG'];
+  
+  // Probamos la primera opción
+  let img = new Image();
+  let index = 0;
+
+  function intentarSiguiente() {
+    if (index >= extensiones.length) return;
+    const ruta = `${nombreBase}.${extensiones[index]}`;
+    img = new Image();
+    img.onload = () => {
+      root.style.setProperty('--bg-portada', `url('${ruta}')`);
+    };
+    img.onerror = () => {
+      index++;
+      intentarSiguiente();
+    };
+    img.src = ruta;
+  }
+
+  intentarSiguiente();
+}
+
+function cambiarTema(modo) {
   const avatar = document.getElementById('avatar-img');
-  const config = TEMAS[modo] || TEMAS.SFW;
 
-  // Cambiar la imagen del banner superior (Portada)
-  root.style.setProperty('--bg-portada', `url('${config.portada}')`);
-
-  // Cambiar la imagen del avatar circular
-  if (avatar) {
-    // Si la imagen cambia de modo, reiniciamos el dataset de intentos de carga (onerror)
-    avatar.dataset.retry = '';
-    avatar.src = config.avatar;
+  if (modo === 'NSFW') {
+    aplicarPortada('portada_nsfw');
+    if (avatar) {
+      avatar.dataset.retry = '';
+      avatar.src = "avatar_nsfw.png"; 
+    }
+  } else {
+    aplicarPortada('portada');
+    if (avatar) {
+      avatar.dataset.retry = '';
+      avatar.src = "avatar.jpg";
+    }
   }
 }
 
@@ -47,7 +61,6 @@ function setView(activeBtn, ...visibleElements) {
 }
 
 function loadImages(cat, e) {
-  // Cambia el tema según la categoría (NSFW o SFW)
   cambiarTema(cat === 'NSFW' ? 'NSFW' : 'SFW');
 
   const gallery = document.getElementById("gallery");
@@ -56,7 +69,6 @@ function loadImages(cat, e) {
 }
 
 function showComicFolders(type = 'SFW', e) {
-  // Cambia el tema al entrar a cómics SFW o NSFW
   cambiarTema(type);
 
   currentComicType = type;
@@ -97,7 +109,7 @@ function openComicPages(comicId, type = 'SFW') {
 }
 
 function showInfo(e) { 
-  cambiarTema('SFW'); // Regresa al tema normal al estar en Inicio / Sobre mí
+  cambiarTema('SFW');
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
 }
 
@@ -119,8 +131,12 @@ function closeModal() {
 
 window.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
 
-// INICIALIZACIÓN AUTOMÁTICA Y CONTADORES
-(function updateCounters() {
+// INICIALIZACIÓN AUTOMÁTICA
+(function init() {
+  // Carga inicial del tema
+  cambiarTema('SFW');
+
+  // Actualizar contadores
   document.querySelectorAll('.filter-btn').forEach(btn => {
     const cat = btn.getAttribute('data-cat');
     if (cat && GALERIA[cat]) {
