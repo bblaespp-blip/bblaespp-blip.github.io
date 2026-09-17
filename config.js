@@ -14,7 +14,7 @@ const GALERIA = {
   ],
 
   NSFW: [
-    "nsfw/1.png", "nsfw/2.png", "nsfw/3.png", "nsfw/4.png", "nsfw/5.png"
+    "nsfw/1.png", "nsfw/2.png", "nsfw/3.png", "nsfw/4.png", "nsfw/5.png", "nsfw/6.jpg","nsfw/7.jpg", "nsfw/8.jpg"
   ],
 
   FONDOS: [
