@@ -132,10 +132,11 @@ function sendOrder(e) {
   pedidosGuardados.unshift(nuevoPedido);
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
-  const text = `🔔 *¡NUEVO PEDIDO / TICKET!*%0A%0A🎫 *ID:* ${ticketId}%0A👤 *Cliente:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
+  // Notificación a WhatsApp corregida para que el número de ticket se vea perfectamente
+  const mensaje = `🔔 *¡NUEVO PEDIDO / TICKET!*\n\n🎫 *ID:* ${ticketId}\n👤 *Cliente:* ${name}\n🎨 *Tipo:* ${type}\n💡 *Idea:* ${idea}`;
   const phone = "573152395773";
   
-  window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`, '_blank');
 
   alert(`¡Pedido registrado con éxito! Tu número de ticket asignado es ${ticketId} 🎉`);
   document.querySelector('.order-form').reset();
@@ -185,7 +186,6 @@ function finalizarTicket(index) {
     return;
   }
 
-  // Corrección automática si solo escribes el número o nombre de la imagen
   if (!imgInput.includes('/')) {
     imgInput = 'ILUSTRACION/' + imgInput; 
   }
@@ -229,26 +229,24 @@ function showUserCommissions(e) {
   cambiarTema('SFW');
   const container = document.getElementById("userCommissionsGallery");
 
-  const entregadasConfig = GALERIA.comisionesUsuarios || [];
   const entregadasStorage = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
-  const todasEntregadas = [...entregadasStorage, ...entregadasConfig];
 
   let htmlContenido = "";
 
-  // Botón protegido para limpiar tus pruebas rápidamente
   if (entregadasStorage.length > 0) {
     htmlContenido += `
       <div style="grid-column: 1/-1; display: flex; justify-content: flex-end;">
-        <button class="btn-delete" onclick="borrarEntregadasAdmin()">🗑️ Borrar Entregadas de Prueba (Admin)</button>
+        <button class="btn-delete" onclick="borrarEntregadasAdmin()">🗑️ Borrar Todas las Entregadas (Admin)</button>
       </div>
     `;
   }
 
-  if (todasEntregadas.length === 0) {
+  if (entregadasStorage.length === 0) {
     htmlContenido += `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones entregadas aquí 🎨</p>`;
   } else {
-    htmlContenido += todasEntregadas.map(item => `
+    htmlContenido += entregadasStorage.map((item, index) => `
       <div class="commission-card">
+        <button class="btn-delete-item" onclick="borrarEntregadaIndividual(${index})" title="Borrar esta publicación">×</button>
         <img src="${item.imagen}" loading="lazy" alt="Comisión para ${item.cliente}" onclick="openModal('${item.imagen}')">
         <div class="commission-info">
           <div class="commission-user">👤 ${item.cliente}</div>
@@ -262,12 +260,25 @@ function showUserCommissions(e) {
   setView(e || document.getElementById('btn-user-commissions'), container);
 }
 
+// 🔒 BORRAR UNA SOLA COMISIÓN ENTREGADA (CON CONTRASEÑA)
+function borrarEntregadaIndividual(index) {
+  const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar esta publicación:");
+  if (password === "BETTO2026") {
+    let entregadasStorage = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
+    entregadasStorage.splice(index, 1);
+    localStorage.setItem('betto_entregadas', JSON.stringify(entregadasStorage));
+    showUserCommissions();
+  } else if (password !== null) {
+    alert("❌ Contraseña incorrecta.");
+  }
+}
+
+// 🔒 BORRAR TODAS LAS ENTREGADAS (CON CONTRASEÑA)
 function borrarEntregadasAdmin() {
-  const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar las entregadas de prueba:");
-  
+  const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar todas las entregadas:");
   if (password === "BETTO2026") {
     localStorage.removeItem('betto_entregadas');
-    alert("¡Comisiones de prueba borradas con éxito!");
+    alert("¡Todas las comisiones entregadas fueron borradas!");
     showUserCommissions();
   } else if (password !== null) {
     alert("❌ Contraseña incorrecta.");
