@@ -69,14 +69,14 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .folder-count, .commission-prompt { color: #e0e0e0; font-size: 0.85rem; margin-top: 6px; font-style: italic; }
 .back-btn-container { max-width: 1300px; margin: 15px auto 0; padding: 0 15px; }
 
-#infoSection, #orderSection {
+#infoSection {
   background: var(--card-bg); padding: clamp(30px, 6vw, 50px) clamp(18px, 5vw, 35px); margin: 30px 15px; border-radius: 25px;
   text-align: center; max-width: 850px; border: 2px solid var(--cyan); box-shadow: 0 0 25px rgba(0, 243, 255, 0.2); animation: fadeIn 0.5s ease;
 }
-@media (min-width: 768px) { #infoSection, #orderSection { margin: 50px auto; } }
-#infoSection h2, #orderSection h2 { color: var(--cyan); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-.bio-text { font-size: clamp(0.95rem, 2.8vw, 1.15rem); line-height: 1.7; color: #e0e0e0; margin-bottom: 30px; }
-.bio-text b, #infoSection h3, #orderSection h3 { color: var(--pink); }
+@media (min-width: 768px) { #infoSection { margin: 50px auto; } }
+#infoSection h2 { color: var(--cyan); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+.bio-text { font-size: clamp(0.95rem, 2.8vw, 1.15rem); line-height: 1.7; color: #e0e0e0; margin-bottom: 30px; text-align: left; }
+.bio-text b, #infoSection h3 { color: var(--pink); }
 
 .commission-box { background: #12121c; border: 1px solid var(--cyan); border-radius: 20px; padding: 25px 15px; margin: 35px 0; }
 .commission-badge { display: inline-block; background: rgba(0, 255, 136, 0.15); border: 2px solid #00ff88; color: #00ff88; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; margin-bottom: 20px; box-shadow: 0 0 12px rgba(0, 255, 136, 0.3); }
@@ -85,12 +85,7 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .pricing-table th { color: var(--cyan); }
 .pricing-table td:last-child { text-align: right; color: var(--pink); font-weight: bold; }
 
-.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-.contact-card { background: #161622; padding: 20px 15px; border-radius: 16px; text-decoration: none; color: #fff; border: 1px solid var(--cyan); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.9rem; transition: all .3s; }
-@media (hover: hover) { .contact-card:hover { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #000; transform: translateY(-5px); font-weight: bold; } }
-.contact-card span { font-size: 1.8rem; }
-
-/* ESTILOS DEL FORMULARIO DE PEDIDOS */
+/* ESTILOS DEL FORMULARIO INTEGRADO EN INICIO */
 .order-form { display: flex; flex-direction: column; gap: 18px; margin-top: 25px; text-align: left; }
 .order-form label { font-weight: bold; color: var(--cyan); font-size: 0.95rem; }
 .order-form input, .order-form select, .order-form textarea {
@@ -119,17 +114,16 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 
 <div class="filters-container">
   <div class="filters">
-    <button id="btn-info" class="active" onclick="showInfo(event)">INICIO / CONTACTO</button>
+    <button id="btn-info" class="active" onclick="showInfo(event)">INICIO / PEDIDOS</button>
     <button class="filter-btn" data-cat="ILUSTRACION" onclick="loadImages('ILUSTRACION', event)">ILUSTRACIÓN</button>
     <button class="filter-btn" data-cat="SFW" onclick="loadImages('SFW', event)">SFW</button>
     <button class="filter-btn" id="btn-nsfw" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
     <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
     <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
     
-    <!-- NUEVAS PESTAÑAS DE PEDIDOS Y TICKETS -->
+    <!-- PESTAÑAS DE TICKETS Y ENTREGADAS -->
     <button class="filter-btn" id="btn-user-commissions" onclick="showUserCommissions(event)">ENTREGADAS 🎨</button>
     <button class="filter-btn" id="btn-tickets" onclick="showTickets(event)">TICKETS 🎫</button>
-    <button id="btn-order" onclick="showOrderForm(event)">HACER PEDIDO 📝</button>
   </div>
 </div>
 
@@ -162,17 +156,8 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
     </table>
   </div>
 
-  <h3>📬 CANALES DE CONTACTO</h3>
-  <div class="contact-grid">
-    <a href="mailto:bblaespp@gmail.com" class="contact-card"><span>📧</span><b>Email</b><br>bblaespp@gmail.com</a>
-    <a href="https://wa.me/3152395773" target="_blank" class="contact-card"><span>📱</span><b>WhatsApp</b><br>3152395773</a>
-  </div>
-</div>
-
-<!-- SECCIÓN DEL FORMULARIO DE PEDIDOS -->
-<div id="orderSection" class="hidden">
   <h2>📝 HAZ TU COMISIÓN</h2>
-  <p class="bio-text">Rellena el formulario con tu idea. Al presionar enviar, el ticket se guardará automáticamente en el sistema y se abrirá tu WhatsApp para enviarme la notificación.</p>
+  <p class="bio-text" style="text-align: center;">Rellena el formulario con tu idea. Al presionar enviar, el ticket se guardará automáticamente en el sistema y se abrirá tu WhatsApp para enviarme la notificación.</p>
   
   <form class="order-form" onsubmit="sendOrder(event)">
     <div>
