@@ -39,11 +39,11 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .filters::-webkit-scrollbar { display: none; }
 @media (min-width: 768px) { .filters { justify-content: center; } }
 
-.filters button, .back-btn, .btn-submit {
+.filters button, .back-btn, .btn-submit, .btn-action {
   background: transparent; border: 2px solid var(--cyan); color: var(--cyan); padding: 8px 18px; border-radius: 25px;
   cursor: pointer; font-weight: 700; transition: all 0.25s; font-size: clamp(11px, 2.8vw, 13px); flex-shrink: 0;
 }
-@media (hover: hover) { .filters button:hover, .back-btn:hover, .btn-submit:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); } }
+@media (hover: hover) { .filters button:hover, .back-btn:hover, .btn-submit:hover, .btn-action:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); } }
 .filters button.active { background: var(--pink); border-color: var(--pink); color: #fff; box-shadow: 0 0 15px var(--pink); }
 
 #gallery, #comicsContainer, #userCommissionsGallery, #ticketsContainer {
@@ -52,16 +52,23 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 @media (min-width: 600px) { #gallery, #comicsContainer, #userCommissionsGallery, #ticketsContainer { gap: 25px; padding: 30px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
 
 .image-container, .folder-card, .commission-card, .ticket-card {
-  background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1px solid #1a1a24; animation: fadeIn 0.4s ease; transition: transform 0.3s, border-color 0.3s;
+  background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1.5px solid #1a1a24; animation: fadeIn 0.4s ease; transition: transform 0.3s, border-color 0.3s;
 }
-@media (hover: hover) { .ticket-card:hover { border-color: var(--cyan); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 243, 255, 0.2); } }
+.commission-card img, .ticket-card img { width: 100%; height: 220px; border-radius: 10px; object-fit: cover; margin-top: 10px; cursor: pointer; }
 
 .ticket-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222233; padding-bottom: 8px; margin-bottom: 10px; }
 .ticket-id { color: var(--cyan); font-weight: bold; font-size: 0.85rem; }
 .ticket-date { color: #888; font-size: 0.75rem; }
-.ticket-client { color: var(--pink); font-weight: bold; font-size: 1.1rem; margin-bottom: 6px; }
-.ticket-type { color: #00ff88; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
-.ticket-idea { color: #e0e0e0; font-size: 0.95rem; line-height: 1.5; font-style: italic; }
+.ticket-client { color: var(--pink); font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
+.ticket-type { color: #00ff88; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+.ticket-idea { color: #e0e0e0; font-size: 0.95rem; line-height: 1.4; font-style: italic; margin-bottom: 12px; }
+
+.ticket-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid #222233; padding-top: 10px; }
+.ticket-actions input[type="text"] { width: 100%; padding: 8px; background: #07070b; border: 1px solid var(--cyan); border-radius: 8px; color: #fff; font-size: 0.85rem; }
+.btn-finish { background: rgba(0,255,136,0.15); border: 1.5px solid #00ff88; color: #00ff88; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+.btn-finish:hover { background: #00ff88; color: #000; box-shadow: 0 0 10px #00ff88; }
+.btn-delete { background: rgba(255,0,85,0.15); border: 1.5px solid var(--pink); color: var(--pink); padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+.btn-delete:hover { background: var(--pink); color: #fff; box-shadow: 0 0 10px var(--pink); }
 
 .folder-card { cursor: pointer; text-align: center; }
 .folder-info, .commission-info { margin-top: 10px; padding: 5px; }
@@ -85,7 +92,6 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .pricing-table th { color: var(--cyan); }
 .pricing-table td:last-child { text-align: right; color: var(--pink); font-weight: bold; }
 
-/* ESTILOS DEL FORMULARIO INTEGRADO EN INICIO */
 .order-form { display: flex; flex-direction: column; gap: 18px; margin-top: 25px; text-align: left; }
 .order-form label { font-weight: bold; color: var(--cyan); font-size: 0.95rem; }
 .order-form input, .order-form select, .order-form textarea {
@@ -121,7 +127,6 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
     <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
     <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
     
-    <!-- PESTAÑAS DE TICKETS Y ENTREGADAS -->
     <button class="filter-btn" id="btn-user-commissions" onclick="showUserCommissions(event)">ENTREGADAS 🎨</button>
     <button class="filter-btn" id="btn-tickets" onclick="showTickets(event)">TICKETS 🎫</button>
   </div>
@@ -157,7 +162,7 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
   </div>
 
   <h2>📝 HAZ TU COMISIÓN</h2>
-  <p class="bio-text" style="text-align: center;">Rellena el formulario con tu idea. Al presionar enviar, el ticket se guardará automáticamente en el sistema y se abrirá tu WhatsApp para enviarme la notificación.</p>
+  <p class="bio-text" style="text-align: center;">Rellena el formulario con tu idea. Al presionar enviar, el ticket se registrará en el sistema y se abrirá tu WhatsApp para enviar la notificación con el número de ticket.</p>
   
   <form class="order-form" onsubmit="sendOrder(event)">
     <div>
