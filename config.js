@@ -59,7 +59,7 @@ const GALERIA = {
     {
       cliente: "Carlos M.",
       idea: "Max Steel peleando contra Venom en el Monte Fuji",
-      imagen: "COMISIONES/maxsteel_vs_venom.png" // Cambia la ruta por la imagen finalizada
+      imagen: "COMISIONES/maxsteel_vs_venom.png"
     }
   ]
 };
