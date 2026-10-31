@@ -54,6 +54,6 @@ const GALERIA = {
     }
   ],
 
-  // 4. COMISIONES ENTREGADAS (Vacío para que las manejes con los tickets y los botones de borrado)
+  // 4. COMISIONES ENTREGADAS (Se gestionan de forma dinámica desde tu panel de admin)
   comisionesUsuarios: []
 };
