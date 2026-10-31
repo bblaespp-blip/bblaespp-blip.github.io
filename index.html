@@ -66,7 +66,7 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .ticket-type { color: #00ff88; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
 .ticket-idea { color: #e0e0e0; font-size: 0.95rem; line-height: 1.4; font-style: italic; margin-bottom: 12px; }
 
-.ticket-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid #222233; paddingTop: 10px; }
+.ticket-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid #222233; padding-top: 10px; }
 .ticket-actions input[type="text"] { width: 100%; padding: 8px; background: #07070b; border: 1px solid var(--cyan); border-radius: 8px; color: #fff; font-size: 0.85rem; }
 .btn-finish { background: rgba(0,255,136,0.15); border: 1.5px solid #00ff88; color: #00ff88; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
 .btn-finish:hover { background: #00ff88; color: #000; box-shadow: 0 0 10px #00ff88; }
@@ -114,7 +114,8 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 <body>
 
 <header>
-  <div class="avatar-wrapper">
+  <!-- Haz clic doble en tu avatar para abrir el panel secreto de administración de tickets -->
+  <div class="avatar-wrapper" ondblclick="pedirAccesoAdmin()" title="Zona Admin (Doble clic)">
     <img id="avatar-img" src="avatar.jpg" alt="BETTO BLAESPP">
   </div>
   <h1>BETTO BLAESPP</h1>
@@ -131,7 +132,8 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
     <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
     
     <button class="filter-btn" id="btn-user-commissions" onclick="showUserCommissions(event)">ENTREGADAS 🎨</button>
-    <button class="filter-btn" id="btn-tickets" onclick="showTickets(event)">TICKETS 🎫</button>
+    <!-- BOTÓN DE TICKETS OCULTO AL PÚBLICO -->
+    <button class="filter-btn hidden" id="btn-tickets" onclick="showTickets(event)">TICKETS 🎫</button>
   </div>
 </div>
 
