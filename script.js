@@ -59,7 +59,6 @@ function setView(activeBtn, ...visibleElements) {
     document.getElementById("comicsContainer"), 
     document.getElementById("infoSection"), 
     document.getElementById("backBtnContainer"),
-    document.getElementById("orderSection"),
     document.getElementById("userCommissionsGallery"),
     document.getElementById("ticketsContainer")
   ].forEach(el => el.classList.add("hidden"));
@@ -122,13 +121,7 @@ function showInfo(e) {
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
 }
 
-// MOSTRAR LA SECCIÓN DE HACER PEDIDO
-function showOrderForm(e) {
-  cambiarTema('SFW');
-  setView(e || document.getElementById('btn-order'), document.getElementById("orderSection"));
-}
-
-// GUARDAR COMO TICKET EN LOCALSTORAGE Y ENVIAR NOTIFICACIÓN A WHATSAPP
+// GUARDAR COMO TICKET EN LOCALSTORAGE Y ENVIAR NOTIFICACIÓN CON ID A WHATSAPP
 function sendOrder(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
@@ -146,13 +139,13 @@ function sendOrder(e) {
   pedidosGuardados.unshift(nuevoPedido); // Pone el más reciente arriba
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
-  // Notificación a WhatsApp
+  // Notificación a WhatsApp incluyendo explícitamente el número de Ticket
   const text = `🔔 *¡NUEVO PEDIDO / TICKET!*%0A%0A🎫 *ID:* ${ticketId}%0A👤 *Cliente:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
   const phone = "573152395773";
   
   window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
 
-  alert('¡Pedido registrado con éxito en tus Tickets y notificación enviada por WhatsApp! 🎉');
+  alert(`¡Pedido registrado con éxito! Tu número de ticket es ${ticketId} 🎉`);
   document.querySelector('.order-form').reset();
   showTickets();
 }
