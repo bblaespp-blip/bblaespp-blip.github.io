@@ -141,15 +141,12 @@ function sendOrder(e) {
   document.querySelector('.order-form').reset();
 }
 
-// 🔒 FUNCIÓN SECRETA PARA ACCEDER A LOS TICKETS (Haciendo doble clic en tu avatar)
+// 🔒 ACCESO DE ADMIN CON UN SOLO CLIC EN EL AVATAR
 function pedirAccesoAdmin() {
   const password = prompt("🔒 ACCESO RESTRINGIDO\nIntroduce la contraseña de Administrador para ver los Tickets:");
   if (password === "BETTO2026") {
-    // Muestra el botón de tickets en el menú de forma temporal
     const btnTickets = document.getElementById('btn-tickets');
     btnTickets.classList.remove('hidden');
-    
-    // Abre directamente la sección de tickets
     showTickets(btnTickets);
     alert("¡Acceso concedido, Betto! Panel de tickets desbloqueado.");
   } else if (password !== null) {
