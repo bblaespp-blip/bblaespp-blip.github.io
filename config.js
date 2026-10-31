@@ -54,12 +54,6 @@ const GALERIA = {
     }
   ],
 
-  // 4. COMISIONES ENTREGADAS
-  comisionesUsuarios: [
-    {
-      cliente: "Carlos M.",
-      idea: "Max Steel peleando contra Venom en el Monte Fuji",
-      imagen: "COMISIONES/maxsteel_vs_venom.png"
-    }
-  ]
+  // 4. COMISIONES ENTREGADAS (Vacío para que las manejes con los tickets y los botones de borrado)
+  comisionesUsuarios: []
 };
