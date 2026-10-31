@@ -60,7 +60,8 @@ function setView(activeBtn, ...visibleElements) {
     document.getElementById("infoSection"), 
     document.getElementById("backBtnContainer"),
     document.getElementById("orderSection"),
-    document.getElementById("userCommissionsGallery")
+    document.getElementById("userCommissionsGallery"),
+    document.getElementById("ticketsContainer")
   ].forEach(el => el.classList.add("hidden"));
   
   visibleElements.forEach(el => el.classList.remove("hidden"));
@@ -127,17 +128,58 @@ function showOrderForm(e) {
   setView(e || document.getElementById('btn-order'), document.getElementById("orderSection"));
 }
 
-// ENVIAR EL PEDIDO POR WHATSAPP
+// GUARDAR COMO TICKET EN LOCALSTORAGE Y ENVIAR NOTIFICACIÓN A WHATSAPP
 function sendOrder(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
   const type = document.getElementById('orderType').value;
   const idea = document.getElementById('orderIdea').value;
+  
+  const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const ticketId = 'TICKET #' + Math.floor(1000 + Math.random() * 9000);
 
-  const text = `¡Hola Betto! 👋 Quisiera pedir una comisión:%0A%0A👤 *Nombre:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
+  // Crear objeto del ticket
+  const nuevoPedido = { id: ticketId, cliente: name, tipo: type, idea: idea, fecha: fechaActual };
+
+  // Guardar en el almacenamiento del navegador (localStorage)
+  let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
+  pedidosGuardados.unshift(nuevoPedido); // Pone el más reciente arriba
+  localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
+
+  // Notificación a WhatsApp
+  const text = `🔔 *¡NUEVO PEDIDO / TICKET!*%0A%0A🎫 *ID:* ${ticketId}%0A👤 *Cliente:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
   const phone = "573152395773";
   
   window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+
+  alert('¡Pedido registrado con éxito en tus Tickets y notificación enviada por WhatsApp! 🎉');
+  document.querySelector('.order-form').reset();
+  showTickets();
+}
+
+// MOSTRAR LA PESTAÑA DE TICKETS ALMACENADOS
+function showTickets(e) {
+  cambiarTema('SFW');
+  const container = document.getElementById("ticketsContainer");
+  let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
+
+  if (pedidosGuardados.length === 0) {
+    container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">No hay tickets de pedidos pendientes en este momento 🎫</p>`;
+  } else {
+    container.innerHTML = pedidosGuardados.map(ticket => `
+      <div class="ticket-card">
+        <div class="ticket-header">
+          <span class="ticket-id">${ticket.id}</span>
+          <span class="ticket-date">📅 ${ticket.fecha}</span>
+        </div>
+        <div class="ticket-client">👤 ${ticket.cliente}</div>
+        <div class="ticket-type">🎨 ${ticket.tipo}</div>
+        <div class="ticket-idea">"${ticket.idea}"</div>
+      </div>
+    `).join('');
+  }
+
+  setView(e || document.getElementById('btn-tickets'), container);
 }
 
 // MOSTRAR GALERÍA DE COMISIONES COMPLETADAS DE USUARIOS
@@ -146,7 +188,7 @@ function showUserCommissions(e) {
   const container = document.getElementById("userCommissionsGallery");
 
   if (!GALERIA.comisionesUsuarios || !GALERIA.comisionesUsuarios.length) {
-    container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones de usuarios aquí 🎨</p>`;
+    container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones entregadas aquí 🎨</p>`;
   } else {
     container.innerHTML = GALERIA.comisionesUsuarios.map(item => `
       <div class="commission-card">
