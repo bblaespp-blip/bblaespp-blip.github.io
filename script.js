@@ -3,7 +3,6 @@ let currentComicType = 'SFW';
 
 const EXTENSIONES = ['png', 'jpg', 'jpeg', 'webp', 'PNG', 'JPG', 'JPEG', 'WEBP'];
 
-// Probar cuál extensión existe y aplicarla al CSS (--bg-portada) o a una etiqueta <img>
 function probarYAplicarImagen(nombreBase, callback) {
   let index = 0;
 
@@ -25,7 +24,6 @@ function probarYAplicarImagen(nombreBase, callback) {
   probar();
 }
 
-// CAMBIA ENTRE SFW Y NSFW (Soporta JPG, PNG, WEBP en avatar y portada)
 function cambiarTema(modo) {
   const root = document.documentElement;
   const avatar = document.getElementById('avatar-img');
@@ -111,7 +109,7 @@ function openComicPages(comicId, type = 'SFW') {
   
   const gallery = document.getElementById("gallery");
   renderImages(gallery, comic.pages, comic.title);
-  setView(type === 'NSFW' ? document.getElementById('btn-nsfw') : document.getElementById('btn-comics'), gallery, document.getElementById("backBtnContainer"));
+  setView(type === 'NSFW' ? document.getElementById('btn-nsfw' ) : document.getElementById('btn-comics'), gallery, document.getElementById("backBtnContainer"));
 }
 
 function showInfo(e) { 
@@ -119,7 +117,6 @@ function showInfo(e) {
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
 }
 
-// 1. GUARDAR TICKET Y ENVIAR WHATSAPP CON EL ID INCLUIDO
 function sendOrder(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
@@ -135,7 +132,6 @@ function sendOrder(e) {
   pedidosGuardados.unshift(nuevoPedido);
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
-  // Notificación a WhatsApp con el número de Ticket explícito
   const text = `🔔 *¡NUEVO PEDIDO / TICKET!*%0A%0A🎫 *ID:* ${ticketId}%0A👤 *Cliente:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
   const phone = "573152395773";
   
@@ -146,7 +142,6 @@ function sendOrder(e) {
   showTickets();
 }
 
-// 2. MOSTRAR TICKETS CON OPCIÓN DE FINALIZAR O BORRAR
 function showTickets(e) {
   cambiarTema('SFW');
   const container = document.getElementById("ticketsContainer");
@@ -181,7 +176,6 @@ function showTickets(e) {
   setView(e || document.getElementById('btn-tickets'), container);
 }
 
-// 3. FINALIZAR TICKET (LO MANDA AUTOMÁTICAMENTE A ENTREGADAS Y LO QUITA DE TICKETS)
 function finalizarTicket(index) {
   let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
   const imgInput = document.getElementById(`img-url-${index}`).value.trim();
@@ -193,19 +187,16 @@ function finalizarTicket(index) {
 
   const ticketACompletar = pedidosGuardados[index];
 
-  // Crear objeto para comisiones entregadas
   const comisionEntregada = {
     cliente: ticketACompletar.cliente,
     idea: ticketACompletar.idea,
     imagen: imgInput
   };
 
-  // Guardar en la lista de entregadas de localStorage
   let entregadasGuardadas = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
   entregadasGuardadas.unshift(comisionEntregada);
   localStorage.setItem('betto_entregadas', JSON.stringify(entregadasGuardadas));
 
-  // Borrar de los tickets pendientes
   pedidosGuardados.splice(index, 1);
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
@@ -213,7 +204,6 @@ function finalizarTicket(index) {
   showTickets();
 }
 
-// 4. BORRAR UN TICKET INDIVIDUAL
 function borrarTicket(index) {
   if (confirm("¿Estás seguro de eliminar este ticket?")) {
     let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
@@ -223,7 +213,6 @@ function borrarTicket(index) {
   }
 }
 
-// 5. BORRAR TODOS LOS TICKETS
 function borrarTodosLosTickets() {
   if (confirm("¿Deseas eliminar todos los tickets registrados?")) {
     localStorage.removeItem('betto_tickets');
@@ -231,20 +220,30 @@ function borrarTodosLosTickets() {
   }
 }
 
-// 6. MOSTRAR GALERÍA DE COMISIONES COMPLETADAS (INCLUYE LAS DEL CONFIG Y LAS DE LOCALSTORAGE)
+// 🎨 MOSTRAR COMISIONES ENTREGADAS CON OPCIÓN PROTEGIDA PARA BORRAR PRUEBAS
 function showUserCommissions(e) {
   cambiarTema('SFW');
   const container = document.getElementById("userCommissionsGallery");
 
-  // Combinar las del config.js con las que se hayan finalizado dinámicamente
   const entregadasConfig = GALERIA.comisionesUsuarios || [];
   const entregadasStorage = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
   const todasEntregadas = [...entregadasStorage, ...entregadasConfig];
 
+  let htmlContenido = "";
+
+  // Botón protegido exclusivamente para ti (para limpiar pruebas)
+  if (entregadasStorage.length > 0) {
+    htmlContenido += `
+      <div style="grid-column: 1/-1; display: flex; justify-content: flex-end;">
+        <button class="btn-delete" onclick="borrarEntregadasAdmin()">🗑️ Borrar Entregadas de Prueba (Admin)</button>
+      </div>
+    `;
+  }
+
   if (todasEntregadas.length === 0) {
-    container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones entregadas aquí 🎨</p>`;
+    htmlContenido += `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones entregadas aquí 🎨</p>`;
   } else {
-    container.innerHTML = todasEntregadas.map(item => `
+    htmlContenido += todasEntregadas.map(item => `
       <div class="commission-card">
         <img src="${item.imagen}" loading="lazy" alt="Comisión para ${item.cliente}" onclick="openModal('${item.imagen}')">
         <div class="commission-info">
@@ -255,7 +254,22 @@ function showUserCommissions(e) {
     `).join('');
   }
 
+  container.innerHTML = htmlContenido;
   setView(e || document.getElementById('btn-user-commissions'), container);
+}
+
+// 🔒 FUNCIÓN PROTEGIDA CON CONTRASEÑA PARA BORRAR ENTREGADAS
+function borrarEntregadasAdmin() {
+  const password = prompt("⚠️ Zona restringida para el Administrador (Betto).\nIntroduce la contraseña de seguridad para borrar las entregadas:");
+  
+  // Contraseña de seguridad configurada para ti
+  if (password === "BETTO2026") {
+    localStorage.removeItem('betto_entregadas');
+    alert("¡Comisiones de prueba borradas con éxito!");
+    showUserCommissions();
+  } else if (password !== null) {
+    alert("❌ Contraseña incorrecta. No tienes permiso para borrar esto.");
+  }
 }
 
 function askNSFW(e) {
@@ -276,7 +290,6 @@ function closeModal() {
 
 window.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
 
-// INICIALIZACIÓN AUTOMÁTICA Y CONTADORES
 (function init() {
   cambiarTema('SFW');
 
