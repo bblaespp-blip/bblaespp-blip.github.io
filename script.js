@@ -1,5 +1,6 @@
 let nsfwUnlocked = false;
 let currentComicType = 'SFW';
+let isAdminUnlocked = false;
 
 const EXTENSIONES = ['png', 'jpg', 'jpeg', 'webp', 'PNG', 'JPG', 'JPEG', 'WEBP'];
 
@@ -33,7 +34,7 @@ function cambiarTema(modo) {
   const baseAvatar = esNSFW ? 'avatar_nsfw' : 'avatar';
 
   probarYAplicarImagen(basePortada, (rutaCorrecta) => {
-    root.style.setProperty('--bg-portada', `url('${rutaCorrecta}')`);
+    root.style.setProperty('--bg-portada`, `url('${rutaCorrecta}')`);
   });
 
   if (avatar) {
@@ -55,8 +56,7 @@ function setView(activeBtn, ...visibleElements) {
     document.getElementById("comicsContainer"), 
     document.getElementById("infoSection"), 
     document.getElementById("backBtnContainer"),
-    document.getElementById("userCommissionsGallery"),
-    document.getElementById("ticketsContainer")
+    document.getElementById("userCommissionsGallery")
   ].forEach(el => el.classList.add("hidden"));
   
   visibleElements.forEach(el => el.classList.remove("hidden"));
@@ -117,125 +117,37 @@ function showInfo(e) {
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
 }
 
+// ENVÍO DE PEDIDO DIRECTO A WHATSAPP CON TICKET
 function sendOrder(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
   const type = document.getElementById('orderType').value;
   const idea = document.getElementById('orderIdea').value;
   
-  const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const ticketId = 'TICKET #' + Math.floor(1000 + Math.random() * 9000);
-
-  const nuevoPedido = { id: ticketId, cliente: name, tipo: type, idea: idea, fecha: fechaActual };
-
-  let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
-  pedidosGuardados.unshift(nuevoPedido);
-  localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
   const mensaje = `🔔 *¡NUEVO PEDIDO / TICKET!*\n\n🎫 *ID:* ${ticketId}\n👤 *Cliente:* ${name}\n🎨 *Tipo:* ${type}\n💡 *Idea:* ${idea}`;
   const phone = "573152395773";
   
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}`, '_blank');
 
-  alert(`¡Pedido registrado con éxito! Tu número de ticket asignado es ${ticketId} 🎉`);
+  alert(`¡Pedido generado! Tu número de ticket es ${ticketId}. Revisa tu WhatsApp para enviarlo 🎉`);
   document.querySelector('.order-form').reset();
 }
 
-// 🔒 ACCESO DE ADMIN CON UN SOLO CLIC EN EL AVATAR
+// 🔒 ACCESO DE ADMIN AL HACER CLIC EN EL AVATAR
 function pedirAccesoAdmin() {
-  const password = prompt("🔒 ACCESO RESTRINGIDO\nIntroduce la contraseña de Administrador para ver los Tickets:");
+  const password = prompt("🔒 ACCESO RESTRINGIDO (ADMIN)\nIntroduce tu contraseña para desbloquear el panel de publicaciones:");
   if (password === "BETTO2026") {
-    const btnTickets = document.getElementById('btn-tickets');
-    btnTickets.classList.remove('hidden');
-    showTickets(btnTickets);
-    alert("¡Acceso concedido, Betto! Panel de tickets desbloqueado.");
+    isAdminUnlocked = true;
+    alert("¡Acceso concedido, Betto! Ya puedes publicar comisiones en la pestaña Entregadas.");
+    showUserCommissions();
   } else if (password !== null) {
     alert("❌ Contraseña incorrecta.");
   }
 }
 
-function showTickets(e) {
-  cambiarTema('SFW');
-  const container = document.getElementById("ticketsContainer");
-  let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
-
-  if (pedidosGuardados.length === 0) {
-    container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">No hay tickets de pedidos pendientes en este momento 🎫</p>`;
-  } else {
-    container.innerHTML = `
-      <div style="grid-column: 1/-1; display: flex; justify-content: flex-end;">
-        <button class="btn-delete" onclick="borrarTodosLosTickets()">🗑️ Vaciar Todos los Tickets</button>
-      </div>
-    ` + pedidosGuardados.map((ticket, index) => `
-      <div class="ticket-card" id="ticket-${index}">
-        <div class="ticket-header">
-          <span class="ticket-id">${ticket.id}</span>
-          <span class="ticket-date">📅 ${ticket.fecha}</span>
-        </div>
-        <div class="ticket-client">👤 ${ticket.cliente}</div>
-        <div class="ticket-type">🎨 ${ticket.tipo}</div>
-        <div class="ticket-idea">"${ticket.idea}"</div>
-        
-        <div class="ticket-actions">
-          <input type="text" id="img-url-${index}" placeholder="Ej: COMISIONES/nombre.png o 1.png" />
-          <button class="btn-finish" onclick="finalizarTicket(${index})">✨ Finalizar y Publicar en Entregadas</button>
-          <button class="btn-delete" onclick="borrarTicket(${index})">❌ Borrar Ticket</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  setView(e || document.getElementById('btn-tickets'), container);
-}
-
-function finalizarTicket(index) {
-  let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
-  let imgInput = document.getElementById(`img-url-${index}`).value.trim();
-
-  if (!imgInput) {
-    alert("Por favor, ingresa la ruta o nombre de la imagen finalizada.");
-    return;
-  }
-
-  if (!imgInput.includes('/')) {
-    imgInput = 'ILUSTRACION/' + imgInput; 
-  }
-
-  const ticketACompletar = pedidosGuardados[index];
-
-  const comisionEntregada = {
-    cliente: ticketACompletar.cliente,
-    idea: ticketACompletar.idea,
-    imagen: imgInput
-  };
-
-  let entregadasGuardadas = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
-  entregadasGuardadas.unshift(comisionEntregada);
-  localStorage.setItem('betto_entregadas', JSON.stringify(entregadasGuardadas));
-
-  pedidosGuardados.splice(index, 1);
-  localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
-
-  alert("¡Trabajo finalizado con éxito! Publicado en ENTREGADAS 🎨");
-  showTickets();
-}
-
-function borrarTicket(index) {
-  if (confirm("¿Estás seguro de eliminar este ticket?")) {
-    let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
-    pedidosGuardados.splice(index, 1);
-    localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
-    showTickets();
-  }
-}
-
-function borrarTodosLosTickets() {
-  if (confirm("¿Deseas eliminar todos los tickets registrados?")) {
-    localStorage.removeItem('betto_tickets');
-    showTickets();
-  }
-}
-
+// MOSTRAR COMISIONES ENTREGADAS CON PANEL DE ADMIN SI ESTÁS LOGUEADO
 function showUserCommissions(e) {
   cambiarTema('SFW');
   const container = document.getElementById("userCommissionsGallery");
@@ -244,20 +156,25 @@ function showUserCommissions(e) {
 
   let htmlContenido = "";
 
-  if (entregadasStorage.length > 0) {
+  // Si eres admin, muestras el panel para subir una nueva comisión entregada
+  if (isAdminUnlocked) {
     htmlContenido += `
-      <div style="grid-column: 1/-1; display: flex; justify-content: flex-end;">
-        <button class="btn-delete" onclick="borrarEntregadasAdmin()">🗑️ Borrar Todas las Entregadas (Admin)</button>
+      <div style="grid-column: 1/-1;" class="admin-upload-box" id="adminBox">
+        <h3>✨ Panel Admin: Publicar Comisión Entregada</h3>
+        <input type="text" id="adminClient" placeholder="Nombre del Cliente (Ej: Carlos M.)">
+        <textarea id="adminIdea" rows="2" placeholder="Idea o descripción del trabajo"></textarea>
+        <input type="text" id="adminImg" placeholder="Ruta de la imagen (Ej: COMISIONES/maxsteel.png o 1.png)">
+        <button class="btn-publish" onclick="publicarComisionAdmin()">🚀 Publicar en Entregadas</button>
       </div>
     `;
   }
 
-  if (entregadasStorage.length === 0) {
+  if (entregadasStorage.length === 0 && !isAdminUnlocked) {
     htmlContenido += `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones entregadas aquí 🎨</p>`;
   } else {
     htmlContenido += entregadasStorage.map((item, index) => `
       <div class="commission-card">
-        <button class="btn-delete-item" onclick="borrarEntregadaIndividual(${index})" title="Borrar esta publicación">×</button>
+        ${isAdminUnlocked ? `<button class="btn-delete-item" onclick="borrarEntregadaIndividual(${index})" title="Borrar esta publicación">×</button>` : ''}
         <img src="${item.imagen}" loading="lazy" alt="Comisión para ${item.cliente}" onclick="openModal('${item.imagen}')">
         <div class="commission-info">
           <div class="commission-user">👤 ${item.cliente}</div>
@@ -269,28 +186,43 @@ function showUserCommissions(e) {
 
   container.innerHTML = htmlContenido;
   setView(e || document.getElementById('btn-user-commissions'), container);
+  
+  if (isAdminUnlocked) {
+    document.getElementById('adminBox').style.display = 'block';
+  }
+}
+
+// PUBLICAR DESDE EL PANEL DE ADMIN
+function publicarComisionAdmin() {
+  const cliente = document.getElementById('adminClient').value.trim();
+  const idea = document.getElementById('adminIdea').value.trim();
+  let img = document.getElementById('adminImg').value.trim();
+
+  if (!cliente || !idea || !img) {
+    alert("Por favor rellena todos los campos (cliente, idea y ruta de imagen).");
+    return;
+  }
+
+  if (!img.includes('/')) {
+    img = 'ILUSTRACION/' + img;
+  }
+
+  const nuevaComision = { cliente, idea, imagen: img };
+
+  let entregadasStorage = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
+  entregadasStorage.unshift(nuevaComision);
+  localStorage.setItem('betto_entregadas', JSON.stringify(entregadasStorage));
+
+  alert("¡Publicado con éxito en ENTREGADAS! 🎉");
+  showUserCommissions();
 }
 
 function borrarEntregadaIndividual(index) {
-  const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar esta publicación:");
-  if (password === "BETTO2026") {
+  if (confirm("¿Seguro que deseas eliminar esta publicación?")) {
     let entregadasStorage = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
     entregadasStorage.splice(index, 1);
     localStorage.setItem('betto_entregadas', JSON.stringify(entregadasStorage));
     showUserCommissions();
-  } else if (password !== null) {
-    alert("❌ Contraseña incorrecta.");
-  }
-}
-
-function borrarEntregadasAdmin() {
-  const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar todas las entregadas:");
-  if (password === "BETTO2026") {
-    localStorage.removeItem('betto_entregadas');
-    alert("¡Todas las comisiones entregadas fueron borradas!");
-    showUserCommissions();
-  } else if (password !== null) {
-    alert("❌ Contraseña incorrecta.");
   }
 }
 
