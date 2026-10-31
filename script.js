@@ -109,7 +109,7 @@ function openComicPages(comicId, type = 'SFW') {
   
   const gallery = document.getElementById("gallery");
   renderImages(gallery, comic.pages, comic.title);
-  setView(type === 'NSFW' ? document.getElementById('btn-nsfw' ) : document.getElementById('btn-comics'), gallery, document.getElementById("backBtnContainer"));
+  setView(type === 'NSFW' ? document.getElementById('btn-nsfw') : document.getElementById('btn-comics'), gallery, document.getElementById("backBtnContainer"));
 }
 
 function showInfo(e) { 
@@ -165,7 +165,7 @@ function showTickets(e) {
         <div class="ticket-idea">"${ticket.idea}"</div>
         
         <div class="ticket-actions">
-          <input type="text" id="img-url-${index}" placeholder="Ruta de imagen (ej: COMISIONES/dibujo.png)" />
+          <input type="text" id="img-url-${index}" placeholder="Ej: COMISIONES/nombre.png o 1.png" />
           <button class="btn-finish" onclick="finalizarTicket(${index})">✨ Finalizar y Publicar en Entregadas</button>
           <button class="btn-delete" onclick="borrarTicket(${index})">❌ Borrar Ticket</button>
         </div>
@@ -178,11 +178,16 @@ function showTickets(e) {
 
 function finalizarTicket(index) {
   let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
-  const imgInput = document.getElementById(`img-url-${index}`).value.trim();
+  let imgInput = document.getElementById(`img-url-${index}`).value.trim();
 
   if (!imgInput) {
-    alert("Por favor, ingresa la ruta de la imagen finalizada para poder publicarla.");
+    alert("Por favor, ingresa la ruta o nombre de la imagen finalizada.");
     return;
+  }
+
+  // Corrección automática si solo escribes el número o nombre de la imagen
+  if (!imgInput.includes('/')) {
+    imgInput = 'ILUSTRACION/' + imgInput; 
   }
 
   const ticketACompletar = pedidosGuardados[index];
@@ -200,7 +205,7 @@ function finalizarTicket(index) {
   pedidosGuardados.splice(index, 1);
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
-  alert("¡Trabajo finalizado con éxito! La comisión ya se publicó en la pestaña de ENTREGADAS 🎨");
+  alert("¡Trabajo finalizado con éxito! Publicado en ENTREGADAS 🎨");
   showTickets();
 }
 
@@ -220,7 +225,6 @@ function borrarTodosLosTickets() {
   }
 }
 
-// 🎨 MOSTRAR COMISIONES ENTREGADAS CON OPCIÓN PROTEGIDA PARA BORRAR PRUEBAS
 function showUserCommissions(e) {
   cambiarTema('SFW');
   const container = document.getElementById("userCommissionsGallery");
@@ -231,7 +235,7 @@ function showUserCommissions(e) {
 
   let htmlContenido = "";
 
-  // Botón protegido exclusivamente para ti (para limpiar pruebas)
+  // Botón protegido para limpiar tus pruebas rápidamente
   if (entregadasStorage.length > 0) {
     htmlContenido += `
       <div style="grid-column: 1/-1; display: flex; justify-content: flex-end;">
@@ -258,17 +262,15 @@ function showUserCommissions(e) {
   setView(e || document.getElementById('btn-user-commissions'), container);
 }
 
-// 🔒 FUNCIÓN PROTEGIDA CON CONTRASEÑA PARA BORRAR ENTREGADAS
 function borrarEntregadasAdmin() {
-  const password = prompt("⚠️ Zona restringida para el Administrador (Betto).\nIntroduce la contraseña de seguridad para borrar las entregadas:");
+  const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar las entregadas de prueba:");
   
-  // Contraseña de seguridad configurada para ti
   if (password === "BETTO2026") {
     localStorage.removeItem('betto_entregadas');
     alert("¡Comisiones de prueba borradas con éxito!");
     showUserCommissions();
   } else if (password !== null) {
-    alert("❌ Contraseña incorrecta. No tienes permiso para borrar esto.");
+    alert("❌ Contraseña incorrecta.");
   }
 }
 
