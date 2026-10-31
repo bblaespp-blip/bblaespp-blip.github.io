@@ -54,8 +54,14 @@ function renderImages(targetEl, imgList, altText = "Ilustración") {
 }
 
 function setView(activeBtn, ...visibleElements) {
-  [document.getElementById("gallery"), document.getElementById("comicsContainer"), document.getElementById("infoSection"), document.getElementById("backBtnContainer")]
-    .forEach(el => el.classList.add("hidden"));
+  [
+    document.getElementById("gallery"), 
+    document.getElementById("comicsContainer"), 
+    document.getElementById("infoSection"), 
+    document.getElementById("backBtnContainer"),
+    document.getElementById("orderSection"),
+    document.getElementById("userCommissionsGallery")
+  ].forEach(el => el.classList.add("hidden"));
   
   visibleElements.forEach(el => el.classList.remove("hidden"));
   document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
@@ -113,6 +119,47 @@ function openComicPages(comicId, type = 'SFW') {
 function showInfo(e) { 
   cambiarTema('SFW');
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
+}
+
+// MOSTRAR LA SECCIÓN DE HACER PEDIDO
+function showOrderForm(e) {
+  cambiarTema('SFW');
+  setView(e || document.getElementById('btn-order'), document.getElementById("orderSection"));
+}
+
+// ENVIAR EL PEDIDO POR WHATSAPP
+function sendOrder(e) {
+  e.preventDefault();
+  const name = document.getElementById('orderName').value;
+  const type = document.getElementById('orderType').value;
+  const idea = document.getElementById('orderIdea').value;
+
+  const text = `¡Hola Betto! 👋 Quisiera pedir una comisión:%0A%0A👤 *Nombre:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
+  const phone = "573152395773";
+  
+  window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+}
+
+// MOSTRAR GALERÍA DE COMISIONES COMPLETADAS DE USUARIOS
+function showUserCommissions(e) {
+  cambiarTema('SFW');
+  const container = document.getElementById("userCommissionsGallery");
+
+  if (!GALERIA.comisionesUsuarios || !GALERIA.comisionesUsuarios.length) {
+    container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones de usuarios aquí 🎨</p>`;
+  } else {
+    container.innerHTML = GALERIA.comisionesUsuarios.map(item => `
+      <div class="commission-card">
+        <img src="${item.imagen}" loading="lazy" alt="Comisión para ${item.cliente}" onclick="openModal('${item.imagen}')">
+        <div class="commission-info">
+          <div class="commission-user">👤 ${item.cliente}</div>
+          <div class="commission-prompt">"${item.idea}"</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  setView(e || document.getElementById('btn-user-commissions'), container);
 }
 
 function askNSFW(e) {
