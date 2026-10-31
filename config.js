@@ -54,6 +54,6 @@ const GALERIA = {
     }
   ],
 
-  // 4. COMISIONES ENTREGADAS (Se gestionan de forma dinámica desde tu panel de admin)
+  // 4. COMISIONES ENTREGADAS
   comisionesUsuarios: []
 };
