@@ -39,41 +39,41 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .filters::-webkit-scrollbar { display: none; }
 @media (min-width: 768px) { .filters { justify-content: center; } }
 
-.filters button, .back-btn {
+.filters button, .back-btn, .btn-submit {
   background: transparent; border: 2px solid var(--cyan); color: var(--cyan); padding: 8px 18px; border-radius: 25px;
   cursor: pointer; font-weight: 700; transition: all 0.25s; font-size: clamp(11px, 2.8vw, 13px); flex-shrink: 0;
 }
-@media (hover: hover) { .filters button:hover, .back-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); } }
+@media (hover: hover) { .filters button:hover, .back-btn:hover, .btn-submit:hover { background: var(--cyan); color: #000; box-shadow: 0 0 15px var(--cyan); } }
 .filters button.active { background: var(--pink); border-color: var(--pink); color: #fff; box-shadow: 0 0 15px var(--pink); }
 
-#gallery, #comicsContainer {
+#gallery, #comicsContainer, #userCommissionsGallery {
   display: grid; gap: 15px; padding: 20px 15px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); max-width: 1300px; margin: auto;
 }
-@media (min-width: 600px) { #gallery, #comicsContainer { gap: 25px; padding: 30px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+@media (min-width: 600px) { #gallery, #comicsContainer, #userCommissionsGallery { gap: 25px; padding: 30px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
 
-.image-container, .folder-card {
+.image-container, .folder-card, .commission-card {
   background: var(--card-bg); padding: 8px; border-radius: 15px; border: 1px solid #1a1a24; animation: fadeIn 0.4s ease; transition: transform 0.3s, border-color 0.3s;
 }
-@media (min-width: 600px) { .image-container, .folder-card { padding: 12px; border-radius: 20px; } }
-@media (hover: hover) { .image-container:hover, .folder-card:hover { border-color: var(--pink); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(255, 0, 85, 0.3); } }
+@media (min-width: 600px) { .image-container, .folder-card, .commission-card { padding: 12px; border-radius: 20px; } }
+@media (hover: hover) { .image-container:hover, .folder-card:hover, .commission-card:hover { border-color: var(--pink); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(255, 0, 85, 0.3); } }
 
-.image-container img, .folder-card img { width: 100%; height: 240px; border-radius: 10px; cursor: pointer; object-fit: cover; display: block; }
-@media (min-width: 600px) { .image-container img, .folder-card img { height: 360px; border-radius: 12px; } }
+.image-container img, .folder-card img, .commission-card img { width: 100%; height: 240px; border-radius: 10px; cursor: pointer; object-fit: cover; display: block; }
+@media (min-width: 600px) { .image-container img, .folder-card img, .commission-card img { height: 360px; border-radius: 12px; } }
 
 .folder-card { cursor: pointer; text-align: center; }
-.folder-info { margin-top: 10px; padding: 5px; }
-.folder-title { color: var(--cyan); font-weight: bold; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
-.folder-count { color: var(--pink); font-size: 0.85rem; margin-top: 4px; }
+.folder-info, .commission-info { margin-top: 10px; padding: 5px; }
+.folder-title, .commission-user { color: var(--cyan); font-weight: bold; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+.folder-count, .commission-prompt { color: #e0e0e0; font-size: 0.85rem; margin-top: 6px; font-style: italic; }
 .back-btn-container { max-width: 1300px; margin: 15px auto 0; padding: 0 15px; }
 
-#infoSection {
+#infoSection, #orderSection {
   background: var(--card-bg); padding: clamp(30px, 6vw, 50px) clamp(18px, 5vw, 35px); margin: 30px 15px; border-radius: 25px;
   text-align: center; max-width: 850px; border: 2px solid var(--cyan); box-shadow: 0 0 25px rgba(0, 243, 255, 0.2); animation: fadeIn 0.5s ease;
 }
-@media (min-width: 768px) { #infoSection { margin: 50px auto; } }
-#infoSection h2 { color: var(--cyan); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+@media (min-width: 768px) { #infoSection, #orderSection { margin: 50px auto; } }
+#infoSection h2, #orderSection h2 { color: var(--cyan); font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
 .bio-text { font-size: clamp(0.95rem, 2.8vw, 1.15rem); line-height: 1.7; color: #e0e0e0; margin-bottom: 30px; }
-.bio-text b, #infoSection h3 { color: var(--pink); }
+.bio-text b, #infoSection h3, #orderSection h3 { color: var(--pink); }
 
 .commission-box { background: #12121c; border: 1px solid var(--cyan); border-radius: 20px; padding: 25px 15px; margin: 35px 0; }
 .commission-badge { display: inline-block; background: rgba(0, 255, 136, 0.15); border: 2px solid #00ff88; color: #00ff88; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; margin-bottom: 20px; box-shadow: 0 0 12px rgba(0, 255, 136, 0.3); }
@@ -86,6 +86,15 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .contact-card { background: #161622; padding: 20px 15px; border-radius: 16px; text-decoration: none; color: #fff; border: 1px solid var(--cyan); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 0.9rem; transition: all .3s; }
 @media (hover: hover) { .contact-card:hover { background: linear-gradient(135deg, var(--cyan), var(--pink)); color: #000; transform: translateY(-5px); font-weight: bold; } }
 .contact-card span { font-size: 1.8rem; }
+
+/* ESTILOS DEL FORMULARIO DE PEDIDOS */
+.order-form { display: flex; flex-direction: column; gap: 18px; margin-top: 25px; text-align: left; }
+.order-form label { font-weight: bold; color: var(--cyan); font-size: 0.95rem; }
+.order-form input, .order-form select, .order-form textarea {
+  width: 100%; padding: 12px 15px; background: #07070b; border: 1.5px solid #222233; border-radius: 12px; color: #fff; font-size: 1rem; outline: none; transition: border-color 0.3s;
+}
+.order-form input:focus, .order-form select:focus, .order-form textarea:focus { border-color: var(--pink); }
+.btn-submit { background: var(--pink); color: #fff; border-color: var(--pink); padding: 12px; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; width: 100%; margin-top: 10px; }
 
 .hidden { display: none !important; }
 .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 15px; backdrop-filter: blur(8px); }
@@ -113,6 +122,9 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
     <button class="filter-btn" id="btn-nsfw" data-cat="NSFW" onclick="askNSFW(event)">NSFW 🔞</button>
     <button class="filter-btn" data-cat="FONDOS" onclick="loadImages('FONDOS', event)">FONDOS</button>
     <button class="filter-btn" id="btn-comics" onclick="showComicFolders('SFW', event)">CÓMICS</button>
+    <!-- NUEVOS BOTONES -->
+    <button class="filter-btn" id="btn-user-commissions" onclick="showUserCommissions(event)">PEDIDOS ENTREGADOS 🎨</button>
+    <button id="btn-order" onclick="showOrderForm(event)">HACER PEDIDO 📝</button>
   </div>
 </div>
 
@@ -122,6 +134,7 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 
 <div id="gallery" class="hidden"></div>
 <div id="comicsContainer" class="hidden"></div>
+<div id="userCommissionsGallery" class="hidden"></div>
 
 <div id="infoSection">
   <h2>👤 SOBRE MÍ</h2>
@@ -148,6 +161,35 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
     <a href="mailto:bblaespp@gmail.com" class="contact-card"><span>📧</span><b>Email</b><br>bblaespp@gmail.com</a>
     <a href="https://wa.me/3152395773" target="_blank" class="contact-card"><span>📱</span><b>WhatsApp</b><br>3152395773</a>
   </div>
+</div>
+
+<!-- NUEVA SECCIÓN DE PESTAÑA PARA PEDIDOS DE USUARIOS -->
+<div id="orderSection" class="hidden">
+  <h2>📝 HAZ TU COMISIÓN</h2>
+  <p class="bio-text">Escribe los detalles de la ilustración o cómic que deseas encargar. Al presionar enviar se abrirá un chat directo a mi WhatsApp con la información prellenada.</p>
+  
+  <form class="order-form" onsubmit="sendOrder(event)">
+    <div>
+      <label>Tu Nombre o Apodo:</label>
+      <input type="text" id="orderName" placeholder="Ej: Carlos M." required>
+    </div>
+    
+    <div>
+      <label>Tipo de Comisión:</label>
+      <select id="orderType">
+        <option value="Sketch / Boceto Limpio ($10 USD)">Sketch / Boceto Limpio ($10 USD)</option>
+        <option value="Full Body / Personaje Completo ($20 USD)">Full Body / Personaje Completo ($20 USD)</option>
+        <option value="Página de Cómic / Manga (A consultar)">Página de Cómic / Manga (A consultar)</option>
+      </select>
+    </div>
+
+    <div>
+      <label>¿Qué deseas en tu dibujo? (Describe la idea):</label>
+      <textarea id="orderIdea" rows="4" placeholder="Ej: Quiero hacer un Max Steel peleando contra un Venom en el Monte Fuji con estilo manga." required></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">🚀 ENVIAR PEDIDO POR WHATSAPP</button>
+  </form>
 </div>
 
 <div class="modal hidden" id="modal" onclick="closeModal()">
