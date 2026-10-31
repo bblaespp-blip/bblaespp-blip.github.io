@@ -54,7 +54,7 @@ const GALERIA = {
     }
   ],
 
-  // 4. COMISIONES ENTREGADAS (Se sincronizan automáticamente con tus tickets finalizados o puedes precargar aquí)
+  // 4. COMISIONES ENTREGADAS
   comisionesUsuarios: [
     {
       cliente: "Carlos M.",
