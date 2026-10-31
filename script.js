@@ -34,7 +34,7 @@ function cambiarTema(modo) {
   const baseAvatar = esNSFW ? 'avatar_nsfw' : 'avatar';
 
   probarYAplicarImagen(basePortada, (rutaCorrecta) => {
-    root.style.setProperty('--bg-portada`, `url('${rutaCorrecta}')`);
+    root.style.setProperty('--bg-portada', `url('${rutaCorrecta}')`);
   });
 
   if (avatar) {
@@ -117,7 +117,6 @@ function showInfo(e) {
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
 }
 
-// ENVÍO DE PEDIDO DIRECTO A WHATSAPP CON TICKET
 function sendOrder(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
@@ -135,7 +134,6 @@ function sendOrder(e) {
   document.querySelector('.order-form').reset();
 }
 
-// 🔒 ACCESO DE ADMIN AL HACER CLIC EN EL AVATAR
 function pedirAccesoAdmin() {
   const password = prompt("🔒 ACCESO RESTRINGIDO (ADMIN)\nIntroduce tu contraseña para desbloquear el panel de publicaciones:");
   if (password === "BETTO2026") {
@@ -147,7 +145,6 @@ function pedirAccesoAdmin() {
   }
 }
 
-// MOSTRAR COMISIONES ENTREGADAS CON PANEL DE ADMIN SI ESTÁS LOGUEADO
 function showUserCommissions(e) {
   cambiarTema('SFW');
   const container = document.getElementById("userCommissionsGallery");
@@ -156,7 +153,6 @@ function showUserCommissions(e) {
 
   let htmlContenido = "";
 
-  // Si eres admin, muestras el panel para subir una nueva comisión entregada
   if (isAdminUnlocked) {
     htmlContenido += `
       <div style="grid-column: 1/-1;" class="admin-upload-box" id="adminBox">
@@ -192,7 +188,6 @@ function showUserCommissions(e) {
   }
 }
 
-// PUBLICAR DESDE EL PANEL DE ADMIN
 function publicarComisionAdmin() {
   const cliente = document.getElementById('adminClient').value.trim();
   const idea = document.getElementById('adminIdea').value.trim();
