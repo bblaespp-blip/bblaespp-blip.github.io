@@ -34,12 +34,10 @@ function cambiarTema(modo) {
   const basePortada = esNSFW ? 'portada_nsfw' : 'portada';
   const baseAvatar = esNSFW ? 'avatar_nsfw' : 'avatar';
 
-  // Actualiza la variable CSS de la portada en el header
   probarYAplicarImagen(basePortada, (rutaCorrecta) => {
     root.style.setProperty('--bg-portada', `url('${rutaCorrecta}')`);
   });
 
-  // Actualiza la imagen del avatar
   if (avatar) {
     probarYAplicarImagen(baseAvatar, (rutaCorrecta) => {
       avatar.src = rutaCorrecta;
@@ -121,7 +119,7 @@ function showInfo(e) {
   setView(e || document.getElementById('btn-info'), document.getElementById("infoSection")); 
 }
 
-// GUARDAR COMO TICKET EN LOCALSTORAGE Y ENVIAR NOTIFICACIÓN CON ID A WHATSAPP
+// 1. GUARDAR TICKET Y ENVIAR WHATSAPP CON EL ID INCLUIDO
 function sendOrder(e) {
   e.preventDefault();
   const name = document.getElementById('orderName').value;
@@ -131,26 +129,24 @@ function sendOrder(e) {
   const fechaActual = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const ticketId = 'TICKET #' + Math.floor(1000 + Math.random() * 9000);
 
-  // Crear objeto del ticket
   const nuevoPedido = { id: ticketId, cliente: name, tipo: type, idea: idea, fecha: fechaActual };
 
-  // Guardar en el almacenamiento del navegador (localStorage)
   let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
-  pedidosGuardados.unshift(nuevoPedido); // Pone el más reciente arriba
+  pedidosGuardados.unshift(nuevoPedido);
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
-  // Notificación a WhatsApp incluyendo explícitamente el número de Ticket
+  // Notificación a WhatsApp con el número de Ticket explícito
   const text = `🔔 *¡NUEVO PEDIDO / TICKET!*%0A%0A🎫 *ID:* ${ticketId}%0A👤 *Cliente:* ${encodeURIComponent(name)}%0A🎨 *Tipo:* ${encodeURIComponent(type)}%0A💡 *Idea:* ${encodeURIComponent(idea)}`;
   const phone = "573152395773";
   
   window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
 
-  alert(`¡Pedido registrado con éxito! Tu número de ticket es ${ticketId} 🎉`);
+  alert(`¡Pedido registrado con éxito! Tu número de ticket asignado es ${ticketId} 🎉`);
   document.querySelector('.order-form').reset();
   showTickets();
 }
 
-// MOSTRAR LA PESTAÑA DE TICKETS ALMACENADOS
+// 2. MOSTRAR TICKETS CON OPCIÓN DE FINALIZAR O BORRAR
 function showTickets(e) {
   cambiarTema('SFW');
   const container = document.getElementById("ticketsContainer");
@@ -159,8 +155,12 @@ function showTickets(e) {
   if (pedidosGuardados.length === 0) {
     container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">No hay tickets de pedidos pendientes en este momento 🎫</p>`;
   } else {
-    container.innerHTML = pedidosGuardados.map(ticket => `
-      <div class="ticket-card">
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; display: flex; justify-content: flex-end;">
+        <button class="btn-delete" onclick="borrarTodosLosTickets()">🗑️ Vaciar Todos los Tickets</button>
+      </div>
+    ` + pedidosGuardados.map((ticket, index) => `
+      <div class="ticket-card" id="ticket-${index}">
         <div class="ticket-header">
           <span class="ticket-id">${ticket.id}</span>
           <span class="ticket-date">📅 ${ticket.fecha}</span>
@@ -168,6 +168,12 @@ function showTickets(e) {
         <div class="ticket-client">👤 ${ticket.cliente}</div>
         <div class="ticket-type">🎨 ${ticket.tipo}</div>
         <div class="ticket-idea">"${ticket.idea}"</div>
+        
+        <div class="ticket-actions">
+          <input type="text" id="img-url-${index}" placeholder="Ruta de imagen (ej: COMISIONES/dibujo.png)" />
+          <button class="btn-finish" onclick="finalizarTicket(${index})">✨ Finalizar y Publicar en Entregadas</button>
+          <button class="btn-delete" onclick="borrarTicket(${index})">❌ Borrar Ticket</button>
+        </div>
       </div>
     `).join('');
   }
@@ -175,15 +181,70 @@ function showTickets(e) {
   setView(e || document.getElementById('btn-tickets'), container);
 }
 
-// MOSTRAR GALERÍA DE COMISIONES COMPLETADAS DE USUARIOS
+// 3. FINALIZAR TICKET (LO MANDA AUTOMÁTICAMENTE A ENTREGADAS Y LO QUITA DE TICKETS)
+function finalizarTicket(index) {
+  let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
+  const imgInput = document.getElementById(`img-url-${index}`).value.trim();
+
+  if (!imgInput) {
+    alert("Por favor, ingresa la ruta de la imagen finalizada para poder publicarla.");
+    return;
+  }
+
+  const ticketACompletar = pedidosGuardados[index];
+
+  // Crear objeto para comisiones entregadas
+  const comisionEntregada = {
+    cliente: ticketACompletar.cliente,
+    idea: ticketACompletar.idea,
+    imagen: imgInput
+  };
+
+  // Guardar en la lista de entregadas de localStorage
+  let entregadasGuardadas = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
+  entregadasGuardadas.unshift(comisionEntregada);
+  localStorage.setItem('betto_entregadas', JSON.stringify(entregadasGuardadas));
+
+  // Borrar de los tickets pendientes
+  pedidosGuardados.splice(index, 1);
+  localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
+
+  alert("¡Trabajo finalizado con éxito! La comisión ya se publicó en la pestaña de ENTREGADAS 🎨");
+  showTickets();
+}
+
+// 4. BORRAR UN TICKET INDIVIDUAL
+function borrarTicket(index) {
+  if (confirm("¿Estás seguro de eliminar este ticket?")) {
+    let pedidosGuardados = JSON.parse(localStorage.getItem('betto_tickets')) || [];
+    pedidosGuardados.splice(index, 1);
+    localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
+    showTickets();
+  }
+}
+
+// 5. BORRAR TODOS LOS TICKETS
+function borrarTodosLosTickets() {
+  if (confirm("¿Deseas eliminar todos los tickets registrados?")) {
+    localStorage.removeItem('betto_tickets');
+    showTickets();
+  }
+}
+
+// 6. MOSTRAR GALERÍA DE COMISIONES COMPLETADAS (INCLUYE LAS DEL CONFIG Y LAS DE LOCALSTORAGE)
 function showUserCommissions(e) {
   cambiarTema('SFW');
   const container = document.getElementById("userCommissionsGallery");
 
-  if (!GALERIA.comisionesUsuarios || !GALERIA.comisionesUsuarios.length) {
+  // Combinar las del config.js con las que se hayan finalizado dinámicamente
+  const entregadasConfig = GALERIA.comisionesUsuarios || [];
+  const entregadasStorage = JSON.parse(localStorage.getItem('betto_entregadas')) || [];
+  const todasEntregadas = [...entregadasStorage, ...entregadasConfig];
+
+  if (todasEntregadas.length === 0) {
     container.innerHTML = `<p style="text-align:center; grid-column: 1/-1; color: var(--pink);">Pronto se publicarán las primeras comisiones entregadas aquí 🎨</p>`;
   } else {
-    container.innerHTML = GALERIA.comisionesUsuarios.map(item => `
+    container.innerHTML = todasEntregadas.map(item => `
       <div class="commission-card">
         <img src="${item.imagen}" loading="lazy" alt="Comisión para ${item.cliente}" onclick="openModal('${item.imagen}')">
         <div class="commission-info">
