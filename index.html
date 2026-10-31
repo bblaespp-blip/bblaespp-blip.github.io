@@ -55,6 +55,9 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
   background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1.5px solid #1a1a24; animation: fadeIn 0.4s ease; transition: transform 0.3s, border-color 0.3s;
 }
 .commission-card img, .ticket-card img { width: 100%; height: 220px; border-radius: 10px; object-fit: cover; margin-top: 10px; cursor: pointer; display: block; }
+.commission-card { position: relative; }
+.btn-delete-item { position: absolute; top: 10px; right: 10px; background: rgba(255,0,85,0.8); color: #fff; border: none; border-radius: 50%; width: 30px; height: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.btn-delete-item:hover { background: var(--pink); transform: scale(1.1); }
 
 .ticket-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222233; padding-bottom: 8px; margin-bottom: 10px; }
 .ticket-id { color: var(--cyan); font-weight: bold; font-size: 0.85rem; }
@@ -63,7 +66,7 @@ header p { font-size: clamp(0.75rem, 2.5vw, 1rem); color: var(--pink); font-weig
 .ticket-type { color: #00ff88; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
 .ticket-idea { color: #e0e0e0; font-size: 0.95rem; line-height: 1.4; font-style: italic; margin-bottom: 12px; }
 
-.ticket-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid #222233; padding-top: 10px; }
+.ticket-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; border-top: 1px solid #222233; paddingTop: 10px; }
 .ticket-actions input[type="text"] { width: 100%; padding: 8px; background: #07070b; border: 1px solid var(--cyan); border-radius: 8px; color: #fff; font-size: 0.85rem; }
 .btn-finish { background: rgba(0,255,136,0.15); border: 1.5px solid #00ff88; color: #00ff88; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
 .btn-finish:hover { background: #00ff88; color: #000; box-shadow: 0 0 10px #00ff88; }
