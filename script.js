@@ -132,7 +132,6 @@ function sendOrder(e) {
   pedidosGuardados.unshift(nuevoPedido);
   localStorage.setItem('betto_tickets', JSON.stringify(pedidosGuardados));
 
-  // Notificación a WhatsApp corregida para que el número de ticket se vea perfectamente
   const mensaje = `🔔 *¡NUEVO PEDIDO / TICKET!*\n\n🎫 *ID:* ${ticketId}\n👤 *Cliente:* ${name}\n🎨 *Tipo:* ${type}\n💡 *Idea:* ${idea}`;
   const phone = "573152395773";
   
@@ -140,7 +139,22 @@ function sendOrder(e) {
 
   alert(`¡Pedido registrado con éxito! Tu número de ticket asignado es ${ticketId} 🎉`);
   document.querySelector('.order-form').reset();
-  showTickets();
+}
+
+// 🔒 FUNCIÓN SECRETA PARA ACCEDER A LOS TICKETS (Haciendo doble clic en tu avatar)
+function pedirAccesoAdmin() {
+  const password = prompt("🔒 ACCESO RESTRINGIDO\nIntroduce la contraseña de Administrador para ver los Tickets:");
+  if (password === "BETTO2026") {
+    // Muestra el botón de tickets en el menú de forma temporal
+    const btnTickets = document.getElementById('btn-tickets');
+    btnTickets.classList.remove('hidden');
+    
+    // Abre directamente la sección de tickets
+    showTickets(btnTickets);
+    alert("¡Acceso concedido, Betto! Panel de tickets desbloqueado.");
+  } else if (password !== null) {
+    alert("❌ Contraseña incorrecta.");
+  }
 }
 
 function showTickets(e) {
@@ -260,7 +274,6 @@ function showUserCommissions(e) {
   setView(e || document.getElementById('btn-user-commissions'), container);
 }
 
-// 🔒 BORRAR UNA SOLA COMISIÓN ENTREGADA (CON CONTRASEÑA)
 function borrarEntregadaIndividual(index) {
   const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar esta publicación:");
   if (password === "BETTO2026") {
@@ -273,7 +286,6 @@ function borrarEntregadaIndividual(index) {
   }
 }
 
-// 🔒 BORRAR TODAS LAS ENTREGADAS (CON CONTRASEÑA)
 function borrarEntregadasAdmin() {
   const password = prompt("⚠️ Zona restringida (Admin).\nIntroduce la contraseña para borrar todas las entregadas:");
   if (password === "BETTO2026") {
